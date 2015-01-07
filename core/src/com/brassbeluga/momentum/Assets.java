@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class Assets {
 
-	private TextureAtlas atlas;
+	private static TextureAtlas atlas;
 	
 	public static Texture spider;
 	public static Texture peg;
 	
-	public Assets () {
+	public static void load () {
 		atlas = new TextureAtlas("Momentum.pack");
 		
 		spider = atlas.createSprite("spider").getTexture();
