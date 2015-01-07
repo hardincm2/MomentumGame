@@ -1,0 +1,19 @@
+
+Momentum2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+spider
+  rotate: false
+  xy: 1, 1
+  size: 50, 51
+  orig: 50, 51
+  offset: 0, 0
+  index: -1
+peg
+  rotate: false
+  xy: 53, 32
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
