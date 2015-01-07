@@ -9,12 +9,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.brassbeluga.momentum.GameScreen;
 
 public class Momentum extends Game {
-	SpriteBatch batch;
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		//Assets.load();
+		Assets.load();
 		setScreen(new GameScreen(this));
 	}
 
