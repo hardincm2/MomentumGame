@@ -12,6 +12,7 @@ public class World {
 	
 	World() {
 		spider = new Spider(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, 10, 10, Assets.spider);
+		pegs = new Array<Peg>();
 	}
 	
 	public void update(float delta) {
