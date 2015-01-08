@@ -13,7 +13,7 @@ public class Assets {
 	public static TextureRegion spider;
 	public static TextureRegion peg;
 	
-	public static Music medieval;
+	public static Music noodling;
 	
 	public static void load () {
 		atlas = new TextureAtlas("Momentum.pack");
@@ -21,7 +21,7 @@ public class Assets {
 		spider = atlas.findRegion("spider");
 		peg = atlas.findRegion("peg");
 		
-		medieval = Gdx.audio.newMusic(Gdx.files.internal("medieval.wav"));
+		noodling = Gdx.audio.newMusic(Gdx.files.internal("Noodling.mp3"));
 	}
 	
 }
