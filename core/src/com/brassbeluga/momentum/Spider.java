@@ -74,8 +74,12 @@ public class Spider extends GameObject {
 	public void resetSpider(float x, float y) {
 		this.x = x;
 		this.y = y;
+		this.velocity.x = 0;
+		this.velocity.y = 0;
+		this.peg = null;
 		this.angVel = 0;
 		this.angle = 0;
+		this.lastAngle = 0;
 	}
 
 }
