@@ -1,5 +1,6 @@
 package com.brassbeluga.momentum;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -60,12 +61,21 @@ public class Spider extends GameObject {
 		float magnitude = rope.len() * rope.len();
 		velocity = rope.scl((rope.dot(velocity) / magnitude));
 		angVel = 0;
-		spiderAngle = angle - rope.angle();
+		spiderAngle = angle - Math.abs(rope.angle());
+		if ((velocity.x < 0 && y < peg.y) || (y > peg.y & velocity.y < 0) || (y > peg.y && x < peg.x && velocity.y > 0))
+			spiderAngle -= 180;
 	}
 	
 	public void clearPeg() {
 		peg = null;
 		angVel = angle - lastAngle;
+	}
+	
+	public void resetSpider(float x, float y) {
+		this.x = x;
+		this.y = y;
+		this.angVel = 0;
+		this.angle = 0;
 	}
 
 }
