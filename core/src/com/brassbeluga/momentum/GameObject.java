@@ -32,7 +32,7 @@ public class GameObject {
 	}
 	
 	public void render(SpriteBatch batch) {
-		batch.draw(region, x + rect.x, y + rect.y, 0, 0, 
+		batch.draw(region, x + rect.x, y + rect.y, halfWidth, halfHeight, 
 				rect.width, rect.height, 1.0f, 1.0f, angle);
 	}
 	

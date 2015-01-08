@@ -11,9 +11,13 @@ public class Spider extends GameObject {
 	public Peg peg; // null if spider is currently not attached
 	public float angVel;
 	public float swingRadius;
+	public float lastAngle;
+	public float spiderAngle;
 	
 	public Spider(float x, float y, float width, float height, TextureRegion texture, World world) {
 		super(x, y, width, height, texture);
+		lastAngle = angle;
+		spiderAngle = angle;
 	}
 	
 	@Override
@@ -37,8 +41,12 @@ public class Spider extends GameObject {
 			
 			rope.setLength(velocity.len());
 			rope.rotate90(-1);
+			lastAngle = angle;
+			angle = spiderAngle + rope.angle();
 			float magnitude = rope.len() * rope.len();
 			velocity = rope.scl((rope.dot(velocity) / magnitude));
+		}else{
+			angle += angVel;
 		}
 	}
 	
@@ -51,6 +59,13 @@ public class Spider extends GameObject {
 		rope.rotate90(-1);
 		float magnitude = rope.len() * rope.len();
 		velocity = rope.scl((rope.dot(velocity) / magnitude));
+		angVel = 0;
+		spiderAngle = angle - rope.angle();
+	}
+	
+	public void clearPeg() {
+		peg = null;
+		angVel = angle - lastAngle;
 	}
 
 }

@@ -84,7 +84,7 @@ public class World {
 	}
 
 	public void onTouchUp(float x, float y, int pointer, int button) {
-		spider.peg = null;
+		spider.clearPeg();
 	}
 	
 }

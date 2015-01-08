@@ -2,9 +2,11 @@ package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class GameScreen extends ScreenAdapter {
 	private static final float STEP = 1/60f;
@@ -13,6 +15,7 @@ public class GameScreen extends ScreenAdapter {
 	public World world;
 	public OrthographicCamera camera;
 	public SpriteBatch batch;
+	public ShapeRenderer shapes;
 	
 	
 	public GameScreen(final Momentum game) {
@@ -21,6 +24,8 @@ public class GameScreen extends ScreenAdapter {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, World.WORLD_WIDTH, World.WORLD_HEIGHT);
 		accumulator = 0;
+		shapes = new ShapeRenderer();
+		shapes.setAutoShapeType(true);
 	}
 	
 	@Override
@@ -45,6 +50,14 @@ public class GameScreen extends ScreenAdapter {
 		batch.begin();
 		world.render(batch);
 		batch.end();
+		
+		if (world.spider != null && world.spider.peg != null) {
+			shapes.setColor(Color.BLACK);
+			shapes.setProjectionMatrix(camera.combined);
+			shapes.begin();
+			shapes.line(world.spider.x, world.spider.y, world.spider.peg.x, world.spider.peg.y);
+			shapes.end();
+		}
 	}
 	
 	@Override
