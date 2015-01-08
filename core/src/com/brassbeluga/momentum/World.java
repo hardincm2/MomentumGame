@@ -21,7 +21,7 @@ public class World {
 		gravity = new Vector2(0.0f, -0.01f);
 		spider = new Spider(0f, WORLD_HEIGHT - 10, 10, 10, Assets.spider, this);
 		pegs = new Array<Peg>();
-		generatePegs(new Rectangle(0f, WORLD_HEIGHT / 4f, WORLD_WIDTH, WORLD_HEIGHT - WORLD_HEIGHT / 4f), 5);
+		generatePegs(5);
 	}
 	
 	public void update(float delta) {
@@ -29,13 +29,15 @@ public class World {
 		
 		if (spider.x >= WORLD_WIDTH) {
 			spider.x = 0;
+			spider.y = WORLD_HEIGHT - 10;
 			spider.peg = null;
-			pegs.clear();
-			generatePegs(new Rectangle(0f, WORLD_HEIGHT / 4f, WORLD_WIDTH, WORLD_HEIGHT - WORLD_HEIGHT / 4f), 5);
+			generatePegs(5);
 		} else if (spider.y <= 0) {
 			spider.x = 0;
 			spider.y = WORLD_HEIGHT - 10;
 			spider.velocity = new Vector2(0,0);
+			spider.angle = 0;
+			spider.angVel = 0;
 			spider.peg = null;
 		}
 	}
@@ -52,11 +54,15 @@ public class World {
 		}
 	}
 	
-	private void generatePegs(Rectangle bounds, int amount) {
+	private void generatePegs(int amount) {
 		pegs.clear();
+		float lastX = 0;
 		for (int i = 0; i < amount; i++) {
-			float x = MathUtils.random(bounds.x, bounds.x + bounds.width);
-			float y = MathUtils.random(bounds.y, bounds.y + bounds.height);
+			float xInc = WORLD_WIDTH / 4 - WORLD_WIDTH / 8 + MathUtils.random(0, WORLD_WIDTH / 4);
+			float x = lastX + xInc;
+			x = x % WORLD_WIDTH;
+			lastX = x;
+			float y = MathUtils.random(WORLD_HEIGHT / 4, WORLD_HEIGHT);
 			Peg peg = new Peg(x, y, 0.2f, Assets.peg, this);
 			pegs.add(peg);
 		}
