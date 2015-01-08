@@ -26,8 +26,19 @@ public class World {
 	
 	public void update(float delta) {
 		spider.update(gravity);
+		
+		if (spider.x >= WORLD_WIDTH) {
+			spider.x = 0;
+			pegs.clear();
+			generatePegs(new Rectangle(0f, WORLD_HEIGHT / 4f, WORLD_WIDTH, WORLD_HEIGHT - WORLD_HEIGHT / 4f), 5);
+		}
 	}
 	
+	/**
+	 * Renders the world.
+	 * 
+	 * @param batch The sprite batch to draw to.
+	 */
 	public void render(SpriteBatch batch) {
 		spider.render(batch);
 		for (Peg peg : pegs) {
