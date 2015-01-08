@@ -54,7 +54,7 @@ public class GameScreen extends ScreenAdapter {
 		world.render(batch);
 		font.setColor(Color.RED);
 		font.setScale(.25f, .25f);
-		font.draw(batch, "" + (int) world.maxDist, 10, 10);
+		font.draw(batch, "" + (int) world.level, 8, 8);
 		batch.end();
 		
 		if (world.spider != null && world.spider.peg != null) {

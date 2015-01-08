@@ -15,30 +15,29 @@ public class World {
 	public Spider spider;
 	public Array<Peg> pegs;
 	
-	public float currentDist;
-	public float maxDist;
+	public int level;
 	
 	World() {
 		gravity = new Vector2(0.0f, -0.01f);
 		spider = new Spider(0f, WORLD_HEIGHT - 10, 10, 10, Assets.spider, this);
 		pegs = new Array<Peg>();
-		currentDist = maxDist = 0;
+		level = 0;
 		generatePegs(5);
 	}
 	
 	public void update(float delta) {
-		float prevDist = spider.x;
 		spider.update(gravity);
-		currentDist += (spider.x - prevDist);
-		maxDist = Math.max(maxDist, currentDist);
 		
 		if (spider.x >= WORLD_WIDTH) {
 			spider.x = 0;
 			spider.y = WORLD_HEIGHT - 10;
 			spider.peg = null;
+			level++;
 			generatePegs(5);
 		} else if (spider.y <= 0) {
+			level = 0;
 			spider.resetSpider(0, WORLD_HEIGHT - 10);
+			generatePegs(5);
 		}
 	}
 	
