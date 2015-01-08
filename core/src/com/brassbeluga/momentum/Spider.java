@@ -76,6 +76,7 @@ public class Spider extends GameObject {
 		this.y = y;
 		this.angVel = 0;
 		this.angle = 0;
+		this.lastAngle = 0;
 	}
 
 }
