@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -14,12 +15,14 @@ public class GameScreen extends ScreenAdapter {
 
 	public World world;
 	public OrthographicCamera camera;
+	private BitmapFont font;
 	public SpriteBatch batch;
 	public ShapeRenderer shapes;
 	
 	
 	public GameScreen(final Momentum game) {
 		world = new World();
+		font = new BitmapFont();
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, World.WORLD_WIDTH, World.WORLD_HEIGHT);
@@ -49,6 +52,9 @@ public class GameScreen extends ScreenAdapter {
 		// Render the game to the spritebatch.
 		batch.begin();
 		world.render(batch);
+		font.setColor(Color.RED);
+		font.setScale(.25f, .25f);
+		font.draw(batch, "" + world.currentDist, 10, 10);
 		batch.end();
 		
 		if (world.spider != null && world.spider.peg != null) {
@@ -58,6 +64,8 @@ public class GameScreen extends ScreenAdapter {
 			shapes.line(world.spider.x, world.spider.y, world.spider.peg.x, world.spider.peg.y);
 			shapes.end();
 		}
+		
+		
 	}
 	
 	@Override
