@@ -8,21 +8,23 @@ import com.badlogic.gdx.math.Vector2;
 
 public class GameObject {
 
+	public float x;
+	public float y;
+	public float halfWidth;
+	public float halfHeight;
 	public Rectangle rect;
 	public float angle;
 	public Vector2 velocity;
 	public TextureRegion region;
-	public World world;
 	
-	public GameObject(float x, float y, float width, float height, TextureRegion texture, World world) {
+	public GameObject(float x, float y, float width, float height, TextureRegion texture) {
 		this.rect = new Rectangle(x, y, width, height);
 		this.region = texture;
 		this.angle = 0f;
 		this.velocity = new Vector2(0f, 0f);
-		this.world = world;
 	}
 	
-	public void update() {
+	public void update(Vector2 gravity) {
 		
 	}
 	

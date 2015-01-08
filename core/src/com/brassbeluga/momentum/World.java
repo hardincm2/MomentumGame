@@ -12,19 +12,20 @@ public class World {
 	public static final float WORLD_WIDTH = 100;
 	public static final float WORLD_HEIGHT = 60; 
 	
-	public float gravity = 0.01f;
+	public Vector2 gravity;
 	
 	public Spider spider;
 	public Array<Peg> pegs;
 	
 	World() {
+		gravity = new Vector2(0.0f, 0.01f);
 		spider = new Spider(0f, WORLD_HEIGHT - 10, 10, 10, Assets.spider, this);
 		pegs = new Array<Peg>();
 		generatePegs(new Rectangle(0f, WORLD_HEIGHT / 4f, WORLD_WIDTH, WORLD_HEIGHT - WORLD_HEIGHT / 4f), 5);
 	}
 	
 	public void update(float delta) {
-		spider.update();
+		spider.update(gravity);
 	}
 	
 	public void render(SpriteBatch batch) {

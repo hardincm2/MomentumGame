@@ -10,12 +10,12 @@ public class Spider extends GameObject {
 	public float swingRadius;
 	
 	public Spider(float x, float y, float width, float height, TextureRegion texture, World world) {
-		super(x, y, width, height, texture, world);
+		super(x, y, width, height, texture);
 	}
 	
 	@Override
-	public void update() {
-		velocity.y -= world.gravity;
+	public void update(Vector2 gravity) {
+		velocity.y -= gravity.y;
 		rect.x += velocity.x;
 		rect.y += velocity.y;
 		if (peg != null) {

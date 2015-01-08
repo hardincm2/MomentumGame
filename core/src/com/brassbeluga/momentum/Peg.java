@@ -11,7 +11,7 @@ public class Peg extends GameObject {
 	 * @param texture The texture to be used for the peg
 	 */
 	public Peg(float x, float y, float scale, TextureRegion texture, World world) {
-		super(x, y, texture.getRegionWidth() * scale, texture.getRegionHeight() * scale, texture, world);
+		super(x, y, texture.getRegionWidth() * scale, texture.getRegionHeight() * scale, texture);
 	}
 
 }
