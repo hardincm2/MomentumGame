@@ -38,12 +38,7 @@ public class World {
 			spider.peg = null;
 			generatePegs(5);
 		} else if (spider.y <= 0) {
-			spider.x = 0;
-			spider.y = WORLD_HEIGHT - 10;
-			spider.velocity = new Vector2(0,0);
-			spider.angle = 0;
-			spider.angVel = 0;
-			spider.peg = null;
+			spider.resetSpider(0, WORLD_HEIGHT - 10);
 		}
 	}
 	
