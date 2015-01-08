@@ -52,7 +52,8 @@ public class GameScreen extends ScreenAdapter {
 		batch.end();
 		
 		if (world.spider != null && world.spider.peg != null) {
-			shapes.setColor(Color.BLACK);
+			shapes.setColor(Color.PURPLE);
+			Gdx.gl20.glLineWidth(5);
 			shapes.setProjectionMatrix(camera.combined);
 			shapes.begin();
 			shapes.line(world.spider.x, world.spider.y, world.spider.peg.x, world.spider.peg.y);
