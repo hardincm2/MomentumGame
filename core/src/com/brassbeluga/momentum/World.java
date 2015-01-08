@@ -18,7 +18,7 @@ public class World {
 	public Array<Peg> pegs;
 	
 	World() {
-		gravity = new Vector2(0.0f, 0.01f);
+		gravity = new Vector2(0.0f, -0.01f);
 		spider = new Spider(0f, WORLD_HEIGHT - 10, 10, 10, Assets.spider, this);
 		pegs = new Array<Peg>();
 		generatePegs(new Rectangle(0f, WORLD_HEIGHT / 4f, WORLD_WIDTH, WORLD_HEIGHT - WORLD_HEIGHT / 4f), 5);
@@ -50,12 +50,12 @@ public class World {
 		Peg peg = iter.next();
 		Peg closePeg = peg;
 		Vector2 touch = new Vector2(x, y);
-		Vector2 pegPos = new Vector2(peg.rect.x, peg.rect.y);
+		Vector2 pegPos = new Vector2(peg.x, peg.y);
 		float dist = pegPos.dst(touch);
 		// Find the closest peg to touch;
 		while (iter.hasNext()) {
 			peg = iter.next();
-			pegPos.set(peg.rect.x, peg.rect.y);
+			pegPos.set(peg.x, peg.y);
 			float newDist = pegPos.dst(touch);
 			if (newDist < dist) {
 				dist = newDist;
