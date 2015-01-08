@@ -1,6 +1,7 @@
 package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Spider extends GameObject {
@@ -15,21 +16,28 @@ public class Spider extends GameObject {
 	
 	@Override
 	public void update(Vector2 gravity) {
-		velocity.y -= gravity.y;
-		rect.x += velocity.x;
-		rect.y += velocity.y;
+		velocity.add(gravity);
+		x += velocity.x;
+		y += velocity.y;
 		if (peg != null) {
-			rect.x = peg.rect.x;
-			rect.y = peg.rect.y;
-			velocity.y = 0;
+			Vector2 pos = getPosition(new Vector2());
+			Vector2 pegPos = peg.getPosition(new Vector2());
+			Vector2 rope = pegPos.sub(pos);
+			rope.rotate90(-1);
+			float magnitude = rope.len() * rope.len();
+			velocity = rope.scl((rope.dot(velocity) / magnitude));
 		}
 	}
 	
 	public void setPeg(Peg peg) {
 		this.peg = peg;
-		Vector2 pos = rect.getPosition(new Vector2());
-		Vector2 pegPos = peg.rect.getPosition(new Vector2());
-		this.swingRadius = pos.dst(pegPos);
+		Vector2 pos = getPosition(new Vector2());
+		Vector2 pegPos = peg.getPosition(new Vector2());
+		swingRadius = pos.dst(pegPos);
+		Vector2 rope = pegPos.sub(pos);
+		rope.rotate90(-1);
+		float magnitude = rope.len() * rope.len();
+		velocity = rope.scl((rope.dot(velocity) / magnitude));
 	}
 
 }
