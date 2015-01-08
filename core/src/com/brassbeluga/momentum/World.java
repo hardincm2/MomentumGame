@@ -15,8 +15,8 @@ public class World {
 	public Spider spider;
 	public Array<Peg> pegs;
 	
-	public int currentDist;
-	public int maxDist;
+	public float currentDist;
+	public float maxDist;
 	
 	World() {
 		gravity = new Vector2(0.0f, -0.01f);
@@ -44,6 +44,7 @@ public class World {
 			spider.angle = 0;
 			spider.angVel = 0;
 			spider.peg = null;
+			currentDist = maxDist = 0;
 		}
 	}
 	
