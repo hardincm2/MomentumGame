@@ -22,9 +22,20 @@ public class Spider extends GameObject {
 		x += velocity.x;
 		y += velocity.y;
 		if (peg != null) {
-			Vector2 pos = getPosition(new Vector2());
-			Vector2 pegPos = peg.getPosition(new Vector2());
-			Vector2 rope = pegPos.sub(pos);
+			Vector2 pos = new Vector2();
+			Vector2 pegPos = new Vector2();
+			Vector2 newPos = getPosition(pos);
+			pegPos = peg.getPosition(pegPos);
+			Vector2 rope = newPos.sub(pegPos).setLength(swingRadius);
+			pegPos.add(rope);
+			x = pegPos.x;
+			y = pegPos.y;
+			
+			pos = getPosition(new Vector2());
+			pegPos = peg.getPosition(new Vector2());
+			rope = pegPos.sub(pos);
+			
+			rope.setLength(velocity.len());
 			rope.rotate90(-1);
 			float magnitude = rope.len() * rope.len();
 			velocity = rope.scl((rope.dot(velocity) / magnitude));
