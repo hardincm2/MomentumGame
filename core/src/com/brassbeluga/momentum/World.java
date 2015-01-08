@@ -29,8 +29,14 @@ public class World {
 		
 		if (spider.x >= WORLD_WIDTH) {
 			spider.x = 0;
+			spider.peg = null;
 			pegs.clear();
 			generatePegs(new Rectangle(0f, WORLD_HEIGHT / 4f, WORLD_WIDTH, WORLD_HEIGHT - WORLD_HEIGHT / 4f), 5);
+		} else if (spider.y <= 0) {
+			spider.x = 0;
+			spider.y = WORLD_HEIGHT - 10;
+			spider.velocity = new Vector2(0,0);
+			spider.peg = null;
 		}
 	}
 	
