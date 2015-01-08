@@ -49,8 +49,8 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		Assets.medieval.setLooping(true);
-		Assets.medieval.play();
+		Assets.noodling.setLooping(true);
+		Assets.noodling.play();
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}
 }
