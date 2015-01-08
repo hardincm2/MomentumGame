@@ -4,8 +4,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Spider extends GameObject {
+	public static float HEIGHT = 10;
+	public static float WIDTH = 10;
 
-	public Peg peg;
+	public Peg peg; // null if spider is currently not attached
 	public float angVel;
 	public float swingRadius;
 	
