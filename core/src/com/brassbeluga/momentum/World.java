@@ -22,7 +22,8 @@ public class World {
 	World(GameScreen game) {
 		this.game = game;
 		gravity = new Vector2(0.0f, -0.01f);
-		spider = new Spider(0f, WORLD_HEIGHT - 10, 10, 10, Assets.spider, this);
+		spider = new Spider(0f, WORLD_HEIGHT - 10, Assets.catBody, this);
+		spider.x += spider.rect.width;
 		pegs = new Array<Peg>();
 		level = 0;
 		generatePegs(5);
@@ -67,7 +68,7 @@ public class World {
 			x = x % WORLD_WIDTH;
 			lastX = x;
 			float y = MathUtils.random(WORLD_HEIGHT / 4, WORLD_HEIGHT);
-			Peg peg = new Peg(x, y, 0.2f, Assets.peg, this);
+			Peg peg = new Peg(x, y, Assets.peg, this);
 			pegs.add(peg);
 		}
 	}

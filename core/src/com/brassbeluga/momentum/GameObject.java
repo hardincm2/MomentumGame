@@ -1,5 +1,6 @@
 package com.brassbeluga.momentum;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,9 +17,11 @@ public class GameObject {
 	public Vector2 velocity;
 	public TextureRegion region;
 	
-	public GameObject(float x, float y, float width, float height, TextureRegion texture) {
+	public GameObject(float x, float y, TextureRegion texture) {
 		this.x = x;
 		this.y = y;
+		float width = (texture.getRegionWidth() * 1.0f / Gdx.graphics.getWidth()) * World.WORLD_WIDTH;
+		float height = (texture.getRegionHeight() * 1.0f / Gdx.graphics.getHeight()) * World.WORLD_HEIGHT;
 		this.halfWidth = width / 2;
 		this.halfHeight = height / 2;
 		this.rect = new Rectangle(-halfWidth, -halfHeight, width, height);
@@ -38,6 +41,12 @@ public class GameObject {
 	
 	public Vector2 getPosition(Vector2 position) {
 		return position.set(x, y);
+	}
+	
+	protected Vector2 getAdjustedSpriteBounds(TextureRegion texture) {
+		float width = (texture.getRegionWidth() * 1.0f / Gdx.graphics.getWidth()) * World.WORLD_WIDTH;
+		float height = (texture.getRegionHeight() * 1.0f / Gdx.graphics.getHeight()) * World.WORLD_HEIGHT;
+		return new Vector2(width, height);
 	}
 	
 }

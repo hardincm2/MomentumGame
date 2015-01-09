@@ -14,7 +14,11 @@ public class Assets {
 	private static TextureAtlas atlas;
 	private static TextureAtlas uiAtlas;
 	
-	public static TextureRegion spider;
+	public static TextureRegion catBody;
+	public static TextureRegion catTail;
+	public static TextureRegion catTailLong;
+	public static TextureRegion catTailCurl;
+	
 	public static TextureRegion peg;
 	
 	public static Music noodling;
@@ -23,9 +27,12 @@ public class Assets {
 	public static BitmapFont chunkFont;
 	
 	public static void load () {
-		atlas = new TextureAtlas("Momentum.pack");
+		atlas = new TextureAtlas("momentum.pack");
 		
-		spider = atlas.findRegion("spider");
+		catBody = atlas.findRegion("cat_body");
+		catTail = atlas.findRegion("cat_tail");
+		catTailLong = atlas.findRegion("cat_tail_long");
+		catTailCurl = atlas.findRegion("cat_tail_curl");
 		peg = atlas.findRegion("peg");
 		
 		uiAtlas = new TextureAtlas("uiskin.atlas");
@@ -37,13 +44,13 @@ public class Assets {
 		         Gdx.files.internal("chunk.png"), false);
 	}
 	
-	public static void drawText(String text, float x, float y) {
-		drawText(text, x, y, BitmapFont.HAlignment.LEFT);
+	public static void drawText(SpriteBatch batch, String text, float x, float y) {
+		drawText(batch, text, x, y, BitmapFont.HAlignment.LEFT);
 	}
 	
-	public static void drawText(String text, float x, float y, BitmapFont.HAlignment align) {
+	public static void drawText(SpriteBatch batch, String text, float x, float y, BitmapFont.HAlignment align) {
 		TextBounds width = Assets.chunkFont.getBounds(text);
-		Assets.chunkFont.drawWrapped(Assets.chunkBatch, text, x - width.width / 2, y + width.height / 2, 
+		Assets.chunkFont.drawWrapped(batch, text, x - width.width / 2, y + width.height / 2, 
 				Gdx.graphics.getWidth(), align);
 	}
 	

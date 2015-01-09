@@ -15,9 +15,9 @@ public class GameScreen extends ScreenAdapter {
 	private float accumulator;
 
 	public World world;
-	public OrthographicCamera camera;
-	private BitmapFont font;
-	public SpriteBatch batch;
+
+	private SpriteBatch batch;
+	private OrthographicCamera camera;
 	public ShapeRenderer shapes;
 	public Vector3 cameraPos;
 	
@@ -26,13 +26,12 @@ public class GameScreen extends ScreenAdapter {
 	public boolean startTouch;
 	
 	
-	public GameScreen(final Momentum game) {
+	public GameScreen(final Momentum game, OrthographicCamera camera, SpriteBatch batch) {
 		this.game = game;
+		this.batch = batch;
+		this.camera = camera;
+		
 		world = new World(this);
-		font = new BitmapFont();
-		batch = new SpriteBatch();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, World.WORLD_WIDTH, World.WORLD_HEIGHT);
 		accumulator = 0;
 		shapes = new ShapeRenderer();
 		shapes.setAutoShapeType(true);
@@ -41,6 +40,14 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void render(float delta) {
+
+		// Fixed time steps for predictable physics.
+		accumulator += delta;
+		while (accumulator >= STEP) {
+			world.update(delta);
+			accumulator -= delta;
+		}
+		
 		// Clear the screen and set a screen color.
 		Gdx.gl.glClearColor(200 / 255f, 257 / 255f, 240 / 255f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -56,25 +63,9 @@ public class GameScreen extends ScreenAdapter {
 		
 		Assets.chunkBatch.begin();
 		Assets.chunkFont.setColor(Color.PURPLE);
-		Assets.drawText("" + world.level, 30, 30, BitmapFont.HAlignment.LEFT);
+		Assets.drawText(Assets.chunkBatch, "" + world.level, 30, 30, BitmapFont.HAlignment.LEFT);
 		Assets.chunkFont.setColor(Color.WHITE);
 		Assets.chunkBatch.end();
-		
-		if (world.spider != null && world.spider.peg != null) {
-			shapes.setColor(Color.PURPLE);
-			Gdx.gl20.glLineWidth(5);
-			shapes.setProjectionMatrix(camera.combined);
-			shapes.begin();
-			shapes.line(world.spider.x, world.spider.y, world.spider.peg.x, world.spider.peg.y);
-			shapes.end();
-		}
-		
-		// Fixed time steps for predictable physics.
-		accumulator += delta;
-		while (accumulator >= STEP) {
-			world.update(delta);
-			accumulator -= delta;
-		}
 	}
 	
 	@Override
