@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen extends ScreenAdapter {
 	private static final float STEP = 1/60f;
@@ -18,10 +19,16 @@ public class GameScreen extends ScreenAdapter {
 	private BitmapFont font;
 	public SpriteBatch batch;
 	public ShapeRenderer shapes;
+	public Vector3 cameraPos;
+	
+	public Momentum game;
+	
+	public boolean startTouch;
 	
 	
 	public GameScreen(final Momentum game) {
-		world = new World();
+		this.game = game;
+		world = new World(this);
 		font = new BitmapFont();
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
@@ -29,33 +36,29 @@ public class GameScreen extends ScreenAdapter {
 		accumulator = 0;
 		shapes = new ShapeRenderer();
 		shapes.setAutoShapeType(true);
+		cameraPos = new Vector3(0, 0, 0);
 	}
 	
 	@Override
 	public void render(float delta) {
 		// Clear the screen and set a screen color.
-		Gdx.gl.glClearColor(1f, 1f, 1f, 1f);
+		Gdx.gl.glClearColor(200 / 255f, 257 / 255f, 240 / 255f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		// Fixed time steps for predictable physics.
-		accumulator += delta;
-		while (accumulator >= STEP) {
-			world.update(delta);
-			accumulator -= delta;
-		}
 		
 		// Update the camera and sync the batch with the camera.
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		
-		
 		// Render the game to the spritebatch.
 		batch.begin();
 		world.render(batch);
-		font.setColor(Color.RED);
-		font.setScale(.25f, .25f);
-		font.draw(batch, "" + (int) world.level, 8, 8);
 		batch.end();
+		
+		Assets.chunkBatch.begin();
+		Assets.chunkFont.setColor(Color.PURPLE);
+		Assets.drawText("" + world.level, 30, 30, BitmapFont.HAlignment.LEFT);
+		Assets.chunkFont.setColor(Color.WHITE);
+		Assets.chunkBatch.end();
 		
 		if (world.spider != null && world.spider.peg != null) {
 			shapes.setColor(Color.PURPLE);
@@ -66,13 +69,19 @@ public class GameScreen extends ScreenAdapter {
 			shapes.end();
 		}
 		
-		
+		// Fixed time steps for predictable physics.
+		accumulator += delta;
+		while (accumulator >= STEP) {
+			world.update(delta);
+			accumulator -= delta;
+		}
 	}
 	
 	@Override
 	public void show() {
 		Assets.noodling.setLooping(true);
-		Assets.noodling.play();
+		//Assets.noodling.play();
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
+		startTouch = Gdx.input.isTouched();
 	}
 }
