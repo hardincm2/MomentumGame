@@ -12,7 +12,7 @@ public class Momentum extends Game {
 		Assets.load();
 		game = new GameScreen(this);
 		death = new DeathScreen(this);
-		setScreen(game);
+		setScreen(new StartScreen(this));
 	}
 
 	@Override
