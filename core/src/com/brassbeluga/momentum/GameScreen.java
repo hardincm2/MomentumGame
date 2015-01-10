@@ -63,7 +63,7 @@ public class GameScreen extends ScreenAdapter {
 		
 		Assets.chunkBatch.begin();
 		Assets.chunkFont.setColor(Color.PURPLE);
-		Assets.drawText(Assets.chunkBatch, "" + world.level, 30, 30, BitmapFont.HAlignment.LEFT);
+		Assets.drawText(Assets.chunkBatch, "" + world.level, 30, 30);
 		Assets.chunkFont.setColor(Color.WHITE);
 		Assets.chunkBatch.end();
 	}

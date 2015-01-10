@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 public class Assets {
 
 	private static TextureAtlas atlas;
-	private static TextureAtlas uiAtlas;
 	
 	public static TextureRegion catBody;
 	public static TextureRegion catTail;
@@ -27,6 +26,7 @@ public class Assets {
 	public static BitmapFont chunkFont;
 	
 	public static void load () {
+		// Load assets from file
 		atlas = new TextureAtlas("momentum.pack");
 		
 		catBody = atlas.findRegion("cat_body");
@@ -35,8 +35,6 @@ public class Assets {
 		catTailCurl = atlas.findRegion("cat_tail_curl");
 		peg = atlas.findRegion("peg");
 		
-		uiAtlas = new TextureAtlas("uiskin.atlas");
-		
 		noodling = Gdx.audio.newMusic(Gdx.files.internal("Noodling.mp3"));
 		
 		chunkBatch = new SpriteBatch();
@@ -44,14 +42,17 @@ public class Assets {
 		         Gdx.files.internal("chunk.png"), false);
 	}
 	
+	/**
+	 * Draws text with the default font at a given position
+	 * @param batch Current batch to draw the text to
+	 * @param text The text to draw
+	 * @param x Screen x-position
+	 * @param y Screen y-position
+	 */
 	public static void drawText(SpriteBatch batch, String text, float x, float y) {
-		drawText(batch, text, x, y, BitmapFont.HAlignment.LEFT);
-	}
-	
-	public static void drawText(SpriteBatch batch, String text, float x, float y, BitmapFont.HAlignment align) {
 		TextBounds width = Assets.chunkFont.getBounds(text);
 		Assets.chunkFont.drawWrapped(batch, text, x - width.width / 2, y + width.height / 2, 
-				Gdx.graphics.getWidth(), align);
+				Gdx.graphics.getWidth(), BitmapFont.HAlignment.LEFT);
 	}
 	
 }

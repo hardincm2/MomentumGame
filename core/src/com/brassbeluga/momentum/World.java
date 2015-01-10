@@ -14,7 +14,7 @@ public class World {
 	public static final float WORLD_HEIGHT = 60; 
 	
 	public Vector2 gravity;
-	public Spider spider;
+	public Player player;
 	public Array<Peg> pegs;
 	
 	public int level;
@@ -22,25 +22,25 @@ public class World {
 	World(GameScreen game) {
 		this.game = game;
 		gravity = new Vector2(0.0f, -0.01f);
-		spider = new Spider(0f, WORLD_HEIGHT - 10, Assets.catBody, this);
-		spider.x += spider.rect.width;
+		player = new Player(0f, WORLD_HEIGHT - 10, Assets.catBody, this);
+		player.x += player.bounds.width;
 		pegs = new Array<Peg>();
 		level = 0;
 		generatePegs(5);
 	}
 	
 	public void update(float delta) {
-		spider.update(gravity);
-		if (spider.x >= WORLD_WIDTH) {
-			spider.x = 0;
-			spider.y = WORLD_HEIGHT - 10;
-			spider.peg = null;
+		player.update(gravity);
+		if (player.x >= WORLD_WIDTH) {
+			player.x = 0;
+			player.y = WORLD_HEIGHT - 10;
+			player.peg = null;
 			level++;
 			generatePegs(5);
-		} else if (spider.y <= 0) {
+		} else if (player.y <= 0) {
 			game.game.onDeath();
-			game.game.death.stages = level;
-			spider.resetSpider(10, WORLD_HEIGHT - 10);
+			game.game.death.setLevels(level);
+			player.resetSpider(10, WORLD_HEIGHT - 10);
 			level = 0;
 			generatePegs(5);
 			game.startTouch = true;
@@ -53,7 +53,7 @@ public class World {
 	 * @param batch The sprite batch to draw to.
 	 */
 	public void render(SpriteBatch batch) {
-		spider.render(batch);
+		player.render(batch);
 		for (Peg peg : pegs) {
 			peg.render(batch);
 		}
@@ -74,7 +74,7 @@ public class World {
 	}
 	
 	public void onTouchDown(float x, float y, int pointer, int button) {
-		if (!game.startTouch && spider.peg == null) {
+		if (!game.startTouch && player.peg == null) {
 			Iterator<Peg> iter = pegs.iterator();
 			Peg peg = iter.next();
 			Peg closePeg = peg;
@@ -91,14 +91,14 @@ public class World {
 					closePeg = peg;
 				}
 			}
-			spider.setPeg(closePeg);
+			player.setPeg(closePeg);
 		}
 		
 	}
 
 	public void onTouchUp(float x, float y, int pointer, int button) {
 		game.startTouch = false;
-		spider.clearPeg();
+		player.clearPeg();
 	}
 	
 }

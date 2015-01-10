@@ -8,12 +8,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-public class Spider extends GameObject {
+public class Player extends GameObject {
 	public static float HEIGHT = 10;
 	public static float WIDTH = 10;
 	public static float TARGET_ANGLE_VEL = 10;
 	public static float MAX_ANG_VEL = 5;
-	public Vector2 tailOff = new Vector2(-42f, -40f);
+	public Vector2 tailOff = new Vector2(42f, 40f);
 
 	public Peg peg; // null if spider is currently not attached
 	public float pegAngle;
@@ -22,41 +22,45 @@ public class Spider extends GameObject {
 	public float lastAngle;
 	public float targetAngle;
 	
+	public float angle;
+	
 	public Vector2 lastPos;
 	public Vector2 pos;
 	
-	public TailObject tail;
-	
-	public Spider(float x, float y, TextureRegion texture, World world) {
+	public Player(float x, float y, TextureRegion texture, World world) {
 		super(x, y,texture);
+		angle = 0.0f;
 		targetAngle = angle;
 		lastAngle = angle;
 		pegAngle = angle;
-		tailOff.set((tailOff.x / texture.getRegionWidth()) * rect.width, (tailOff.y / texture.getRegionHeight()) * rect.height);
-		float tailX = x + tailOff.x;
-		float tailY = y + tailOff.y;
-		tail = new TailObject(this, tailX, tailY, tailOff.x, tailOff.y, Assets.catTail);
+		
+		tailOff.set((tailOff.x / texture.getRegionWidth()) * bounds.width, (tailOff.y / texture.getRegionHeight()) * bounds.height);
+		//tail = new TailObject(this, tailX, tailY, tailOff.x, tailOff.y, Assets.catTail);
+		
 		lastPos = new Vector2(x, y);
 		pos = new Vector2(x, y);
+		
+		GameSprite tail = new GameSprite(Assets.catTail, tailOff.x, tailOff.y);
+		tail.setOffset(60, 12);
+		sprite.children.add(tail);
 	}
 	
 	@Override
 	public void update(Vector2 gravity) {
-		velocity.add(gravity);
-		x += velocity.x;
-		y += velocity.y;
+		//velocity.add(gravity);
+		//x += velocity.x;
+		//y += velocity.y;
 		if (peg != null) {
-			Vector2 pos = new Vector2();
-			Vector2 pegPos = new Vector2();
-			Vector2 newPos = getPosition(pos);
-			pegPos = peg.getPosition(pegPos);
+			Vector2 pegPos = new Vector2(peg.x, peg.y);
+			Vector2 newPos = new Vector2(x, y);
+			pegPos.set(peg.x, peg.y);
 			Vector2 rope = newPos.sub(pegPos).setLength(swingRadius);
 			pegPos.add(rope);
 			x = pegPos.x;
 			y = pegPos.y;
 			
-			pos = getPosition(new Vector2());
-			pegPos = peg.getPosition(new Vector2());
+			pos.set(x, y);
+			pegPos.set(peg.x, peg.y);
 			rope = pegPos.sub(pos);
 			
 			rope.setLength(velocity.len());
@@ -73,7 +77,7 @@ public class Spider extends GameObject {
 			else
 				angle += dir * TARGET_ANGLE_VEL;
 		}else{
-			angle += angVel;
+			angle += 1;
 			/*
 			pos.set(x,y);
 			angle = (float) (MathUtils.radiansToDegrees * Math.atan2(pos.y - lastPos.y, pos.x - lastPos.x)) - 90;
@@ -84,15 +88,15 @@ public class Spider extends GameObject {
 	
 	@Override
 	public void render(SpriteBatch batch) {
-		tail.render(batch);
-		batch.draw(region, x + rect.x, y + rect.y, halfWidth, halfHeight, 
-				rect.width, rect.height, 1.0f, 1.0f, angle);
+		sprite.position.set(x, y);
+		sprite.angle = angle;
+		sprite.draw(batch);
 	}
 	
 	public void setPeg(Peg peg) {
 		this.peg = peg;
-		Vector2 pos = getPosition(new Vector2());
-		Vector2 pegPos = peg.getPosition(new Vector2());
+		Vector2 pos = new Vector2(x, y);
+		Vector2 pegPos = new Vector2(peg.x, peg.y);
 		swingRadius = pos.dst(pegPos);
 		Vector2 rope = pegPos.sub(pos);
 		rope.rotate90(-1);
