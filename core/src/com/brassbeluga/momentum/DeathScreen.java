@@ -14,10 +14,10 @@ public class DeathScreen extends ScreenAdapter {
 	
 	private int levels;
 	
-	public DeathScreen(final Momentum game, OrthographicCamera camera, SpriteBatch batch) {
+	public DeathScreen(final Momentum game) {
 		this.game = game;
-		this.camera = camera;
-		this.batch = batch;
+		this.camera = game.camera;
+		this.batch = game.batch;
 		
 		levels = 0;
 		
@@ -30,7 +30,7 @@ public class DeathScreen extends ScreenAdapter {
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 	    
-		// Draw the death message to screen
+		// Draw the death message to screen.
 		Assets.chunkBatch.begin();
 		float height = Assets.chunkFont.getBounds("Test").height;
 		Assets.drawText(Assets.chunkBatch, "You died!", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 + 2 * height);
@@ -41,9 +41,9 @@ public class DeathScreen extends ScreenAdapter {
 		Assets.chunkFont.setScale(1.0f);
 		Assets.chunkBatch.end();
 		
-		// Change back to the GameScreen if touched
+		// Change back to the GameScreen if touched.
 		if (Gdx.input.justTouched()) {
-            game.setScreen(game.game);
+            game.setScreen(game.gameScreen);
         }
 	}
 	

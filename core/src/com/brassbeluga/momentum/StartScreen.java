@@ -13,10 +13,10 @@ public class StartScreen extends ScreenAdapter {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	
-	public StartScreen(final Momentum game, OrthographicCamera camera, SpriteBatch batch) {
+	public StartScreen(final Momentum game) {
 		this.game = game;	
-		this.camera = camera;
-		this.batch = batch;
+		this.camera = game.camera;
+		this.batch = game.batch;
 	}
 
 	public void render (float delta) {
@@ -38,7 +38,7 @@ public class StartScreen extends ScreenAdapter {
 		Assets.chunkBatch.end();
 		
 		if (Gdx.input.justTouched()) {
-            game.setScreen(game.game);
+            game.setScreen(game.gameScreen);
         }
 	}
 

@@ -2,33 +2,46 @@ package com.brassbeluga.momentum;
 
 import java.util.Iterator;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class World {
-	public GameScreen game;
+	private Momentum game;
 	
+	// World dimensions.
 	public static final float WORLD_WIDTH = 100;
 	public static final float WORLD_HEIGHT = 60; 
 	
+	// Starting position for the player.
+	public static final float PLAYER_START_X = 10;
+	public static final float PLAYER_START_Y = WORLD_HEIGHT - 10;
+
 	public Vector2 gravity;
 	public Player player;
 	public Array<Peg> pegs;
 	
+	// Keeps track of which level the player is currently on.
 	public int level;
 	
-	World(GameScreen game) {
+	
+	World(Momentum game) {
 		this.game = game;
 		gravity = new Vector2(0.0f, -0.01f);
-		player = new Player(0f, WORLD_HEIGHT - 10, Assets.catBody, this);
+		player = new Player(PLAYER_START_X, PLAYER_START_Y, Assets.catBody, this);
 		player.x += player.bounds.width;
 		pegs = new Array<Peg>();
 		level = 0;
 		generatePegs(5);
 	}
 	
+	/**
+	 * Updates the world and all of the bodies contained within it.
+	 * 
+	 * @param delta The time that has passed since update was last called.
+	 */
 	public void update(float delta) {
 		player.update(gravity);
 		if (player.x >= WORLD_WIDTH) {
@@ -38,12 +51,12 @@ public class World {
 			level++;
 			generatePegs(5);
 		} else if (player.y <= 0) {
-			game.game.onDeath();
-			game.game.death.setLevels(level);
-			player.resetSpider(10, WORLD_HEIGHT - 10);
+			// Player has died so show the death screen.
+			game.onDeath(level);
+			player.reset(10, WORLD_HEIGHT - 10);
 			level = 0;
 			generatePegs(5);
-			game.startTouch = true;
+			gameScreen.startTouch = true;
 		}
 	}
 	
@@ -74,7 +87,7 @@ public class World {
 	}
 	
 	public void onTouchDown(float x, float y, int pointer, int button) {
-		if (!game.startTouch && player.peg == null) {
+		if (!gameScreen.startTouch && player.peg == null) {
 			Iterator<Peg> iter = pegs.iterator();
 			Peg peg = iter.next();
 			Peg closePeg = peg;
@@ -97,7 +110,7 @@ public class World {
 	}
 
 	public void onTouchUp(float x, float y, int pointer, int button) {
-		game.startTouch = false;
+		gameScreen.startTouch = false;
 		player.clearPeg();
 	}
 	

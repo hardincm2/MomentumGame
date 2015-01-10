@@ -5,7 +5,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -14,24 +13,23 @@ public class GameScreen extends ScreenAdapter {
 	private static final float STEP = 1/60f;
 	private float accumulator;
 
-	public World world;
-
+	private Momentum game;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
+	
+	public World world;
 	public ShapeRenderer shapes;
 	public Vector3 cameraPos;
-	
-	public Momentum game;
 	
 	public boolean startTouch;
 	
 	
-	public GameScreen(final Momentum game, OrthographicCamera camera, SpriteBatch batch) {
+	public GameScreen(final Momentum game) {
 		this.game = game;
-		this.batch = batch;
-		this.camera = camera;
+		this.batch = game.batch;
+		this.camera = game.camera;
 		
-		world = new World(this);
+		world = new World(game);
 		accumulator = 0;
 		shapes = new ShapeRenderer();
 		shapes.setAutoShapeType(true);

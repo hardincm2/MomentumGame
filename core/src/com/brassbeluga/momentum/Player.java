@@ -15,7 +15,7 @@ public class Player extends GameObject {
 	public static float MAX_ANG_VEL = 5;
 	public Vector2 tailOff = new Vector2(42f, 40f);
 
-	public Peg peg; // null if spider is currently not attached
+	public Peg peg; // null if currently not attached
 	public float pegAngle;
 	public float angVel = 1;
 	public float swingRadius;
@@ -111,7 +111,7 @@ public class Player extends GameObject {
 		angVel = MathUtils.clamp(angle - lastAngle, -MAX_ANG_VEL, MAX_ANG_VEL);
 	}
 	
-	public void resetSpider(float x, float y) {
+	public void reset(float x, float y) {
 		this.x = x;
 		this.y = y;
 		this.velocity.x = 0;
