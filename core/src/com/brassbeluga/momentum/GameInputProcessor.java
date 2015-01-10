@@ -20,11 +20,12 @@ public class GameInputProcessor extends InputAdapter {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		// Convert the screen coordinates to world coordinates and pass to world
-		touchPoint.set(screenX, screenY, 0f);
+		touchPoint.set(screenX, screenY, 0);
 		touchPoint = cam.unproject(touchPoint);
 		world.onTouchDown(touchPoint.x, touchPoint.y, pointer, button);
 		return true;
 	}
+	
 	
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) { 

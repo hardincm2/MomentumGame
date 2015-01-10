@@ -20,7 +20,6 @@ public class DeathScreen extends ScreenAdapter {
 		this.batch = game.batch;
 		
 		levels = 0;
-		
 	}
 
 	public void render (float delta) {

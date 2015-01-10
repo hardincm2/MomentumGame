@@ -7,25 +7,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen extends ScreenAdapter {
 	private static final float STEP = 1/60f;
 	private float accumulator;
-
-	private Momentum game;
+	
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	
-	public World world;
-	public ShapeRenderer shapes;
-	public Vector3 cameraPos;
-	
-	public boolean startTouch;
+	private World world;
+	private ShapeRenderer shapes;
 	
 	
 	public GameScreen(final Momentum game) {
-		this.game = game;
 		this.batch = game.batch;
 		this.camera = game.camera;
 		
@@ -33,19 +26,10 @@ public class GameScreen extends ScreenAdapter {
 		accumulator = 0;
 		shapes = new ShapeRenderer();
 		shapes.setAutoShapeType(true);
-		cameraPos = new Vector3(0, 0, 0);
 	}
 	
 	@Override
 	public void render(float delta) {
-
-		// Fixed time steps for predictable physics.
-		accumulator += delta;
-		while (accumulator >= STEP) {
-			world.update(delta);
-			accumulator -= delta;
-		}
-		
 		// Clear the screen and set a screen color.
 		Gdx.gl.glClearColor(200 / 255f, 257 / 255f, 240 / 255f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -64,13 +48,25 @@ public class GameScreen extends ScreenAdapter {
 		Assets.drawText(Assets.chunkBatch, "" + world.level, 30, 30);
 		Assets.chunkFont.setColor(Color.WHITE);
 		Assets.chunkBatch.end();
+		
+		// Fixed time steps for predictable physics.
+		accumulator += delta;
+		while (accumulator >= STEP) {
+			world.update(delta);
+			accumulator -= delta;
+		}
 	}
 	
 	@Override
 	public void show() {
 		Assets.noodling.setLooping(true);
-		//Assets.noodling.play();
+		Assets.noodling.play();
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
-		startTouch = Gdx.input.isTouched();
+	}
+	
+	@Override
+	public void hide() {
+		Assets.noodling.stop();
+		Gdx.input.setInputProcessor(null);
 	}
 }

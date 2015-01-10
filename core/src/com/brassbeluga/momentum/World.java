@@ -2,7 +2,6 @@ package com.brassbeluga.momentum;
 
 import java.util.Iterator;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -26,6 +25,8 @@ public class World {
 	// Keeps track of which level the player is currently on.
 	public int level;
 	
+	// Which pointer (finger) is currently touching the screen 
+	public int currPointer;
 	
 	World(Momentum game) {
 		this.game = game;
@@ -45,18 +46,18 @@ public class World {
 	public void update(float delta) {
 		player.update(gravity);
 		if (player.x >= WORLD_WIDTH) {
+			// The player has moved to the next screen.
 			player.x = 0;
-			player.y = WORLD_HEIGHT - 10;
+			player.y = PLAYER_START_Y;
 			player.peg = null;
 			level++;
 			generatePegs(5);
 		} else if (player.y <= 0) {
-			// Player has died so show the death screen.
+			// Player has died.
 			game.onDeath(level);
 			player.reset(10, WORLD_HEIGHT - 10);
 			level = 0;
 			generatePegs(5);
-			gameScreen.startTouch = true;
 		}
 	}
 	
@@ -72,22 +73,17 @@ public class World {
 		}
 	}
 	
-	private void generatePegs(int amount) {
-		pegs.clear();
-		float lastX = 0;
-		for (int i = 0; i < amount; i++) {
-			float xInc = WORLD_WIDTH / 4 - WORLD_WIDTH / 8 + MathUtils.random(0, WORLD_WIDTH / 4);
-			float x = lastX + xInc;
-			x = x % WORLD_WIDTH;
-			lastX = x;
-			float y = MathUtils.random(WORLD_HEIGHT / 4, WORLD_HEIGHT);
-			Peg peg = new Peg(x, y, Assets.peg, this);
-			pegs.add(peg);
-		}
-	}
-	
+	/**
+	 * Should be called from the controller whenever a touch down event occurs.
+	 * 
+	 * @param x The world x coordinate 
+	 * @param y The world y coordinate
+	 * @param pointer The pointer (finger)
+	 * @param button The button (always 0 for touch devices)
+	 */
 	public void onTouchDown(float x, float y, int pointer, int button) {
-		if (!gameScreen.startTouch && player.peg == null) {
+		if (player.peg == null) {
+			currPointer = pointer;
 			Iterator<Peg> iter = pegs.iterator();
 			Peg peg = iter.next();
 			Peg closePeg = peg;
@@ -109,9 +105,38 @@ public class World {
 		
 	}
 
+	/**
+	 * Should be called from the controller whenever a touch up event occurs.
+	 * 
+	 * @param x The world x coordinate 
+	 * @param y The world y coordinate
+	 * @param pointer The pointer (finger)
+	 * @param button The button (always 0 for touch devices)
+	 */
 	public void onTouchUp(float x, float y, int pointer, int button) {
-		gameScreen.startTouch = false;
-		player.clearPeg();
+		// Ensure that the same pointer that caused the player to be attached
+		// to the peg is the one that was released.
+		if (pointer == currPointer) {
+			player.clearPeg();
+		}
 	}
-	
+
+	/**
+	 * Semi-randomly generates the pegs for the level.
+	 * 
+	 * @param amount The number of pegs to generate
+	 */
+	private void generatePegs(int amount) {
+		pegs.clear();
+		float lastX = 0;
+		for (int i = 0; i < amount; i++) {
+			float xInc = WORLD_WIDTH / 4 - WORLD_WIDTH / 8 + MathUtils.random(0, WORLD_WIDTH / 4);
+			float x = lastX + xInc;
+			x = x % WORLD_WIDTH;
+			lastX = x;
+			float y = MathUtils.random(WORLD_HEIGHT / 4, WORLD_HEIGHT);
+			Peg peg = new Peg(x, y, Assets.peg, this);
+			pegs.add(peg);
+		}
+	}
 }

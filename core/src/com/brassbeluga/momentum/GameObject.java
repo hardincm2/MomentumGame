@@ -15,7 +15,6 @@ public class GameObject {
 	public GameSprite sprite;
 	
 	public GameObject(float x, float y, TextureRegion texture) {
-		
 		this.x = x;
 		this.y = y;
 		float width = (texture.getRegionWidth() * 1.0f / Gdx.graphics.getWidth()) * World.WORLD_WIDTH;
