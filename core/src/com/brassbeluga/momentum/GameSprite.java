@@ -1,6 +1,7 @@
 package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
@@ -59,8 +60,8 @@ public class GameSprite {
 	public void draw(SpriteBatch batch, Matrix3 parentTransform) {
 		// Multiply the local transform by the parent transform
 		Matrix3 trans = getLocalTransform().mul(parentTransform);
-		trans.getTranslation(vecPos);
-		trans.getScale(vecScale);
+		vecPos = trans.getTranslation(vecPos);
+		vecScale = trans.getScale(vecScale);
 		batch.draw(texture, vecPos.x, vecPos.y, offset.x, offset.y, 
 				vecScale.x * bounds.x, vecScale.y * bounds.y, 1.0f, 1.0f, trans.getRotation());
 		// Draw the children with updated transform
@@ -79,7 +80,7 @@ public class GameSprite {
 		localRotation.setToRotation(angle);
 		localScale.setToScaling(scale.x, scale.y);
 		localPosition.setToTranslation(position.x, position.y);
-		localTransform = localOrigin.mul(localScale).mul(localRotation).mul(localPosition);
+		localTransform = localOrigin.mul(localPosition).mul(localRotation);
 		return localTransform;
 	}
 	

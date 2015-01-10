@@ -47,9 +47,9 @@ public class Player extends GameObject {
 	
 	@Override
 	public void update(Vector2 gravity) {
-		//velocity.add(gravity);
-		//x += velocity.x;
-		//y += velocity.y;
+		velocity.add(gravity);
+		x += velocity.x;
+		y += velocity.y;
 		if (peg != null) {
 			Vector2 pegPos = new Vector2(peg.x, peg.y);
 			Vector2 newPos = new Vector2(x, y);
@@ -77,7 +77,7 @@ public class Player extends GameObject {
 			else
 				angle += dir * TARGET_ANGLE_VEL;
 		}else{
-			angle += 1;
+			angle += angVel;
 			/*
 			pos.set(x,y);
 			angle = (float) (MathUtils.radiansToDegrees * Math.atan2(pos.y - lastPos.y, pos.x - lastPos.x)) - 90;
