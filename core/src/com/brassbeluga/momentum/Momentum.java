@@ -1,27 +1,31 @@
 package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Momentum extends Game {
 	
-	public GameScreen game;
-	public DeathScreen death;
+	public GameScreen gameScreen;
+	public DeathScreen deathScreen;
 	public SpriteBatch batch;
-	
 	public OrthographicCamera camera;
 	
 	@Override
 	public void create () {
+		// Load in all sounds, textures, etc...
 		Assets.load();
+		
+		// Set up the camera.
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, World.WORLD_WIDTH, World.WORLD_HEIGHT);
+		
 		batch = new SpriteBatch();
-		game = new GameScreen(this, camera, batch);
-		death = new DeathScreen(this, camera, batch);
-		setScreen(new StartScreen(this, camera, batch));
+		
+		// Instantiate the different screen views that will be shown to the user.
+		gameScreen = new GameScreen(this);
+		deathScreen = new DeathScreen(this);
+		setScreen(new StartScreen(this));
 	}
 
 	@Override
@@ -29,8 +33,15 @@ public class Momentum extends Game {
 		super.render();
 	}
 	
-	public void onDeath() {
-		if (!this.getScreen().equals(death))
-			setScreen(death);
+	/**
+	 * Should be called whenever the player has died in the world.
+	 * 
+	 * @param level The level that the player made it to.
+ 	 */
+	public void onDeath(int level) {
+		if (!this.getScreen().equals(deathScreen)) {
+			deathScreen.setLevels(level);
+			setScreen(deathScreen);
+		}
 	}
 }

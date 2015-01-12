@@ -1,7 +1,6 @@
 package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,7 +15,6 @@ public class GameObject {
 	public GameSprite sprite;
 	
 	public GameObject(float x, float y, TextureRegion texture) {
-		
 		this.x = x;
 		this.y = y;
 		float width = (texture.getRegionWidth() * 1.0f / Gdx.graphics.getWidth()) * World.WORLD_WIDTH;
