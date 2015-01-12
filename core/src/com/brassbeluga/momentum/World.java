@@ -17,16 +17,20 @@ public class World {
 	public Player player;
 	public Array<Peg> pegs;
 	
+	private GameSprite pega;
+	
 	public int level;
 	
 	World(GameScreen game) {
 		this.game = game;
 		gravity = new Vector2(0.0f, -0.01f);
-		player = new Player(0f, WORLD_HEIGHT - 10, Assets.catBody, this);
+		player = new Player(20f, WORLD_HEIGHT - 10, Assets.catBody, this);
 		player.x += player.bounds.width;
 		pegs = new Array<Peg>();
 		level = 0;
 		generatePegs(5);
+		pega = new GameSprite(Assets.peg, player.x, player.y);
+		pega.centerOrigin();
 	}
 	
 	public void update(float delta) {
@@ -54,6 +58,7 @@ public class World {
 	 */
 	public void render(SpriteBatch batch) {
 		player.render(batch);
+		pega.draw(batch);
 		for (Peg peg : pegs) {
 			peg.render(batch);
 		}

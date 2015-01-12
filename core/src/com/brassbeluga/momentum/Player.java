@@ -13,7 +13,7 @@ public class Player extends GameObject {
 	public static float WIDTH = 10;
 	public static float TARGET_ANGLE_VEL = 10;
 	public static float MAX_ANG_VEL = 5;
-	public Vector2 tailOff = new Vector2(42f, 40f);
+	public Vector2 tailOff = new Vector2(-42, -40);
 
 	public Peg peg; // null if spider is currently not attached
 	public float pegAngle;
@@ -41,15 +41,16 @@ public class Player extends GameObject {
 		pos = new Vector2(x, y);
 		
 		GameSprite tail = new GameSprite(Assets.catTail, tailOff.x, tailOff.y);
-		tail.setOffset(60, 12);
+		Gdx.app.log("", "X: " + tail.bounds.x + " Y: " + tail.bounds.y);
+		tail.setOffset(120, 12);
 		sprite.children.add(tail);
 	}
 	
 	@Override
 	public void update(Vector2 gravity) {
-		velocity.add(gravity);
-		x += velocity.x;
-		y += velocity.y;
+		//velocity.add(gravity);
+		//x += velocity.x;
+		//y += velocity.y;
 		if (peg != null) {
 			Vector2 pegPos = new Vector2(peg.x, peg.y);
 			Vector2 newPos = new Vector2(x, y);
@@ -77,7 +78,7 @@ public class Player extends GameObject {
 			else
 				angle += dir * TARGET_ANGLE_VEL;
 		}else{
-			angle += angVel;
+			angle += 1;
 			/*
 			pos.set(x,y);
 			angle = (float) (MathUtils.radiansToDegrees * Math.atan2(pos.y - lastPos.y, pos.x - lastPos.x)) - 90;

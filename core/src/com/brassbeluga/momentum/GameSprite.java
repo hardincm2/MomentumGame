@@ -19,14 +19,6 @@ public class GameSprite {
 	
 	public Matrix3 localTransform;
 	
-	private Matrix3 localOrigin;
-	private Matrix3 localRotation;
-	private Matrix3 localScale;
-	private Matrix3 localPosition;
-	
-	private Vector2 vecPos;
-	private Vector2 vecScale;
-	
 	public Array<GameSprite> children;
 
 	public GameSprite(TextureRegion texture, float x, float y) {
@@ -43,12 +35,6 @@ public class GameSprite {
 		this.angle = angle;
 		this.bounds = new Vector2(width, height);
 		this.localTransform = new Matrix3();
-		this.localOrigin = new Matrix3();
-		this.localPosition = new Matrix3();
-		this.localRotation = new Matrix3();
-		this.localScale = new Matrix3();
-		this.vecPos = new Vector2();
-		this.vecScale = new Vector2();
 		children = new Array<GameSprite>();
 	}
 
@@ -58,15 +44,18 @@ public class GameSprite {
 	}
 	
 	public void draw(SpriteBatch batch, Matrix3 parentTransform) {
-		// Multiply the local transform by the parent transform
-		Matrix3 trans = getLocalTransform().mul(parentTransform);
-		vecPos = trans.getTranslation(vecPos);
-		vecScale = trans.getScale(vecScale);
-		batch.draw(texture, vecPos.x, vecPos.y, offset.x, offset.y, 
-				vecScale.x * bounds.x, vecScale.y * bounds.y, 1.0f, 1.0f, trans.getRotation());
 		// Draw the children with updated transform
+		localTransform = localTransform.setToScaling(scale).translate(-offset.x, -offset.y)
+				.translate(position.x, position.y).rotate(angle);
+		Vector2 parentPos = parentTransform.getTranslation(new Vector2());
+		localTransform.translate(parentPos).rotate(parentTransform.getRotation());
+		Vector2 pos = localTransform.getTranslation(new Vector2());
+		batch.draw(texture, pos.x, pos.y, offset.x, offset.y, bounds.x, bounds.y, 1.0f, 1.0f, localTransform.getRotation());
+		localTransform.translate(offset.x, offset.y);
+		
 		for (GameSprite sprite : children)
-			sprite.draw(batch, trans);
+			sprite.draw(batch, localTransform);
+		
 	}
 	
 	protected Vector2 getAdjustedSpriteBounds(TextureRegion texture) {
@@ -76,11 +65,6 @@ public class GameSprite {
 	}
 	
 	public Matrix3 getLocalTransform() {
-		localOrigin.setToTranslation(-offset.x, -offset.y);
-		localRotation.setToRotation(angle);
-		localScale.setToScaling(scale.x, scale.y);
-		localPosition.setToTranslation(position.x, position.y);
-		localTransform = localOrigin.mul(localPosition).mul(localRotation);
 		return localTransform;
 	}
 	
