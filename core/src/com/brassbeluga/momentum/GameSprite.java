@@ -18,12 +18,14 @@ public class GameSprite {
 	public Vector2 bounds;
 	
 	public Matrix3 localTransform;
+	public Matrix3 identity;
 	
 	public Array<GameSprite> children;
 
 	public GameSprite(TextureRegion texture, float x, float y) {
 		this(texture, x, y, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0, 0);
 		this.bounds = getAdjustedSpriteBounds(texture);
+		this.identity = new Matrix3().idt();
 	}
 	
 	public GameSprite(TextureRegion texture, float x, float y, float originX, float originY,
@@ -40,18 +42,19 @@ public class GameSprite {
 
 	public void draw(SpriteBatch batch) {
 		// ***** unnecessary matrix creation
-		draw(batch, new Matrix3().idt());
+		draw(batch, identity);
 	}
 	
 	public void draw(SpriteBatch batch, Matrix3 parentTransform) {
 		// Draw the children with updated transform
-		localTransform = localTransform.setToScaling(scale).translate(-offset.x, -offset.y)
-				.translate(position.x, position.y).rotate(angle);
-		Vector2 parentPos = parentTransform.getTranslation(new Vector2());
-		localTransform.translate(parentPos).rotate(parentTransform.getRotation());
+		float parAngle = parentTransform.getRotation();
+		Vector2 parTrans = parentTransform.getTranslation(new Vector2());
+		localTransform = localTransform.setToTranslation(parTrans).rotate(parAngle)
+				.translate(position).rotate(angle).translate(-offset.x, -offset.y);
 		Vector2 pos = localTransform.getTranslation(new Vector2());
-		batch.draw(texture, pos.x, pos.y, offset.x, offset.y, bounds.x, bounds.y, 1.0f, 1.0f, localTransform.getRotation());
-		localTransform.translate(offset.x, offset.y);
+		batch.draw(texture, pos.x, pos.y, 0, 0, bounds.x, bounds.y, 1.0f, 1.0f, localTransform.getRotation());
+		
+		localTransform = localTransform.translate(offset);
 		
 		for (GameSprite sprite : children)
 			sprite.draw(batch, localTransform);

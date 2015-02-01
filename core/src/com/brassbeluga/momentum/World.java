@@ -102,7 +102,6 @@ public class World {
 			}
 			player.setPeg(closePeg);
 		}
-		
 	}
 
 	/**
