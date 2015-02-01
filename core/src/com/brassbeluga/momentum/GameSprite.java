@@ -1,12 +1,12 @@
 package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class GameSprite {
 	
@@ -18,6 +18,13 @@ public class GameSprite {
 	public Vector2 bounds;
 	public boolean visible;
 	public boolean hasAbsoluteAngle;
+	
+	public ObjectMap<String, Animation> animations;
+	public boolean looping;
+	public int animIndex;
+	public float animTime;
+	public float animSpeed;
+	public Animation anim;
 	
 	public Matrix3 localTransform;
 	public Matrix3 identity;
@@ -39,6 +46,10 @@ public class GameSprite {
 		this.angle = angle;
 		this.bounds = new Vector2(width, height);
 		this.localTransform = new Matrix3();
+		looping = false;
+		animIndex = 0;
+		animTime = 0;
+		animSpeed = 1.0f;
 		children = new Array<GameSprite>();
 		visible = true;
 		hasAbsoluteAngle = false;
@@ -49,7 +60,38 @@ public class GameSprite {
 		draw(batch, identity);
 	}
 	
+	public void addAnimation(String name, Object ... info) {
+		if (animations == null)
+			animations = new ObjectMap<String, Animation>();
+		animations.put(name, new Animation(info));
+	}
+	
+	public void playAnimation(String name) {
+		playAnimation(name, false);
+	}
+	
+	public void playAnimation(String name, boolean looping) {
+		anim = animations.get(name);
+		animIndex = 0;
+		animTime = anim.getLength(animIndex);
+		texture = anim.getTexture(animIndex);
+	}
+	
 	public void draw(SpriteBatch batch, Matrix3 parentTransform) {
+		if (anim != null) {
+			animTime -= animSpeed;
+			if (animTime <= 0) {
+				if (animIndex < anim.getFrames() - 1) {
+					animIndex++;
+					animTime = anim.getLength(animIndex);
+					texture = anim.getTexture(animIndex);
+				}else if (looping) {
+					animIndex = 0;
+					animTime = anim.getLength(animIndex);
+					texture = anim.getTexture(animIndex);
+				}
+			}
+		}
 		if (visible) {
 			// Draw the children with updated transform
 			float spriteAngle = angle;

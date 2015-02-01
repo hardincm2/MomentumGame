@@ -58,6 +58,9 @@ public class Player extends GameObject {
 		
 		face = new GameSprite(Assets.catFaceNormal, 0, 0);
 		face.centerOrigin();
+		face.addAnimation("blink", Assets.catFaceBlink, 5.0f, Assets.catFaceNormal, 5.0f);
+		face.addAnimation("eyeclose", Assets.catFaceBlink);
+		face.addAnimation("normal", Assets.catFaceNormal);
 		
 		tail = new GameSprite(Assets.catTail, tailOff.x, tailOff.y);
 		tail.setOffset(60, 10);
@@ -132,6 +135,8 @@ public class Player extends GameObject {
 					+ (baseHeight / BREATH_FACTOR) * Math.sin(waveDelta));
 			face.bounds.y = sprite.bounds.y;
 		}
+		if (Math.random() < 0.01F)
+			face.playAnimation("blink");
 	}
 	
 	private float angleDiff(float a1, float a2) {
@@ -158,6 +163,7 @@ public class Player extends GameObject {
 	}
 	
 	public void setPeg(Peg peg) {
+		face.playAnimation("eyeclose");
 		if (started) {
 			this.peg = peg;
 			Vector2 pos = new Vector2(x, y);
@@ -177,11 +183,8 @@ public class Player extends GameObject {
 		}
 	}
 	
-	public void setFace(TextureRegion texture) {
-		face.texture = texture;
-	}
-	
 	public void clearPeg() {
+		face.playAnimation("normal");
 		peg = null;
 		targetAngle = 0;
 		setTailNormal();

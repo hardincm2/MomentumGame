@@ -23,8 +23,6 @@ public class DesktopLauncher {
         File androidAssets = new File("");
         String assetPath = androidAssets.getAbsolutePath().replace("desktop", "android\\assets");
 		TexturePacker.process(settings, assetPath + "/prepack", assetPath, "momentum");
-
-		
 		new LwjglApplication(new Momentum(), config);
 	}
 }

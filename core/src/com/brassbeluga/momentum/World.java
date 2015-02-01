@@ -106,7 +106,6 @@ public class World {
 			}
 			player.setPeg(closePeg);
 		}
-		player.setFace(Assets.catFaceBlink);
 	}
 
 	/**
@@ -118,7 +117,6 @@ public class World {
 	 * @param button The button (always 0 for touch devices)
 	 */
 	public void onTouchUp(float x, float y, int pointer, int button) {
-		player.setFace(Assets.catFaceNormal);
 		// Ensure that the same pointer that caused the player to be attached
 		// to the peg is the one that was released.
 		if (pointer == currPointer) {
