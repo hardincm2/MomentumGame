@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -21,6 +22,8 @@ public class World {
 	public Vector2 gravity;
 	public Player player;
 	public Array<Peg> pegs;
+	
+	private Rectangle resetPegBounds;
 
 	// Keeps track of which level the player is currently on.
 	public int level;
@@ -35,7 +38,8 @@ public class World {
 		player.x += player.bounds.width;
 		pegs = new Array<Peg>();
 		level = 0;
-		generatePegs(5);
+		resetPegBounds = new Rectangle(WORLD_WIDTH / 4.0f, 0, WORLD_WIDTH * 3.0f / 4.0f, WORLD_HEIGHT);
+		generatePegs(5, 4.0f, resetPegBounds);
 	}
 	
 	/**
@@ -57,7 +61,7 @@ public class World {
 			game.onDeath(level);
 			player.reset(10, WORLD_HEIGHT - 10);
 			level = 0;
-			generatePegs(5);
+			generatePegs(5, 4.0f, resetPegBounds);
 		}
 	}
 	
@@ -126,14 +130,19 @@ public class World {
 	 * @param amount The number of pegs to generate
 	 */
 	private void generatePegs(int amount) {
+		generatePegs(amount, 4.0f, new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT));
+	}
+	
+	private void generatePegs(int amount, float incFactor, Rectangle bounds) {
 		pegs.clear();
 		float lastX = 0;
 		for (int i = 0; i < amount; i++) {
-			float xInc = WORLD_WIDTH / 4 - WORLD_WIDTH / 8 + MathUtils.random(0, WORLD_WIDTH / 4);
+			float xInc = bounds.width / incFactor - bounds.width / (2.0f * incFactor) + MathUtils.random(0, bounds.width / 4);
 			float x = lastX + xInc;
-			x = x % WORLD_WIDTH;
+			x = x % bounds.width;
+			x += bounds.x;
 			lastX = x;
-			float y = MathUtils.random(WORLD_HEIGHT / 4, WORLD_HEIGHT);
+			float y = bounds.y + MathUtils.random(bounds.height / incFactor, bounds.height);
 			Peg peg = new Peg(x, y, Assets.peg, this);
 			pegs.add(peg);
 		}

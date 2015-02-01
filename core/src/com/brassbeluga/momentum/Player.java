@@ -32,8 +32,13 @@ public class Player extends GameObject {
 	private GameSprite tailLong;
 	private GameSprite tailPeg;
 	private static float TAIL_SPEED = 1;
-	private static float TAIL_ANGLE_MAX = 40;
+	private static float TAIL_ANGLE_MAX = 60;
 	private float tailTarget = 0;
+	private float waveDelta = 0;
+	private float baseHeight;
+	private static float BREATH_FACTOR = 15f;
+	
+	public boolean started;
 	
 	public Player(float x, float y, TextureRegion texture, World world) {
 		super(x, y,texture);
@@ -41,6 +46,9 @@ public class Player extends GameObject {
 		targetAngle = angle;
 		lastAngle = angle;
 		pegAngle = angle;
+		started = false;
+		
+		baseHeight = sprite.bounds.x;
 		
 		tailOff.set((tailOff.x / texture.getRegionWidth()) * bounds.width, (tailOff.y / texture.getRegionHeight()) * bounds.height);
 		//tail = new TailObject(this, tailX, tailY, tailOff.x, tailOff.y, Assets.catTail);
@@ -65,54 +73,61 @@ public class Player extends GameObject {
 	
 	@Override
 	public void update(Vector2 gravity) {
-		velocity.add(gravity);
-		x += velocity.x;
-		y += velocity.y;
-		
-		if (peg != null) {
-			Vector2 pegPos = new Vector2(peg.x, peg.y);
-			Vector2 newPos = new Vector2(x, y);
-			pegPos.set(peg.x, peg.y);
-			Vector2 rope = newPos.sub(pegPos).setLength(swingRadius);
-			pegPos.add(rope);
-			x = pegPos.x;
-			y = pegPos.y;
+		if (started) {
+			velocity.add(gravity);
+			x += velocity.x;
+			y += velocity.y;
 			
-			pos.set(x, y);
-			pegPos.set(peg.x, peg.y);
-			rope = pegPos.sub(pos);
+			if (peg != null) {
+				Vector2 pegPos = new Vector2(peg.x, peg.y);
+				Vector2 newPos = new Vector2(x, y);
+				pegPos.set(peg.x, peg.y);
+				Vector2 rope = newPos.sub(pegPos).setLength(swingRadius);
+				pegPos.add(rope);
+				x = pegPos.x;
+				y = pegPos.y;
+				
+				pos.set(x, y);
+				pegPos.set(peg.x, peg.y);
+				rope = pegPos.sub(pos);
+				
+				rope.setLength(velocity.len());
+				pegAngle = rope.angle();
+				rope.rotate90(-1);
+				targetAngle = rope.angle() - 90;
+				float magnitude = rope.len() * rope.len();
+				velocity = rope.scl((rope.dot(velocity) / magnitude));
+				float diff = angleDiff(targetAngle, angle);
+				float dir = Math.signum(diff);
+				lastAngle = angle;
+				if (Math.abs(diff) <= TARGET_ANGLE_VEL)
+					angle = targetAngle;
+				else
+					angle += dir * TARGET_ANGLE_VEL;
+				angVel = MathUtils.clamp(angle - lastAngle, -MAX_ANG_VEL, MAX_ANG_VEL);
+			}else{
+				pos.set(x,y);
+				angle += angVel;
+				angVel *= ANG_DECAY;
+				/*
+				angle = (float) (MathUtils.radiansToDegrees * Math.atan2(pos.y - lastPos.y, pos.x - lastPos.x)) - 90;
+				lastPos.set(x, y);
+				*/
+			}
+			tail.angle = MathUtils.clamp(tail.angle - angVel, -TAIL_ANGLE_MAX / 6f, 60);
 			
-			rope.setLength(velocity.len());
-			pegAngle = rope.angle();
-			rope.rotate90(-1);
-			targetAngle = rope.angle() - 90;
-			float magnitude = rope.len() * rope.len();
-			velocity = rope.scl((rope.dot(velocity) / magnitude));
-			float diff = angleDiff(targetAngle, angle);
+			float diff = angleDiff(0, tail.angle);
 			float dir = Math.signum(diff);
-			lastAngle = angle;
-			if (Math.abs(diff) <= TARGET_ANGLE_VEL)
-				angle = targetAngle;
+			if (Math.abs(diff) <= TAIL_SPEED)
+				tail.angle = tailTarget;
 			else
-				angle += dir * TARGET_ANGLE_VEL;
-			angVel = MathUtils.clamp(angle - lastAngle, -MAX_ANG_VEL, MAX_ANG_VEL);
+				tail.angle += dir * TAIL_SPEED;
 		}else{
-			pos.set(x,y);
-			angle += angVel;
-			angVel *= ANG_DECAY;
-			/*
-			angle = (float) (MathUtils.radiansToDegrees * Math.atan2(pos.y - lastPos.y, pos.x - lastPos.x)) - 90;
-			lastPos.set(x, y);
-			*/
+			waveDelta += Math.PI / 100;
+			tail.angle = (float) (Math.sin(waveDelta) * 20f);
+			sprite.bounds.y = (float) (baseHeight + baseHeight / BREATH_FACTOR
+					+ (baseHeight / BREATH_FACTOR) * Math.sin(waveDelta));
 		}
-		tail.angle = MathUtils.clamp(tail.angle - angVel, 10, 60);
-		
-		float diff = angleDiff(0, tail.angle);
-		float dir = Math.signum(diff);
-		if (Math.abs(diff) <= TAIL_SPEED)
-			tail.angle = tailTarget;
-		else
-			tail.angle += dir * TAIL_SPEED;
 	}
 	
 	private float angleDiff(float a1, float a2) {
@@ -140,17 +155,24 @@ public class Player extends GameObject {
 	}
 	
 	public void setPeg(Peg peg) {
-		this.peg = peg;
-		Vector2 pos = new Vector2(x, y);
-		Vector2 pegPos = new Vector2(peg.x, peg.y);
-		swingRadius = pos.dst(pegPos);
-		Vector2 rope = pegPos.sub(pos);
-		rope.rotate90(-1);
-		float magnitude = rope.len() * rope.len();
-		velocity = rope.scl((rope.dot(velocity) / magnitude));
-		tail.visible = false;
-		tailLong.visible = true;
-		tailPeg.visible = true;
+		if (started) {
+			this.peg = peg;
+			Vector2 pos = new Vector2(x, y);
+			Vector2 pegPos = new Vector2(peg.x, peg.y);
+			swingRadius = pos.dst(pegPos);
+			Vector2 rope = pegPos.sub(pos);
+			rope.rotate90(-1);
+			float magnitude = rope.len() * rope.len();
+			velocity = rope.scl((rope.dot(velocity) / magnitude));
+			tail.visible = false;
+			tailLong.visible = true;
+			tailPeg.visible = true;
+		}else{
+			started = true;
+			angVel = -0.5f;
+			velocity.set(0.1f, 0.4f);
+			sprite.bounds.y = baseHeight;
+		}
 	}
 	
 	public void clearPeg() {
@@ -170,6 +192,7 @@ public class Player extends GameObject {
 		this.angVel = 0;
 		this.angle = 0;
 		this.lastAngle = 0;
+		this.started = false;
 	}
 
 }
