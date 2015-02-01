@@ -16,6 +16,8 @@ public class GameSprite {
 	public Vector2 scale;
 	public float angle;
 	public Vector2 bounds;
+	public boolean visible;
+	public boolean hasAbsoluteAngle;
 	
 	public Matrix3 localTransform;
 	public Matrix3 identity;
@@ -38,6 +40,8 @@ public class GameSprite {
 		this.bounds = new Vector2(width, height);
 		this.localTransform = new Matrix3();
 		children = new Array<GameSprite>();
+		visible = true;
+		hasAbsoluteAngle = false;
 	}
 
 	public void draw(SpriteBatch batch) {
@@ -46,18 +50,23 @@ public class GameSprite {
 	}
 	
 	public void draw(SpriteBatch batch, Matrix3 parentTransform) {
-		// Draw the children with updated transform
-		float parAngle = parentTransform.getRotation();
-		Vector2 parTrans = parentTransform.getTranslation(new Vector2());
-		localTransform = localTransform.setToTranslation(parTrans).rotate(parAngle)
-				.translate(position).rotate(angle).translate(-offset.x, -offset.y);
-		Vector2 pos = localTransform.getTranslation(new Vector2());
-		batch.draw(texture, pos.x, pos.y, 0, 0, bounds.x, bounds.y, 1.0f, 1.0f, localTransform.getRotation());
-		
-		localTransform = localTransform.translate(offset);
-		
-		for (GameSprite sprite : children)
-			sprite.draw(batch, localTransform);
+		if (visible) {
+			// Draw the children with updated transform
+			float spriteAngle = angle;
+			float parAngle = parentTransform.getRotation();
+			if (hasAbsoluteAngle)
+				spriteAngle -= parAngle;
+			Vector2 parTrans = parentTransform.getTranslation(new Vector2());
+			localTransform = localTransform.setToTranslation(parTrans).rotate(parAngle)
+					.translate(position).rotate(spriteAngle).translate(-offset.x, -offset.y);
+			Vector2 pos = localTransform.getTranslation(new Vector2());
+			batch.draw(texture, pos.x, pos.y, 0, 0, bounds.x, bounds.y, 1.0f, 1.0f, localTransform.getRotation());
+			
+			localTransform = localTransform.translate(offset);
+			
+			for (GameSprite sprite : children)
+				sprite.draw(batch, localTransform);
+		}
 		
 	}
 	
@@ -76,7 +85,7 @@ public class GameSprite {
 	}
 	
 	public void setOffset(int x, int y) {
-		offset.set((x / texture.getRegionWidth()) * bounds.x, (y / texture.getRegionHeight()) * bounds.y);
+		offset.set((x * 1.0f / texture.getRegionWidth()) * bounds.x, (y * 1.0f / texture.getRegionHeight()) * bounds.y);
 	}
 
 }

@@ -13,6 +13,7 @@ public class Player extends GameObject {
 	public static float WIDTH = 10;
 	public static float TARGET_ANGLE_VEL = 10;
 	public static float MAX_ANG_VEL = 5;
+	public static float ANG_DECAY = 0.995f;
 	public Vector2 tailOff = new Vector2(-38, -38);
 
 	public Peg peg; // null if currently not attached
@@ -28,7 +29,10 @@ public class Player extends GameObject {
 	public Vector2 pos;
 	
 	private GameSprite tail;
-	private static float TAIL_SPEED = 4;
+	private GameSprite tailLong;
+	private GameSprite tailPeg;
+	private static float TAIL_SPEED = 1;
+	private static float TAIL_ANGLE_MAX = 40;
 	private float tailTarget = 0;
 	
 	public Player(float x, float y, TextureRegion texture, World world) {
@@ -46,8 +50,17 @@ public class Player extends GameObject {
 		
 		tail = new GameSprite(Assets.catTail, tailOff.x, tailOff.y);
 		Gdx.app.log("", "X: " + tail.bounds.x + " Y: " + tail.bounds.y);
-		tail.setOffset(118, 10);
+		tail.setOffset(60, 10);
+		
+		tailLong = new GameSprite(Assets.catTailLong, tailOff.x + 0.2f, tailOff.y + 0.1f);
+		tailLong.setOffset(3, 12);
+		tailLong.visible = false;
+		
+		tailPeg = new GameSprite(Assets.catTailCurl, 0, 0);
+		tailPeg.visible = false;
+		tailPeg.setOffset(34, 31);
 		sprite.children.add(tail);
+		sprite.children.add(tailLong);
 	}
 	
 	@Override
@@ -86,13 +99,15 @@ public class Player extends GameObject {
 		}else{
 			pos.set(x,y);
 			angle += angVel;
+			angVel *= ANG_DECAY;
 			/*
 			angle = (float) (MathUtils.radiansToDegrees * Math.atan2(pos.y - lastPos.y, pos.x - lastPos.x)) - 90;
 			lastPos.set(x, y);
 			*/
 		}
-		tailTarget = 30 * angVel / MAX_ANG_VEL;
-		float diff = angleDiff(tailTarget, tail.angle);
+		tail.angle = MathUtils.clamp(tail.angle - angVel, 10, 60);
+		
+		float diff = angleDiff(0, tail.angle);
 		float dir = Math.signum(diff);
 		if (Math.abs(diff) <= TAIL_SPEED)
 			tail.angle = tailTarget;
@@ -106,9 +121,22 @@ public class Player extends GameObject {
 	
 	@Override
 	public void render(SpriteBatch batch) {
+		// Angling, scaling, and positioning the tail to the peg
+		if (peg != null) {
+			Vector2 tailPos = new Vector2(tailOff.x, tailOff.y).rotate(angle);
+			tailPos.set(tailPos.x + x, tailPos.y + y);
+			Vector2 pegTail = new Vector2(peg.x - tailPos.x, peg.y - tailPos.y);
+			tailLong.hasAbsoluteAngle = true;
+			tailLong.angle = pegTail.angle();
+			tailLong.bounds.x = pegTail.len();
+			tailPeg.position.set(peg.x, peg.y);
+			tailPeg.offset.set(3.1f, 2.0f);
+			tailPeg.angle = pegTail.angle() - 140;
+		}
 		sprite.position.set(x, y);
 		sprite.angle = angle;
 		sprite.draw(batch);
+		tailPeg.draw(batch);
 	}
 	
 	public void setPeg(Peg peg) {
@@ -120,11 +148,17 @@ public class Player extends GameObject {
 		rope.rotate90(-1);
 		float magnitude = rope.len() * rope.len();
 		velocity = rope.scl((rope.dot(velocity) / magnitude));
+		tail.visible = false;
+		tailLong.visible = true;
+		tailPeg.visible = true;
 	}
 	
 	public void clearPeg() {
 		peg = null;
 		targetAngle = 0;
+		tail.visible = true;
+		tailLong.visible = false;
+		tailPeg.visible = false;
 	}
 	
 	public void reset(float x, float y) {
