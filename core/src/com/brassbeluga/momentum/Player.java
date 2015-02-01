@@ -18,7 +18,7 @@ public class Player extends GameObject {
 
 	public Peg peg; // null if currently not attached
 	public float pegAngle;
-	public float angVel = 1;
+	public float angVel = 0;
 	public float swingRadius;
 	public float lastAngle;
 	public float targetAngle;
@@ -31,12 +31,13 @@ public class Player extends GameObject {
 	private GameSprite tail;
 	private GameSprite tailLong;
 	private GameSprite tailPeg;
+	private GameSprite face;
 	private static float TAIL_SPEED = 1;
 	private static float TAIL_ANGLE_MAX = 60;
 	private float tailTarget = 0;
 	private float waveDelta = 0;
 	private float baseHeight;
-	private static float BREATH_FACTOR = 15f;
+	private static float BREATH_FACTOR = 25f;
 	
 	public boolean started;
 	
@@ -48,16 +49,17 @@ public class Player extends GameObject {
 		pegAngle = angle;
 		started = false;
 		
-		baseHeight = sprite.bounds.x;
+		baseHeight = sprite.bounds.y;
 		
 		tailOff.set((tailOff.x / texture.getRegionWidth()) * bounds.width, (tailOff.y / texture.getRegionHeight()) * bounds.height);
-		//tail = new TailObject(this, tailX, tailY, tailOff.x, tailOff.y, Assets.catTail);
-		
+
 		lastPos = new Vector2(x, y);
 		pos = new Vector2(x, y);
 		
+		face = new GameSprite(Assets.catFaceNormal, 0, 0);
+		face.centerOrigin();
+		
 		tail = new GameSprite(Assets.catTail, tailOff.x, tailOff.y);
-		Gdx.app.log("", "X: " + tail.bounds.x + " Y: " + tail.bounds.y);
 		tail.setOffset(60, 10);
 		
 		tailLong = new GameSprite(Assets.catTailLong, tailOff.x + 0.2f, tailOff.y + 0.1f);
@@ -66,7 +68,8 @@ public class Player extends GameObject {
 		
 		tailPeg = new GameSprite(Assets.catTailCurl, 0, 0);
 		tailPeg.visible = false;
-		tailPeg.setOffset(34, 31);
+		tailPeg.setOffset(33, 34);
+		sprite.children.add(face);
 		sprite.children.add(tail);
 		sprite.children.add(tailLong);
 	}
@@ -127,6 +130,7 @@ public class Player extends GameObject {
 			tail.angle = (float) (Math.sin(waveDelta) * 20f);
 			sprite.bounds.y = (float) (baseHeight + baseHeight / BREATH_FACTOR
 					+ (baseHeight / BREATH_FACTOR) * Math.sin(waveDelta));
+			face.bounds.y = sprite.bounds.y;
 		}
 	}
 	
@@ -145,7 +149,6 @@ public class Player extends GameObject {
 			tailLong.angle = pegTail.angle();
 			tailLong.bounds.x = pegTail.len();
 			tailPeg.position.set(peg.x, peg.y);
-			tailPeg.offset.set(3.1f, 2.0f);
 			tailPeg.angle = pegTail.angle() - 140;
 		}
 		sprite.position.set(x, y);
@@ -164,25 +167,38 @@ public class Player extends GameObject {
 			rope.rotate90(-1);
 			float magnitude = rope.len() * rope.len();
 			velocity = rope.scl((rope.dot(velocity) / magnitude));
-			tail.visible = false;
-			tailLong.visible = true;
-			tailPeg.visible = true;
+			setTailLong();
 		}else{
 			started = true;
 			angVel = -0.5f;
 			velocity.set(0.1f, 0.4f);
 			sprite.bounds.y = baseHeight;
+			face.bounds.y = sprite.bounds.y;
 		}
+	}
+	
+	public void setFace(TextureRegion texture) {
+		face.texture = texture;
 	}
 	
 	public void clearPeg() {
 		peg = null;
 		targetAngle = 0;
+		setTailNormal();
+	}
+	
+	public void setTailNormal() {
 		tail.visible = true;
 		tailLong.visible = false;
 		tailPeg.visible = false;
 	}
 	
+	public void setTailLong() {
+		tail.visible = false;
+		tailLong.visible = true;
+		tailPeg.visible = true;
+	}
+
 	public void reset(float x, float y) {
 		this.x = x;
 		this.y = y;
@@ -193,6 +209,7 @@ public class Player extends GameObject {
 		this.angle = 0;
 		this.lastAngle = 0;
 		this.started = false;
+		setTailNormal();
 	}
 
 }

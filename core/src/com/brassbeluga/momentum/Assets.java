@@ -14,6 +14,8 @@ public class Assets {
 	private static TextureAtlas atlas;
 	
 	public static TextureRegion catBody;
+	public static TextureRegion catFaceNormal;
+	public static TextureRegion catFaceBlink;
 	public static TextureRegion catTail;
 	public static TextureRegion catTailLong;
 	public static TextureRegion catTailCurl;
@@ -27,9 +29,11 @@ public class Assets {
 	
 	public static void load () {
 		// Load assets from file
-		atlas = new TextureAtlas("momentum.pack");
+		atlas = new TextureAtlas("momentum.atlas");
 		
 		catBody = atlas.findRegion("cat_body");
+		catFaceNormal = atlas.findRegion("cat_face_normal");
+		catFaceBlink = atlas.findRegion("cat_face_blink");
 		catTail = atlas.findRegion("cat_tail");
 		catTailLong = atlas.findRegion("cat_tail_long");
 		catTailCurl = atlas.findRegion("cat_tail_curl");

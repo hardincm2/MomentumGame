@@ -35,7 +35,6 @@ public class World {
 		this.game = game;
 		gravity = new Vector2(0.0f, -0.01f);
 		player = new Player(PLAYER_START_X, PLAYER_START_Y, Assets.catBody, this);
-		player.x += player.bounds.width;
 		pegs = new Array<Peg>();
 		level = 0;
 		resetPegBounds = new Rectangle(WORLD_WIDTH / 4.0f, 0, WORLD_WIDTH * 3.0f / 4.0f, WORLD_HEIGHT);
@@ -54,12 +53,13 @@ public class World {
 			player.x = 0;
 			player.y = PLAYER_START_Y;
 			player.peg = null;
+			player.setTailNormal();
 			level++;
 			generatePegs(5);
 		} else if (player.y <= 0) {
 			// Player has died.
 			game.onDeath(level);
-			player.reset(10, WORLD_HEIGHT - 10);
+			player.reset(PLAYER_START_X, PLAYER_START_Y);
 			level = 0;
 			generatePegs(5, 4.0f, resetPegBounds);
 		}
@@ -106,6 +106,7 @@ public class World {
 			}
 			player.setPeg(closePeg);
 		}
+		player.setFace(Assets.catFaceBlink);
 	}
 
 	/**
@@ -117,6 +118,7 @@ public class World {
 	 * @param button The button (always 0 for touch devices)
 	 */
 	public void onTouchUp(float x, float y, int pointer, int button) {
+		player.setFace(Assets.catFaceNormal);
 		// Ensure that the same pointer that caused the player to be attached
 		// to the peg is the one that was released.
 		if (pointer == currPointer) {
