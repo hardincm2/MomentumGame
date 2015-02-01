@@ -14,7 +14,7 @@ public class Player extends GameObject {
 	public static float TARGET_ANGLE_VEL = 10;
 	public static float MAX_ANG_VEL = 5;
 	public static float ANG_DECAY = 0.995f;
-	public Vector2 tailOff = new Vector2(-38, -38);
+	public Vector2 tailOff = new Vector2(-43, -43);
 
 	public Peg peg; // null if currently not attached
 	public float pegAngle;
@@ -64,17 +64,21 @@ public class Player extends GameObject {
 		
 		tail = new GameSprite(Assets.catTail, tailOff.x, tailOff.y);
 		tail.setOffset(60, 10);
+		tail.drawOrder = 1;
 		
 		tailLong = new GameSprite(Assets.catTailLong, tailOff.x + 0.2f, tailOff.y + 0.1f);
 		tailLong.setOffset(3, 12);
 		tailLong.visible = false;
+		tailLong.drawOrder = 1;
+
 		
 		tailPeg = new GameSprite(Assets.catTailCurl, 0, 0);
 		tailPeg.visible = false;
 		tailPeg.setOffset(33, 34);
-		sprite.children.add(face);
-		sprite.children.add(tail);
-		sprite.children.add(tailLong);
+		
+		sprite.addChild(face);
+		sprite.addChild(tail);
+		sprite.addChild(tailLong);
 	}
 	
 	@Override

@@ -16,13 +16,15 @@ public class DesktopLauncher {
 		
 		/** FOR DEVELOPMENT: Pack textures before each run
 		 *  add gdx-tools to root gradle-build to use TexturePacker
-		 */
+	
 		Settings settings = new Settings();
         settings.maxWidth = 512;
         settings.maxHeight = 512;
         File androidAssets = new File("");
         String assetPath = androidAssets.getAbsolutePath().replace("desktop", "android\\assets");
 		TexturePacker.process(settings, assetPath + "/prepack", assetPath, "momentum");
+		*/
 		new LwjglApplication(new Momentum(), config);
+		
 	}
 }

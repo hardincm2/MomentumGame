@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
-public class GameSprite {
+public class GameSprite implements Comparable {
 	
 	public TextureRegion texture;
 	public Vector2 position;
@@ -18,6 +18,7 @@ public class GameSprite {
 	public Vector2 bounds;
 	public boolean visible;
 	public boolean hasAbsoluteAngle;
+	public int drawOrder;
 	
 	public ObjectMap<String, Animation> animations;
 	public boolean looping;
@@ -25,11 +26,13 @@ public class GameSprite {
 	public float animTime;
 	public float animSpeed;
 	public Animation anim;
+	public boolean isRoot;
 	
 	public Matrix3 localTransform;
 	public Matrix3 identity;
 	
 	public Array<GameSprite> children;
+	public Array<GameSprite> drawList;
 
 	public GameSprite(TextureRegion texture, float x, float y) {
 		this(texture, x, y, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0, 0);
@@ -53,11 +56,8 @@ public class GameSprite {
 		children = new Array<GameSprite>();
 		visible = true;
 		hasAbsoluteAngle = false;
-	}
-
-	public void draw(SpriteBatch batch) {
-		// ***** unnecessary matrix creation
-		draw(batch, identity);
+		isRoot = true;
+		drawOrder = 0;
 	}
 	
 	public void addAnimation(String name, Object ... info) {
@@ -77,7 +77,14 @@ public class GameSprite {
 		texture = anim.getTexture(animIndex);
 	}
 	
+	public void draw(SpriteBatch batch) {
+		// ***** unnecessary matrix creation
+		draw(batch, identity);
+	}
+	
+	// Update animations and transformations
 	public void draw(SpriteBatch batch, Matrix3 parentTransform) {
+		// Update animation state
 		if (anim != null) {
 			animTime -= animSpeed;
 			if (animTime <= 0) {
@@ -92,24 +99,54 @@ public class GameSprite {
 				}
 			}
 		}
+		// Update transform matrix and update transforms in children
 		if (visible) {
-			// Draw the children with updated transform
-			float spriteAngle = angle;
-			float parAngle = parentTransform.getRotation();
-			if (hasAbsoluteAngle)
-				spriteAngle -= parAngle;
-			Vector2 parTrans = parentTransform.getTranslation(new Vector2());
-			localTransform = localTransform.setToTranslation(parTrans).rotate(parAngle)
-					.translate(position).rotate(spriteAngle).translate(-offset.x, -offset.y);
-			Vector2 pos = localTransform.getTranslation(new Vector2());
-			batch.draw(texture, pos.x, pos.y, 0, 0, bounds.x, bounds.y, 1.0f, 1.0f, localTransform.getRotation());
+			updateTransform(parentTransform);
+			if (isRoot) {
+				if (drawList != null) {
+					for (GameSprite next : drawList)
+						next.render(batch);
+				}else{
+					render(batch);
+				}
+			}
 			
-			localTransform = localTransform.translate(offset);
-			
-			for (GameSprite sprite : children)
-				sprite.draw(batch, localTransform);
 		}
 		
+	}
+	
+	public void render(SpriteBatch batch) {
+		if (visible) {
+			Vector2 pos = localTransform.getTranslation(new Vector2());
+			batch.draw(texture, pos.x, pos.y, 0, 0, bounds.x, bounds.y, 1.0f, 1.0f, localTransform.getRotation());
+		}
+	}
+	
+	private void updateDrawList(Array<GameSprite> rootList) {
+		if (drawList != null) {
+			rootList.addAll(drawList);
+			for (GameSprite sprite : children)
+				sprite.updateDrawList(rootList);
+		}
+	}
+	
+	public void updateTransform(Matrix3 parentTransform) {
+		float spriteAngle = angle;
+		float parAngle = parentTransform.getRotation();
+		// Reverse the parent rotation if using absolute angles
+		if (hasAbsoluteAngle)
+			spriteAngle -= parAngle;
+		Vector2 parTrans = parentTransform.getTranslation(new Vector2());
+		// Apply parent then local transformations
+		localTransform = localTransform.setToTranslation(parTrans).rotate(parAngle)
+				.translate(position).rotate(spriteAngle).translate(-offset.x, -offset.y);
+		localTransform = localTransform.translate(offset);
+		
+		// Update children
+		for (GameSprite sprite : children)
+			sprite.updateTransform(localTransform);
+		
+		localTransform = localTransform.translate(-offset.x, -offset.y);
 	}
 	
 	protected Vector2 getAdjustedSpriteBounds(TextureRegion texture) {
@@ -128,6 +165,27 @@ public class GameSprite {
 	
 	public void setOffset(int x, int y) {
 		offset.set((x * 1.0f / texture.getRegionWidth()) * bounds.x, (y * 1.0f / texture.getRegionHeight()) * bounds.y);
+	}
+	
+	public void addChild(GameSprite child) {
+		if (child.isRoot) {
+			if (drawList == null) {
+				drawList = new Array<GameSprite>(true, 50);
+				if (isRoot)
+					drawList.add(this);
+			}
+			children.insert(0, child);
+			child.isRoot = false;
+			drawList.add(child);
+			if (isRoot)
+				child.updateDrawList(drawList);
+			drawList.sort();
+		}
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		return ((GameSprite) o).drawOrder - drawOrder;
 	}
 
 }
