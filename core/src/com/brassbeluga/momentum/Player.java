@@ -139,8 +139,9 @@ public class Player extends GameObject {
 					+ (baseHeight / BREATH_FACTOR) * Math.sin(waveDelta));
 			face.bounds.y = sprite.bounds.y;
 		}
-		if (Math.random() < 0.01F)
+		if (Math.random() < 0.01) {
 			face.playAnimation("blink");
+		}
 	}
 	
 	private float angleDiff(float a1, float a2) {

@@ -75,6 +75,7 @@ public class GameSprite implements Comparable {
 		animIndex = 0;
 		animTime = anim.getLength(animIndex);
 		texture = anim.getTexture(animIndex);
+		this.looping = looping;
 	}
 	
 	public void draw(SpriteBatch batch) {
@@ -84,6 +85,23 @@ public class GameSprite implements Comparable {
 	
 	// Update animations and transformations
 	public void draw(SpriteBatch batch, Matrix3 parentTransform) {
+		// Update transform matrix and update transforms in children
+		if (visible) {
+			updateTransform(parentTransform);
+			// Draw the sprites with correct z-order from the root
+			if (isRoot) {
+				if (drawList != null) {
+					for (GameSprite next : drawList)
+						next.render(batch);
+				}else
+					render(batch);
+			}
+			
+		}
+		
+	}
+	
+	public void render(SpriteBatch batch) {
 		// Update animation state
 		if (anim != null) {
 			animTime -= animSpeed;
@@ -99,23 +117,6 @@ public class GameSprite implements Comparable {
 				}
 			}
 		}
-		// Update transform matrix and update transforms in children
-		if (visible) {
-			updateTransform(parentTransform);
-			if (isRoot) {
-				if (drawList != null) {
-					for (GameSprite next : drawList)
-						next.render(batch);
-				}else{
-					render(batch);
-				}
-			}
-			
-		}
-		
-	}
-	
-	public void render(SpriteBatch batch) {
 		if (visible) {
 			Vector2 pos = localTransform.getTranslation(new Vector2());
 			batch.draw(texture, pos.x, pos.y, 0, 0, bounds.x, bounds.y, 1.0f, 1.0f, localTransform.getRotation());
