@@ -6,63 +6,70 @@ filter: Nearest,Nearest
 repeat: none
 cat_body
   rotate: false
-  xy: 2, 197
+  xy: 2, 280
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_body_original
   rotate: false
-  xy: 127, 167
+  xy: 2, 115
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_face_blink
   rotate: false
-  xy: 2, 32
+  xy: 127, 280
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_face_normal
   rotate: false
-  xy: 127, 2
+  xy: 127, 115
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_tail
   rotate: false
-  xy: 149, 332
+  xy: 2, 16
   size: 65, 97
   orig: 65, 97
   offset: 0, 0
   index: -1
 cat_tail_curl
   rotate: false
-  xy: 48, 362
+  xy: 136, 46
   size: 99, 67
   orig: 99, 67
   offset: 0, 0
   index: -1
 cat_tail_long
   rotate: false
-  xy: 2, 455
+  xy: 2, 469
   size: 210, 22
   orig: 210, 22
   offset: 0, 0
   index: -1
 cat_tail_long0
   rotate: false
-  xy: 2, 431
+  xy: 2, 445
   size: 210, 22
   orig: 210, 22
   offset: 0, 0
   index: -1
+cat_tail_rings
+  rotate: false
+  xy: 69, 16
+  size: 65, 97
+  orig: 65, 97
+  offset: 0, 0
+  index: -1
 peg
   rotate: false
-  xy: 2, 387
+  xy: 136, 2
   size: 44, 42
   orig: 44, 42
   offset: 0, 0

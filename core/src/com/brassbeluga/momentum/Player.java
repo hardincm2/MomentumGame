@@ -66,14 +66,19 @@ public class Player extends GameObject {
 		tail.setOffset(60, 10);
 		tail.drawOrder = 1;
 		
+		GameSprite rings = new GameSprite(Assets.catTailRings, 0.0f, 0.0f);
+		rings.setOffset(60, 10);
+		rings.visible = false;
+		tail.addChild(rings);
+		
 		tailLong = new GameSprite(Assets.catTailLong, tailOff.x + 0.2f, tailOff.y + 0.1f);
-		tailLong.setOffset(3, 12);
-		tailLong.visible = false;
+		tailLong.setOffset(10, 12);
+		tailLong.setVisible(false);
 		tailLong.drawOrder = 1;
 
 		
 		tailPeg = new GameSprite(Assets.catTailCurl, 0, 0);
-		tailPeg.visible = false;
+		tailPeg.setVisible(false);
 		tailPeg.setOffset(33, 34);
 		
 		sprite.addChild(face);
@@ -196,15 +201,15 @@ public class Player extends GameObject {
 	}
 	
 	public void setTailNormal() {
-		tail.visible = true;
-		tailLong.visible = false;
-		tailPeg.visible = false;
+		tail.setVisible(true);
+		tailLong.setVisible(false);
+		tailPeg.setVisible(false);
 	}
 	
 	public void setTailLong() {
-		tail.visible = false;
-		tailLong.visible = true;
-		tailPeg.visible = true;
+		tail.setVisible(false);
+		tailLong.setVisible(true);
+		tailPeg.setVisible(true);
 	}
 
 	public void reset(float x, float y) {

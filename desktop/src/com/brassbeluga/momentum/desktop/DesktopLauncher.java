@@ -1,6 +1,7 @@
 package com.brassbeluga.momentum.desktop;
 
 import java.io.File;
+import java.util.Arrays;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -12,18 +13,20 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 800;
-		config.height = 600;
+		config.height = 480;
 		
 		/** FOR DEVELOPMENT: Pack textures before each run
 		 *  add gdx-tools to root gradle-build to use TexturePacker
-	
-		Settings settings = new Settings();
-        settings.maxWidth = 512;
-        settings.maxHeight = 512;
-        File androidAssets = new File("");
-        String assetPath = androidAssets.getAbsolutePath().replace("desktop", "android\\assets");
-		TexturePacker.process(settings, assetPath + "/prepack", assetPath, "momentum");
 		*/
+		if (arg[0].equals("-packTextures")) {
+			Settings settings = new Settings();
+	        settings.maxWidth = 512;
+	        settings.maxHeight = 512;
+	        File androidAssets = new File("");
+	        String assetPath = androidAssets.getAbsolutePath().replace("MomentumGame\\desktop", "Resources");
+			TexturePacker.process(settings, assetPath + "/prepack", assetPath, "momentum");
+		}
+		
 		new LwjglApplication(new Momentum(), config);
 		
 	}

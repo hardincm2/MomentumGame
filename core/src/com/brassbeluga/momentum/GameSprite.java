@@ -96,9 +96,14 @@ public class GameSprite implements Comparable {
 				}else
 					render(batch);
 			}
-			
 		}
 		
+	}
+	
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+		//for (GameSprite sprite : children)
+		//	sprite.visible = visible;
 	}
 	
 	public void render(SpriteBatch batch) {
@@ -125,9 +130,11 @@ public class GameSprite implements Comparable {
 	
 	private void updateDrawList(Array<GameSprite> rootList) {
 		if (drawList != null) {
-			rootList.addAll(drawList);
-			for (GameSprite sprite : children)
-				sprite.updateDrawList(rootList);
+			//if (visible) {
+				rootList.addAll(drawList);
+				for (GameSprite sprite : children)
+					sprite.updateDrawList(rootList);
+			//}
 		}
 	}
 	

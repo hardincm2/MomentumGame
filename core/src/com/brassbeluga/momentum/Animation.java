@@ -34,7 +34,6 @@ public class Animation {
 			textures[i / 2] = (TextureRegion) data[i];
 			times[i / 2] = (Float) data[i + 1];
 		}
-		System.out.println(textures[1] + "\n" + times[1]);
 	}
 	
 	public int getFrames() {

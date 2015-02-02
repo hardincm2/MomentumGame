@@ -58,7 +58,8 @@ public class World {
 			generatePegs(5);
 		} else if (player.y <= 0) {
 			// Player has died.
-			game.onDeath(level);
+			if (level > 5)
+				game.onDeath(level);
 			player.reset(PLAYER_START_X, PLAYER_START_Y);
 			level = 0;
 			generatePegs(5, 4.0f, resetPegBounds);
