@@ -78,6 +78,15 @@ public class GameSprite implements Comparable {
 		this.looping = looping;
 	}
 	
+	public float getAnimationLength() {
+		float length = 0;
+		if (anim != null) {
+			for (int i = 0; i < anim.getFrames(); i++)
+				length += anim.getLength(i);
+		}
+		return length;
+	}
+	
 	public void draw(SpriteBatch batch) {
 		// ***** unnecessary matrix creation
 		draw(batch, identity);

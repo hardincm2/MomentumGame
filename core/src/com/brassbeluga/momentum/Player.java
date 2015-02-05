@@ -14,9 +14,10 @@ public class Player extends GameObject {
 	public static float TARGET_ANGLE_VEL = 10;
 	public static float MAX_ANG_VEL = 5;
 	public static float ANG_DECAY = 0.995f;
+	public static float SPEED_THRESHOLD = 2.0f; 
 	public Vector2 tailOff = new Vector2(-43, -43);
 
-	public Peg peg; // null if currently not attached
+	public Bird bird; // null if currently not attached
 	public float pegAngle;
 	public float angVel = 0;
 	public float swingRadius;
@@ -93,17 +94,17 @@ public class Player extends GameObject {
 			x += velocity.x;
 			y += velocity.y;
 			
-			if (peg != null) {
-				Vector2 pegPos = new Vector2(peg.x, peg.y);
+			if (bird != null) {
+				Vector2 pegPos = new Vector2(bird.x, bird.y);
 				Vector2 newPos = new Vector2(x, y);
-				pegPos.set(peg.x, peg.y);
+				pegPos.set(bird.x, bird.y);
 				Vector2 rope = newPos.sub(pegPos).setLength(swingRadius);
 				pegPos.add(rope);
 				x = pegPos.x;
 				y = pegPos.y;
 				
 				pos.set(x, y);
-				pegPos.set(peg.x, peg.y);
+				pegPos.set(bird.x, bird.y);
 				rope = pegPos.sub(pos);
 				
 				rope.setLength(velocity.len());
@@ -122,12 +123,13 @@ public class Player extends GameObject {
 				angVel = MathUtils.clamp(angle - lastAngle, -MAX_ANG_VEL, MAX_ANG_VEL);
 			}else{
 				pos.set(x,y);
-				angle += angVel;
-				angVel *= ANG_DECAY;
-				/*
-				angle = (float) (MathUtils.radiansToDegrees * Math.atan2(pos.y - lastPos.y, pos.x - lastPos.x)) - 90;
-				lastPos.set(x, y);
-				*/
+				if (velocity.x < SPEED_THRESHOLD) {
+					angle += angVel;
+					angVel *= ANG_DECAY;
+				}else{
+					angle = (float) (MathUtils.radiansToDegrees * Math.atan2(pos.y - lastPos.y, pos.x - lastPos.x)) - 90;
+					lastPos.set(x, y);
+				}
 			}
 			tail.angle = MathUtils.clamp(tail.angle - angVel, -TAIL_ANGLE_MAX / 6f, 60);
 			
@@ -156,14 +158,14 @@ public class Player extends GameObject {
 	@Override
 	public void render(SpriteBatch batch) {
 		// Angling, scaling, and positioning the tail to the peg
-		if (peg != null) {
+		if (bird != null) {
 			Vector2 tailPos = new Vector2(tailOff.x, tailOff.y).rotate(angle);
 			tailPos.set(tailPos.x + x, tailPos.y + y);
-			Vector2 pegTail = new Vector2(peg.x - tailPos.x, peg.y - tailPos.y);
+			Vector2 pegTail = new Vector2(bird.x - tailPos.x, bird.y - tailPos.y);
 			tailLong.hasAbsoluteAngle = true;
 			tailLong.angle = pegTail.angle();
 			tailLong.bounds.x = pegTail.len();
-			tailPeg.position.set(peg.x, peg.y);
+			tailPeg.position.set(bird.x, bird.y);
 			tailPeg.angle = pegTail.angle() - 140;
 		}
 		sprite.position.set(x, y);
@@ -172,12 +174,12 @@ public class Player extends GameObject {
 		tailPeg.draw(batch);
 	}
 	
-	public void setPeg(Peg peg) {
+	public void setPeg(Bird bird) {
 		face.playAnimation("eyeclose");
 		if (started) {
-			this.peg = peg;
+			this.bird = bird;
 			Vector2 pos = new Vector2(x, y);
-			Vector2 pegPos = new Vector2(peg.x, peg.y);
+			Vector2 pegPos = new Vector2(bird.x, bird.y);
 			swingRadius = pos.dst(pegPos);
 			Vector2 rope = pegPos.sub(pos);
 			rope.rotate90(-1);
@@ -195,7 +197,7 @@ public class Player extends GameObject {
 	
 	public void clearPeg() {
 		face.playAnimation("normal");
-		peg = null;
+		bird = null;
 		targetAngle = 0;
 		setTailNormal();
 	}
@@ -217,7 +219,7 @@ public class Player extends GameObject {
 		this.y = y;
 		this.velocity.x = 0;
 		this.velocity.y = 0;
-		this.peg = null;
+		this.bird = null;
 		this.angVel = 0;
 		this.angle = 0;
 		this.lastAngle = 0;

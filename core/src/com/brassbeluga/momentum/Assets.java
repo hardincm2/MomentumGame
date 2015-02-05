@@ -21,6 +21,12 @@ public class Assets {
 	public static TextureRegion catTailCurl;
 	public static TextureRegion catTailRings;
 	
+	public static TextureRegion birdBody;
+	public static TextureRegion birdWingDown;
+	public static TextureRegion birdWingMid;
+	public static TextureRegion birdWingTop;
+	public static TextureRegion birdEyeNormal;
+	
 	public static TextureRegion peg;
 	
 	public static Music noodling;
@@ -39,6 +45,13 @@ public class Assets {
 		catTailLong = atlas.findRegion("cat_tail_long");
 		catTailCurl = atlas.findRegion("cat_tail_curl");
 		catTailRings = atlas.findRegion("cat_tail_rings");
+		
+		birdBody = atlas.findRegion("bird_body");
+		birdWingDown = atlas.findRegion("bird_wing_down");
+		birdWingMid = atlas.findRegion("bird_wing_mid");
+		birdWingTop = atlas.findRegion("bird_wing_top");
+		birdEyeNormal = atlas.findRegion("bird_eye_normal");
+		
 		peg = atlas.findRegion("peg");
 		
 		noodling = Gdx.audio.newMusic(Gdx.files.internal("Noodling.mp3"));

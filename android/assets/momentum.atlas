@@ -1,75 +1,110 @@
 
 momentum.png
-size: 256,512
+size: 512,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+bird_body
+  rotate: false
+  xy: 319, 372
+  size: 78, 75
+  orig: 78, 75
+  offset: 0, 0
+  index: -1
+bird_eye_normal
+  rotate: false
+  xy: 127, 87
+  size: 78, 75
+  orig: 78, 75
+  offset: 0, 0
+  index: -1
+bird_wing_down
+  rotate: false
+  xy: 127, 10
+  size: 78, 75
+  orig: 78, 75
+  offset: 0, 0
+  index: -1
+bird_wing_mid
+  rotate: false
+  xy: 399, 372
+  size: 78, 75
+  orig: 78, 75
+  offset: 0, 0
+  index: -1
+bird_wing_top
+  rotate: false
+  xy: 194, 186
+  size: 78, 75
+  orig: 78, 75
+  offset: 0, 0
+  index: -1
 cat_body
   rotate: false
-  xy: 2, 280
+  xy: 2, 332
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_body_original
   rotate: false
-  xy: 2, 115
+  xy: 2, 167
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_face_blink
   rotate: false
-  xy: 127, 280
+  xy: 127, 332
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_face_normal
   rotate: false
-  xy: 127, 115
+  xy: 2, 2
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_tail
   rotate: false
-  xy: 2, 16
+  xy: 252, 350
   size: 65, 97
   orig: 65, 97
   offset: 0, 0
   index: -1
 cat_tail_curl
   rotate: false
-  xy: 136, 46
+  xy: 127, 263
   size: 99, 67
   orig: 99, 67
   offset: 0, 0
   index: -1
 cat_tail_long
   rotate: false
-  xy: 2, 469
+  xy: 252, 473
   size: 210, 22
   orig: 210, 22
   offset: 0, 0
   index: -1
 cat_tail_long0
   rotate: false
-  xy: 2, 445
+  xy: 252, 449
   size: 210, 22
   orig: 210, 22
   offset: 0, 0
   index: -1
 cat_tail_rings
   rotate: false
-  xy: 69, 16
+  xy: 127, 164
   size: 65, 97
   orig: 65, 97
   offset: 0, 0
   index: -1
 peg
   rotate: false
-  xy: 136, 2
+  xy: 464, 453
   size: 44, 42
   orig: 44, 42
   offset: 0, 0

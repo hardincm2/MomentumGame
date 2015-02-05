@@ -22,8 +22,8 @@ public class Animation {
 		textures = new TextureRegion[data.length - 1];
 		times = new float[data.length - 1];
 		for (int i = 1; i < data.length; i++) {
-			textures[i] = (TextureRegion) data[i];
-			times[i] = (Float) data[0];
+			textures[i - 1] = (TextureRegion) data[i];
+			times[i - 1] = (Float) data[0];
 		}
 	}
 	

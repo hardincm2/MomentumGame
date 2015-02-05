@@ -1,6 +1,7 @@
 package com.brassbeluga.momentum;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -16,12 +17,12 @@ public class World {
 	public static final float WORLD_HEIGHT = 60; 
 	
 	// Starting position for the player.
-	public static final float PLAYER_START_X = 10;
-	public static final float PLAYER_START_Y = WORLD_HEIGHT - 10;
+	public static final float PLAYER_START_X = 12;
+	public static final float PLAYER_START_Y = WORLD_HEIGHT - 12;
 
 	public Vector2 gravity;
 	public Player player;
-	public Array<Peg> pegs;
+	public Array<Bird> birds;
 	
 	private Rectangle resetPegBounds;
 
@@ -31,13 +32,22 @@ public class World {
 	// Which pointer (finger) is currently touching the screen 
 	public int currPointer;
 	
+	private Random random;
+	private float rumbleX;
+	private float rumbleY;
+	private float rumbleTime = 0;
+	private float currentRumbleTime = 1;
+	private float rumblePower = 0;
+	private float currentRumblePower = 0;
+	
 	World(Momentum game) {
 		this.game = game;
+		random = new Random();
 		gravity = new Vector2(0.0f, -0.01f);
 		player = new Player(PLAYER_START_X, PLAYER_START_Y, Assets.catBody, this);
-		pegs = new Array<Peg>();
+		birds = new Array<Bird>();
 		level = 0;
-		resetPegBounds = new Rectangle(WORLD_WIDTH / 4.0f, 0, WORLD_WIDTH * 3.0f / 4.0f, WORLD_HEIGHT);
+		resetPegBounds = new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 		generatePegs(5, 4.0f, resetPegBounds);
 	}
 	
@@ -48,11 +58,13 @@ public class World {
 	 */
 	public void update(float delta) {
 		player.update(gravity);
+		for (Bird bird : birds)
+			bird.update(gravity);
 		if (player.x >= WORLD_WIDTH) {
 			// The player has moved to the next screen.
 			player.x = 0;
 			player.y = PLAYER_START_Y;
-			player.peg = null;
+			player.bird = null;
 			player.setTailNormal();
 			level++;
 			generatePegs(5);
@@ -64,6 +76,27 @@ public class World {
 			level = 0;
 			generatePegs(5, 4.0f, resetPegBounds);
 		}
+		if (player.velocity.x > 2.0f)
+			rumble((float) (0.1f * (Math.pow(player.velocity.x / 2.0f, 1.5f))), 0.05f);
+		
+		if(currentRumbleTime <= rumbleTime) {
+			currentRumblePower = rumblePower * ((rumbleTime - currentRumbleTime) / rumbleTime);
+			rumbleX = (random.nextFloat() - 0.5f) * 2 * currentRumblePower;
+			rumbleY = (random.nextFloat() - 0.5f) * 2 * currentRumblePower;
+		        	              
+			game.camera.translate(-rumbleX, -rumbleY);
+			currentRumbleTime += delta;
+		} else {
+			game.camera.position.x = WORLD_WIDTH / 2.0f;
+			game.camera.position.y = WORLD_HEIGHT / 2.0f;
+		}
+		
+	}
+	
+	public void rumble(float power, float time) {
+		rumblePower = power;
+		rumbleTime = time;
+		currentRumbleTime = 0;
 	}
 	
 	/**
@@ -73,8 +106,8 @@ public class World {
 	 */
 	public void render(SpriteBatch batch) {
 		player.render(batch);
-		for (Peg peg : pegs) {
-			peg.render(batch);
+		for (Bird bird : birds) {
+			bird.render(batch);
 		}
 	}
 	
@@ -87,22 +120,22 @@ public class World {
 	 * @param button The button (always 0 for touch devices)
 	 */
 	public void onTouchDown(float x, float y, int pointer, int button) {
-		if (player.peg == null) {
+		if (player.bird == null) {
 			currPointer = pointer;
-			Iterator<Peg> iter = pegs.iterator();
-			Peg peg = iter.next();
-			Peg closePeg = peg;
+			Iterator<Bird> iter = birds.iterator();
+			Bird bird = iter.next();
+			Bird closePeg = bird;
 			Vector2 touch = new Vector2(x, y);
-			Vector2 pegPos = new Vector2(peg.x, peg.y);
+			Vector2 pegPos = new Vector2(bird.x, bird.y);
 			float dist = pegPos.dst(touch);
 			// Find the closest peg to the touchpoint in the game world.
 			while (iter.hasNext()) {
-				peg = iter.next();
-				pegPos.set(peg.x, peg.y);
+				bird = iter.next();
+				pegPos.set(bird.x, bird.y);
 				float newDist = pegPos.dst(touch);
 				if (newDist < dist) {
 					dist = newDist;
-					closePeg = peg;
+					closePeg = bird;
 				}
 			}
 			player.setPeg(closePeg);
@@ -135,7 +168,7 @@ public class World {
 	}
 	
 	private void generatePegs(int amount, float incFactor, Rectangle bounds) {
-		pegs.clear();
+		birds.clear();
 		float lastX = 0;
 		for (int i = 0; i < amount; i++) {
 			float xInc = bounds.width / incFactor - bounds.width / (2.0f * incFactor) + MathUtils.random(0, bounds.width / 4);
@@ -144,8 +177,10 @@ public class World {
 			x += bounds.x;
 			lastX = x;
 			float y = bounds.y + MathUtils.random(bounds.height / incFactor, bounds.height);
-			Peg peg = new Peg(x, y, Assets.peg, this);
-			pegs.add(peg);
+			Bird bird = new Bird(x, y, Assets.birdBody, this);
+			birds.add(bird);
 		}
 	}
+	
+	
 }
