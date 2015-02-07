@@ -34,7 +34,15 @@ public class Assets {
 	public static SpriteBatch chunkBatch;
 	public static BitmapFont chunkFont;
 	
+	public static float SCREEN_SCALE;
+	public static final float DEV_WIDTH = 1024f;
+	public static final float DEV_HEIGHT = 768f;
+	// What percent of the screen height the cat should take up;
+	public static final float PERC_CHARACTER = 0.2f;
+	
+	
 	public static void load () {
+	
 		// Load assets from file
 		atlas = new TextureAtlas("momentum.atlas");
 		
@@ -51,6 +59,8 @@ public class Assets {
 		birdWingMid = atlas.findRegion("bird_wing_mid");
 		birdWingTop = atlas.findRegion("bird_wing_top");
 		birdEyeNormal = atlas.findRegion("bird_eye_normal");
+
+		SCREEN_SCALE = (PERC_CHARACTER * Gdx.graphics.getHeight()) / ((float)catBody.getRegionHeight());
 		
 		peg = atlas.findRegion("peg");
 		

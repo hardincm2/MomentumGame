@@ -43,7 +43,7 @@ public class World {
 	World(Momentum game) {
 		this.game = game;
 		random = new Random();
-		gravity = new Vector2(0.0f, -0.01f);
+		gravity = new Vector2(0.0f, -0.012f);
 		player = new Player(PLAYER_START_X, PLAYER_START_Y, Assets.catBody, this);
 		birds = new Array<Bird>();
 		level = 0;
@@ -57,38 +57,26 @@ public class World {
 	 * @param delta The time that has passed since update was last called.
 	 */
 	public void update(float delta) {
+		updateCamera(delta);
 		player.update(gravity);
 		for (Bird bird : birds)
 			bird.update(gravity);
-		if (player.x >= WORLD_WIDTH) {
+		if (player.x >= WORLD_WIDTH + player.bounds.width) {
 			// The player has moved to the next screen.
 			player.x = 0;
-			player.y = PLAYER_START_Y;
+			if (player.y < PLAYER_START_Y)
+				player.y = PLAYER_START_Y;
 			player.bird = null;
 			player.setTailNormal();
 			level++;
 			generatePegs(5);
-		} else if (player.y <= 0) {
+		}else if (player.y <= 0) {
 			// Player has died.
 			if (level > 5)
 				game.onDeath(level);
 			player.reset(PLAYER_START_X, PLAYER_START_Y);
 			level = 0;
 			generatePegs(5, 4.0f, resetPegBounds);
-		}
-		if (player.velocity.x > 2.0f)
-			rumble((float) (0.1f * (Math.pow(player.velocity.x / 2.0f, 1.5f))), 0.05f);
-		
-		if(currentRumbleTime <= rumbleTime) {
-			currentRumblePower = rumblePower * ((rumbleTime - currentRumbleTime) / rumbleTime);
-			rumbleX = (random.nextFloat() - 0.5f) * 2 * currentRumblePower;
-			rumbleY = (random.nextFloat() - 0.5f) * 2 * currentRumblePower;
-		        	              
-			game.camera.translate(-rumbleX, -rumbleY);
-			currentRumbleTime += delta;
-		} else {
-			game.camera.position.x = WORLD_WIDTH / 2.0f;
-			game.camera.position.y = WORLD_HEIGHT / 2.0f;
 		}
 		
 	}
@@ -109,6 +97,36 @@ public class World {
 		for (Bird bird : birds) {
 			bird.render(batch);
 		}
+	}
+	
+	private void updateCamera(float delta) {
+		float camX = WORLD_WIDTH / 2.0f;
+		float camY = WORLD_HEIGHT / 2.0f;
+		
+		/*
+		if (player.x > camX)
+			camX = player.x;
+		*/
+		if ((player.y + player.bounds.height / 2.0f) > WORLD_HEIGHT)
+			camY = player.y + player.bounds.height / 2.0f - WORLD_HEIGHT / 2.0f;
+		
+		
+		game.camera.position.set(camX, camY, 0.0f);
+		if (player.velocity.x > 2.0f)
+			rumble((float) (0.1f * (Math.pow(player.velocity.x / 2.0f, 3f))), 0.05f);
+		
+		if(currentRumbleTime <= rumbleTime) {
+			currentRumblePower = rumblePower * ((rumbleTime - currentRumbleTime) / rumbleTime);
+			rumbleX = (random.nextFloat() - 0.5f) * 2 * currentRumblePower;
+			rumbleY = (random.nextFloat() - 0.5f) * 2 * currentRumblePower;
+		        	              
+			game.camera.translate(-rumbleX, -rumbleY);
+			currentRumbleTime += delta;
+		} else {
+			game.camera.position.x = camX;
+			game.camera.position.y = camY;
+		}
+		game.camera.update();
 	}
 	
 	/**
@@ -171,13 +189,13 @@ public class World {
 		birds.clear();
 		float lastX = 0;
 		for (int i = 0; i < amount; i++) {
-			float xInc = bounds.width / incFactor - bounds.width / (2.0f * incFactor) + MathUtils.random(0, bounds.width / 4);
+			float xInc = bounds.width / incFactor - bounds.width / (2.0f * incFactor) + MathUtils.random(0, bounds.width / incFactor);
 			float x = lastX + xInc;
 			x = x % bounds.width;
 			x += bounds.x;
 			lastX = x;
 			float y = bounds.y + MathUtils.random(bounds.height / incFactor, bounds.height);
-			Bird bird = new Bird(x, y, Assets.birdBody, this);
+			Bird bird = new Bird(x, y, Assets.birdBody);
 			birds.add(bird);
 		}
 	}

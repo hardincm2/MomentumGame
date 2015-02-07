@@ -8,13 +8,14 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
+import com.brassbeluga.momentum.Assets;
 import com.brassbeluga.momentum.Momentum;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 800;
-		config.height = 480;
+		config.width = (int) 1280;
+		config.height = (int) 800;
 		
 		/** FOR DEVELOPMENT: Pack textures before each run
 		 *  add gdx-tools to root gradle-build to use TexturePacker

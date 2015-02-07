@@ -178,6 +178,7 @@ public class Player extends GameObject {
 		face.playAnimation("eyeclose");
 		if (started) {
 			this.bird = bird;
+			bird.held = true;
 			Vector2 pos = new Vector2(x, y);
 			Vector2 pegPos = new Vector2(bird.x, bird.y);
 			swingRadius = pos.dst(pegPos);
@@ -197,6 +198,8 @@ public class Player extends GameObject {
 	
 	public void clearPeg() {
 		face.playAnimation("normal");
+		if (bird != null)
+			bird.held = false;
 		bird = null;
 		targetAngle = 0;
 		setTailNormal();

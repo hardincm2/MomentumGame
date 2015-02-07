@@ -17,9 +17,9 @@ public class GameObject {
 	public GameObject(float x, float y, TextureRegion texture) {
 		this.x = x;
 		this.y = y;
-		float width = (texture.getRegionWidth() * 1.0f / Gdx.graphics.getWidth()) * World.WORLD_WIDTH;
-		float height = (texture.getRegionHeight() * 1.0f / Gdx.graphics.getHeight()) * World.WORLD_HEIGHT;
-		this.bounds = new Rectangle(x - width / 2, y - height / 2, width, height);
+		Vector2 adjustedBounds = GameSprite.getAdjustedSpriteBounds(texture);
+		this.bounds = new Rectangle(x - adjustedBounds.x / 2, y - adjustedBounds.y / 2, 
+				adjustedBounds.x, adjustedBounds.y);
 		sprite = new GameSprite(texture, x, y);
 		sprite.centerOrigin();
 		this.velocity = new Vector2(0f, 0f);

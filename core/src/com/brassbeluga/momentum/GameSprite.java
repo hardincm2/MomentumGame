@@ -166,7 +166,7 @@ public class GameSprite implements Comparable {
 		localTransform = localTransform.translate(-offset.x, -offset.y);
 	}
 	
-	protected Vector2 getAdjustedSpriteBounds(TextureRegion texture) {
+	protected static Vector2 getAdjustedSpriteBounds(TextureRegion texture) {
 		float width = (texture.getRegionWidth() * 1.0f / Gdx.graphics.getWidth()) * World.WORLD_WIDTH;
 		float height = (texture.getRegionHeight() * 1.0f / Gdx.graphics.getHeight()) * World.WORLD_HEIGHT;
 		return new Vector2(width, height);

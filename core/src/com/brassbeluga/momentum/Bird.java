@@ -1,17 +1,20 @@
 package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bird extends GameObject {
 	
 	private float pegSpeed;
-	private static final float PEG_BASE_SPEED = 0.02f;
+	private static final float PEG_BASE_SPEED = 0.01f;
 	private GameSprite body;
 	private GameSprite wing;
 	private GameSprite eye;
 	private float waveDelta;
 	private float wavePeriod;
+	
+	public boolean held;
 
 	/**
 	 * Constructs a simple peg
@@ -19,7 +22,7 @@ public class Bird extends GameObject {
 	 * @param y The y position of the peg
 	 * @param texture The texture to be used for the peg
 	 */
-	public Bird(float x, float y, TextureRegion texture, World world) {
+	public Bird(float x, float y, TextureRegion texture) {
 		super(x, y, texture);
 		this.pegSpeed = (float) (PEG_BASE_SPEED + Math.random() * PEG_BASE_SPEED * 4.0f);
 		waveDelta = 0;
@@ -34,6 +37,8 @@ public class Bird extends GameObject {
 		
 		sprite.addChild(wing);
 		sprite.addChild(eye);
+		
+		held = false;
 	}
 	
 	@Override
@@ -41,8 +46,8 @@ public class Bird extends GameObject {
 		x += pegSpeed;
 		waveDelta += (Math.PI / wing.getAnimationLength());
 		sprite.angle = (float) (Math.abs(Math.sin(waveDelta) * 10f));
-		if (x > World.WORLD_WIDTH +  sprite.bounds.x)
-			x = -sprite.bounds.x / 2; 
+		if (x > World.WORLD_WIDTH + sprite.bounds.x && !held)
+			x = -sprite.bounds.x;
 		sprite.position.set(x, y);
 	}
 

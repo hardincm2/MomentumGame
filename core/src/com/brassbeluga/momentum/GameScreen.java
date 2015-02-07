@@ -17,10 +17,11 @@ public class GameScreen extends ScreenAdapter {
 	private float accumulator;
 	
 	private SpriteBatch batch;
-	private OrthographicCamera camera;
 	private World world;
 	private ShapeRenderer shapeRenderer;
 	private Array<GameObject> hitboxes;
+	
+	private OrthographicCamera camera;
 	
 	
 	public GameScreen(final Momentum game) {
