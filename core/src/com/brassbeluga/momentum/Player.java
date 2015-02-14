@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -52,8 +51,10 @@ public class Player extends GameObject {
 	
 	public ParticleEffectPool partPoolBird;
 	public ParticleEffectPool partPoolDirt;
+	public ParticleEffectPool partPoolAir;
 	public ParticleEffect partBird;
 	public ParticleEffect partDirt;
+	public ParticleEffect partAir;
 	
 	public Player(float x, float y, TextureRegion texture, World world) {
 		super(x, y,texture);
@@ -65,10 +66,13 @@ public class Player extends GameObject {
 		started = false;
 		
 		
-		partPoolBird = new ParticleEffectPool(Assets.partFeathers, 50, 100);
+		partPoolBird = new ParticleEffectPool(Assets.partFeathers, 5, 20);
 		partPoolDirt = new ParticleEffectPool(Assets.partDirt, 100, 200);
+		partPoolAir = new ParticleEffectPool(Assets.partAir, 100, 200);
 		partDirt = partPoolDirt.obtain();
 		partDirt.allowCompletion();
+		partAir = partPoolAir.obtain();
+		partAir.allowCompletion();
 		
 		baseHeight = sprite.bounds.y;
 		
@@ -109,12 +113,18 @@ public class Player extends GameObject {
 	
 	@Override
 	public void update(Vector2 gravity) {
+		
+		// If we aren't waiting to jump and aren't dead
 		if (started && !dead) {
+			
+			// Update velocity and position
 			velocity.add(gravity);
 			x += velocity.x;
 			y += velocity.y;
 			
 			if (bird != null) {
+				
+				// Swinging Logic
 				Vector2 pegPos = new Vector2(bird.x, bird.y);
 				Vector2 newPos = new Vector2(x, y);
 				pegPos.set(bird.x, bird.y);
@@ -132,9 +142,13 @@ public class Player extends GameObject {
 				rope.rotate90(-1);
 				targetAngle = rope.angle() - 90;
 				float magnitude = rope.len() * rope.len();
+				
+				// Apply acceleration if boosting
 				if (isBoosting)
 					velocity.scl(BOOST);
 				velocity = rope.scl((rope.dot(velocity) / magnitude));
+				
+				// Quickly change angle to new, rotating angle
 				float diff = angleDiff(targetAngle, angle);
 				float dir = Math.signum(diff);
 				lastAngle = angle;
@@ -142,10 +156,16 @@ public class Player extends GameObject {
 					angle = targetAngle;
 				else
 					angle += dir * TARGET_ANGLE_VEL;
+				
+				// Clamp the angular velocity within the defined max
 				angVel = MathUtils.clamp(angle - lastAngle, -MAX_ANG_VEL, MAX_ANG_VEL);
 			}else{
+				
+				// If free flying, update position
 				pos.set(x,y);
-				if (velocity.x < SPEED_THRESHOLD) {
+				
+				// Apply effects if above speed threshold
+				if (velocity.len() < SPEED_THRESHOLD) {
 					angle += angVel;
 					angVel *= ANG_DECAY;
 				}else{
@@ -153,30 +173,43 @@ public class Player extends GameObject {
 					lastPos.set(x, y);
 				}
 			}
+			
+			// Lag the tail behind the angle of the player within constraint angle range
 			tail.angle = MathUtils.clamp(tail.angle - angVel, -TAIL_ANGLE_MAX / 6f, 60);
 			
+			// Rotate the tail toward resting position
 			float diff = angleDiff(0, tail.angle);
 			float dir = Math.signum(diff);
 			if (Math.abs(diff) <= TAIL_SPEED)
 				tail.angle = tailTarget;
 			else
 				tail.angle += dir * TAIL_SPEED;
+			
 		}else if (!dead){
+			
+			// Initial standing animations
 			waveDelta += Math.PI / 100;
 			tail.angle = (float) (Math.sin(waveDelta) * 20f);
 			sprite.bounds.y = (float) (baseHeight + baseHeight / BREATH_FACTOR
 					+ (baseHeight / BREATH_FACTOR) * Math.sin(waveDelta));
 			face.bounds.y = sprite.bounds.y;
-		}else{ // if dead
+			
+		}else{
+			
+			// If dead, slide along ground until we stop
 			velocity.y = 0;
 			velocity.x *= 0.96;
 			x += velocity.x;
 			if (velocity.x <= 0.05f)
 				reset(World.PLAYER_START_X, World.PLAYER_START_Y);
+			
 		}
+		
+		// Randomly blink
 		if (Math.random() < 0.01) {
 			face.playAnimation("blink");
 		}
+		
 	}
 	
 	private float angleDiff(float a1, float a2) {
@@ -207,6 +240,14 @@ public class Player extends GameObject {
 	
 	@Override
 	public void render(SpriteBatch batch) {
+		if (partAir != null) {
+			partAir.update(Gdx.graphics.getDeltaTime());
+			partAir.setPosition(x, y);
+			if (velocity.len() >= SPEED_THRESHOLD) {
+				partAir.start();
+				partAir.draw(batch);
+			}
+		}
 		// Angling, scaling, and positioning the tail to the peg
 		if (bird != null) {
 			Vector2 tailPos = new Vector2(tailOff.x, tailOff.y).rotate(angle);
@@ -224,6 +265,11 @@ public class Player extends GameObject {
 		tailPeg.draw(batch);
 	}
 	
+	/**
+	 * Attaches the player to a new swing point. If the player is in initial position,
+	 * applies an initial velocity and angular velocity to player, starting the game.
+	 * @param bird The bird reference to swing around
+	 */
 	public void setPeg(Bird bird) {
 		face.playAnimation("eyeclose");
 		if (started && !dead) {
@@ -252,6 +298,10 @@ public class Player extends GameObject {
 		}
 	}
 	
+	/**
+	 * Clears the players swing point reference. Resets
+	 * all boost and animations.
+	 */
 	public void clearPeg() {
 		face.playAnimation("normal");
 		if (bird != null)
@@ -262,18 +312,32 @@ public class Player extends GameObject {
 		setTailNormal();
 	}
 	
+	/**
+	 * Change the sprite configuration to the free
+	 * flying tail.
+	 */
 	public void setTailNormal() {
 		tail.setVisible(true);
 		tailLong.setVisible(false);
 		tailPeg.setVisible(false);
 	}
 	
+	/**
+	 * Change the sprite configuration to the swinging
+	 * tail.
+	 */
 	public void setTailLong() {
 		tail.setVisible(false);
 		tailLong.setVisible(true);
 		tailPeg.setVisible(true);
 	}
 
+	/**
+	 * Resets the player and sets position to specified x and y.
+	 * Used at the beginning of each new game.
+	 * @param x
+	 * @param y
+	 */
 	public void reset(float x, float y) {
 		this.x = x;
 		this.y = y;
@@ -286,6 +350,7 @@ public class Player extends GameObject {
 		this.started = false;
 		setTailNormal();
 		nextScreen();
+		// Allow the dirt particle effect to end
 		partDirt.allowCompletion();
 	}
 	

@@ -14,9 +14,11 @@ public class Assets {
 
 	public static TextureAtlas atlas;
 	
+	// Background textures
 	public static TextureRegion back_gradient_1;
 	public static TextureRegion back_tile;
 	
+	// Cat textures
 	public static TextureRegion catBody;
 	public static TextureRegion catFaceNormal;
 	public static TextureRegion catFaceBlink;
@@ -25,6 +27,7 @@ public class Assets {
 	public static TextureRegion catTailCurl;
 	public static TextureRegion catTailRings;
 	
+	// Bird textures
 	public static TextureRegion birdBody;
 	public static TextureRegion birdWingDown;
 	public static TextureRegion birdWingMid;
@@ -32,25 +35,29 @@ public class Assets {
 	public static TextureRegion birdEyeNormal;
 	public static TextureRegion birdEyeHeld;
 	
+	// Bush textures
 	public static TextureRegion bush1;
 	public static TextureRegion bush2;
 	public static TextureRegion bush3;
 	public static TextureRegion[] bushes;
 	
+	// Ground textures
 	public static TextureRegion ground;
 	public static TextureRegion start_mound;
 	
-	public static TextureRegion peg;
-	
+	// Game sounds
 	public static Music noodling;
 	
+	// Font rendering
 	public static SpriteBatch chunkBatch;
 	public static BitmapFont chunkFont;
 	
+	// Particles
 	public static ParticleEffect partFeathers;
 	public static ParticleEffect partDirt;
 	public static ParticleEffect partAir;
 	
+	// NOT IN USE: Dynamic screen scaling for use across multiple devices
 	public static float SCREEN_SCALE;
 
 	public static final float DEV_WIDTH = 1024f;
@@ -86,6 +93,8 @@ public class Assets {
 		bush2 = atlas.findRegion("bush2");
 		bush3 = atlas.findRegion("bush3");
 		bushes = new TextureRegion[3];
+		
+		// Load the bushes into an array for random selection
 		bushes[0] = bush1;
 		bushes[1] = bush2;
 		bushes[2] = bush3;
@@ -93,6 +102,7 @@ public class Assets {
 		ground = new TextureRegion(new Texture(Gdx.files.internal("ground.png")));
 		start_mound = new TextureRegion(new Texture(Gdx.files.internal("start_mound.png")));
 		
+		// Create new particle effects with given information
 		partFeathers = new ParticleEffect();
 		partFeathers.load(Gdx.files.internal("part_feathers"), atlas);
 		partDirt = new ParticleEffect();
@@ -100,9 +110,8 @@ public class Assets {
 		partAir = new ParticleEffect();
 		partAir.load(Gdx.files.internal("part_air"), atlas);
 
+		// Define the screen scale as a percentage of the character taking up the screen (?)
 		SCREEN_SCALE = (PERC_CHARACTER * Gdx.graphics.getHeight()) / ((float)catBody.getRegionHeight());
-		
-		peg = atlas.findRegion("peg");
 		
 		noodling = Gdx.audio.newMusic(Gdx.files.internal("Noodling.mp3"));
 		

@@ -8,38 +8,87 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
-public class GameSprite implements Comparable {
+/**
+ * Sprite object allowing parent-child sprite 
+ * relationships for multiple sprites composited
+ * together. Allows allows multiple-texture animations.
+ * @author Spencer
+ *
+ */
+public class GameSprite implements Comparable<GameSprite> {
 	
+	// Current texture of the sprite
 	public TextureRegion texture;
 	public Vector2 position;
 	public Vector2 offset;
 	public Vector2 scale;
 	public float angle;
 	public Vector2 bounds;
+	
+	// Whether or not the sprite is being drawn
 	public boolean visible;
+	
+	// If true, the angle of the sprite will be independent of parent angle
 	public boolean hasAbsoluteAngle;
+	
+	// The z-order of this sprite to be drawn in
 	public int drawOrder;
 	
+	// Object map mapping animation names to animation objects
 	public ObjectMap<String, Animation> animations;
+	
+	// Whether or not the animation is looping
 	public boolean looping;
+	// The current frame of the animation
 	public int animIndex;
+	// The time left on the current frame
 	public float animTime;
+	// The speed at the which the animation is playing
 	public float animSpeed;
+	// The current animation reference
 	public Animation anim;
+	
+	// True if this sprite has no parent, false otherwise
 	public boolean isRoot;
 	
+	// The local transform matrix of this sprite
 	public Matrix3 localTransform;
+	
+	// An identity matrix for use in calculation
 	public Matrix3 identity;
 	
+	// The sprites whose parent is this sprite
 	public Array<GameSprite> children;
+	
+	// The sorted draworder list of children sprites
 	public Array<GameSprite> drawList;
 
+	/**
+	 * Creates a new sprite with the given texture. The position refers to either 
+	 * world coordinats (if root sprite) or offset coordinates (if child)
+	 * @param textures
+	 * @param x
+	 * @param y
+	 */
 	public GameSprite(TextureRegion texture, float x, float y) {
 		this(texture, x, y, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0, 0);
 		this.bounds = getAdjustedSpriteBounds(texture);
 		this.identity = new Matrix3().idt();
 	}
 	
+	/**
+	 * Creates a new sprite with given specifications.
+	 * @param texture The texture of the new sprite
+	 * @param x The x position of the sprite
+	 * @param y The y position of the sprite
+	 * @param originX The offset of the image origin from the x-position
+	 * @param originY The offset of the image origin from the y-position
+	 * @param scaleX The x-scale of the image
+	 * @param scaleY The y-scale of the image
+	 * @param angle The angle (in degrees) of the image
+	 * @param width The width of the image bounds in world units
+	 * @param height The height of the image bounds in world units
+	 */
 	public GameSprite(TextureRegion texture, float x, float y, float originX, float originY,
 			float scaleX, float scaleY, float angle, float width, float height) {
 		this.texture = texture;
@@ -60,16 +109,31 @@ public class GameSprite implements Comparable {
 		drawOrder = 0;
 	}
 	
+	/**
+	 * Adds a new animation to the animation map (creating a new map
+	 * if necessary). See Animation.java for information about input schemes.
+	 * @param name The name of the new animation
+	 * @param info The animation data for the new animation
+	 */
 	public void addAnimation(String name, Object ... info) {
 		if (animations == null)
 			animations = new ObjectMap<String, Animation>();
 		animations.put(name, new Animation(info));
 	}
 	
+	/**
+	 * Plays the given animation if it exists
+	 * @param name The name of the animation
+	 */
 	public void playAnimation(String name) {
 		playAnimation(name, false);
 	}
 	
+	/**
+	 * Plays the given animation if it exists
+	 * @param name The name of the animation
+	 * @param looping Whether or not the animation should loop
+	 */
 	public void playAnimation(String name, boolean looping) {
 		anim = animations.get(name);
 		animIndex = 0;
@@ -78,6 +142,10 @@ public class GameSprite implements Comparable {
 		this.looping = looping;
 	}
 	
+	/**
+	 * Returns the total length of the animation currently playing.
+	 * @return The length of the current animation
+	 */
 	public float getAnimationLength() {
 		float length = 0;
 		if (anim != null) {
@@ -87,12 +155,15 @@ public class GameSprite implements Comparable {
 		return length;
 	}
 	
+	/**
+	 * Draws the sprite to the given sprite batch
+	 * @param batch The sprite batch to draw the sprite to
+	 */
 	public void draw(SpriteBatch batch) {
-		// ***** unnecessary matrix creation
 		draw(batch, identity);
 	}
 	
-	// Update animations and transformations
+	
 	public void draw(SpriteBatch batch, Matrix3 parentTransform) {
 		// Update transform matrix and update transforms in children
 		if (visible) {
@@ -201,8 +272,8 @@ public class GameSprite implements Comparable {
 	}
 
 	@Override
-	public int compareTo(Object o) {
-		return ((GameSprite) o).drawOrder - drawOrder;
+	public int compareTo(GameSprite o) {
+		return o.drawOrder - drawOrder;
 	}
 
 }
