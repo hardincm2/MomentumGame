@@ -17,15 +17,19 @@ public class World {
 	public static final float WORLD_HEIGHT = 60; 
 	
 	// Starting position for the player.
-	public static final float PLAYER_START_X = 12;
-	public static final float PLAYER_START_Y = WORLD_HEIGHT - 12;
+	public static final float PLAYER_START_X = 8;
+	public static final float PLAYER_START_Y = WORLD_HEIGHT - 18;
+	
+	private GameSprite backTile;
+	private GameSprite ground;
+	private GameSprite start_mound;
 
 	public Vector2 gravity;
 	public Player player;
 	public Array<Bird> birds;
+	public Array<GameObject> bushes;
 	
 	private Rectangle resetPegBounds;
-
 	// Keeps track of which level the player is currently on.
 	public int level;
 	
@@ -39,6 +43,8 @@ public class World {
 	private float currentRumbleTime = 1;
 	private float rumblePower = 0;
 	private float currentRumblePower = 0;
+
+	private Rectangle easyStartBounds;
 	
 	World(Momentum game) {
 		this.game = game;
@@ -46,9 +52,14 @@ public class World {
 		gravity = new Vector2(0.0f, -0.012f);
 		player = new Player(PLAYER_START_X, PLAYER_START_Y, Assets.catBody, this);
 		birds = new Array<Bird>();
+		bushes = new Array<GameObject>();
 		level = 0;
 		resetPegBounds = new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-		generatePegs(5, 4.0f, resetPegBounds);
+		easyStartBounds = new Rectangle(0, WORLD_HEIGHT / 4.0f, WORLD_WIDTH, ((3.0f / 4.0f) * WORLD_HEIGHT));
+		backTile = new GameSprite(Assets.back_tile, 0, 0);
+		ground = new GameSprite(Assets.ground, 0, 0);
+		start_mound = new GameSprite(Assets.start_mound, 0, 0);
+		generatePegs(5, 4.0f, easyStartBounds);
 	}
 	
 	/**
@@ -61,22 +72,31 @@ public class World {
 		player.update(gravity);
 		for (Bird bird : birds)
 			bird.update(gravity);
-		if (player.x >= WORLD_WIDTH + player.bounds.width) {
+		if (player.x >= WORLD_WIDTH && !player.dead) {
 			// The player has moved to the next screen.
 			player.x = 0;
 			if (player.y < PLAYER_START_Y)
 				player.y = PLAYER_START_Y;
 			player.bird = null;
 			player.setTailNormal();
+			player.nextScreen();
 			level++;
 			generatePegs(5);
-		}else if (player.y <= 0) {
-			// Player has died.
-			if (level > 5)
-				game.onDeath(level);
-			player.reset(PLAYER_START_X, PLAYER_START_Y);
-			level = 0;
-			generatePegs(5, 4.0f, resetPegBounds);
+		}else if (player.y < player.bounds.height / 2.0f) {
+			player.setDead();
+		}else if (player.dead) {
+			if (player.velocity.x == 0.0f) {
+				// Player has died.
+				player.dead = false;
+				if (level > 5) {
+					game.onDeath(level);
+					generatePegs(5, 4.0f, resetPegBounds);
+				}else{
+					generatePegs(5, 4.0f, easyStartBounds);
+				}
+				level = 0;
+				
+			}
 		}
 		
 	}
@@ -93,10 +113,18 @@ public class World {
 	 * @param batch The sprite batch to draw to.
 	 */
 	public void render(SpriteBatch batch) {
+		for (int i = 0; i < WORLD_WIDTH / backTile.bounds.x; i++)
+			batch.draw(backTile.texture, i * backTile.bounds.x, 0, backTile.bounds.x, backTile.bounds.y);
+		batch.draw(ground.texture, 0, 0, ground.bounds.x, ground.bounds.y);
+		if (level == 0)
+			batch.draw(start_mound.texture, 0, 0, start_mound.bounds.x, start_mound.bounds.y);
+		for (GameObject bush : bushes)
+			bush.render(batch);
 		player.render(batch);
 		for (Bird bird : birds) {
 			bird.render(batch);
 		}
+		player.postRender(batch);
 	}
 	
 	private void updateCamera(float delta) {
@@ -187,6 +215,14 @@ public class World {
 	
 	private void generatePegs(int amount, float incFactor, Rectangle bounds) {
 		birds.clear();
+		bushes.clear();
+		for (int i = 0; i < Math.round(Math.random() * 8.0); i++) {
+			GameObject bush = new GameObject((float) (Math.random() * WORLD_WIDTH), 
+					(float) (8 + Math.random() * 4.0f), Assets.bushes[MathUtils.random(2)]);
+			bush.sprite.angle = MathUtils.random(20) - 10f;
+			bush.sprite.scale.x = bush.sprite.scale.y = MathUtils.random(0.2f) - 0.1f + 1.0f;
+			bushes.add(bush);
+		}
 		float lastX = 0;
 		for (int i = 0; i < amount; i++) {
 			float xInc = bounds.width / incFactor - bounds.width / (2.0f * incFactor) + MathUtils.random(0, bounds.width / incFactor);

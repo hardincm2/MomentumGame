@@ -1,10 +1,12 @@
 package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -16,6 +18,8 @@ public class Player extends GameObject {
 	public static float ANG_DECAY = 0.995f;
 	public static float SPEED_THRESHOLD = 2.0f; 
 	public Vector2 tailOff = new Vector2(-43, -43);
+	
+	public boolean dead;
 
 	public Bird bird; // null if currently not attached
 	public float pegAngle;
@@ -23,6 +27,10 @@ public class Player extends GameObject {
 	public float swingRadius;
 	public float lastAngle;
 	public float targetAngle;
+	
+	public static float BOOST = 1.008f;
+	public static float BOOST_TOLERANCE = 10f;
+	public boolean isBoosting = false;
 	
 	public float angle;
 	
@@ -42,13 +50,25 @@ public class Player extends GameObject {
 	
 	public boolean started;
 	
+	public ParticleEffectPool partPoolBird;
+	public ParticleEffectPool partPoolDirt;
+	public ParticleEffect partBird;
+	public ParticleEffect partDirt;
+	
 	public Player(float x, float y, TextureRegion texture, World world) {
 		super(x, y,texture);
+		dead = false;
 		angle = 0.0f;
 		targetAngle = angle;
 		lastAngle = angle;
 		pegAngle = angle;
 		started = false;
+		
+		
+		partPoolBird = new ParticleEffectPool(Assets.partFeathers, 50, 100);
+		partPoolDirt = new ParticleEffectPool(Assets.partDirt, 100, 200);
+		partDirt = partPoolDirt.obtain();
+		partDirt.allowCompletion();
 		
 		baseHeight = sprite.bounds.y;
 		
@@ -89,7 +109,7 @@ public class Player extends GameObject {
 	
 	@Override
 	public void update(Vector2 gravity) {
-		if (started) {
+		if (started && !dead) {
 			velocity.add(gravity);
 			x += velocity.x;
 			y += velocity.y;
@@ -112,6 +132,8 @@ public class Player extends GameObject {
 				rope.rotate90(-1);
 				targetAngle = rope.angle() - 90;
 				float magnitude = rope.len() * rope.len();
+				if (isBoosting)
+					velocity.scl(BOOST);
 				velocity = rope.scl((rope.dot(velocity) / magnitude));
 				float diff = angleDiff(targetAngle, angle);
 				float dir = Math.signum(diff);
@@ -139,12 +161,18 @@ public class Player extends GameObject {
 				tail.angle = tailTarget;
 			else
 				tail.angle += dir * TAIL_SPEED;
-		}else{
+		}else if (!dead){
 			waveDelta += Math.PI / 100;
 			tail.angle = (float) (Math.sin(waveDelta) * 20f);
 			sprite.bounds.y = (float) (baseHeight + baseHeight / BREATH_FACTOR
 					+ (baseHeight / BREATH_FACTOR) * Math.sin(waveDelta));
 			face.bounds.y = sprite.bounds.y;
+		}else{ // if dead
+			velocity.y = 0;
+			velocity.x *= 0.96;
+			x += velocity.x;
+			if (velocity.x <= 0.05f)
+				reset(World.PLAYER_START_X, World.PLAYER_START_Y);
 		}
 		if (Math.random() < 0.01) {
 			face.playAnimation("blink");
@@ -153,6 +181,28 @@ public class Player extends GameObject {
 	
 	private float angleDiff(float a1, float a2) {
 		return ((((a1 - a2) % 360f) + 540f) % 360f) - 180f;
+	}
+	
+	public void setDead() {
+		clearPeg();
+		velocity.y = 0;
+		dead = true;
+		partDirt.start();
+		partBird = null;
+	}
+	
+	// For effect use
+	public void postRender(SpriteBatch batch) {
+		if (partBird != null) {
+			partBird.update(Gdx.graphics.getDeltaTime());
+			partBird.draw(batch);
+		}
+		if (partDirt != null) {
+			partDirt.update(Gdx.graphics.getDeltaTime());
+			partDirt.setPosition(x, y - sprite.bounds.y / 4.0f);
+			if (dead)
+				partDirt.draw(batch);
+		}
 	}
 	
 	@Override
@@ -176,18 +226,24 @@ public class Player extends GameObject {
 	
 	public void setPeg(Bird bird) {
 		face.playAnimation("eyeclose");
-		if (started) {
+		if (started && !dead) {
 			this.bird = bird;
 			bird.held = true;
+			if (partBird == null)
+				partBird = partPoolBird.obtain();
+			partBird.setPosition(bird.x, bird.y);
+			partBird.start();
 			Vector2 pos = new Vector2(x, y);
 			Vector2 pegPos = new Vector2(bird.x, bird.y);
 			swingRadius = pos.dst(pegPos);
 			Vector2 rope = pegPos.sub(pos);
 			rope.rotate90(-1);
 			float magnitude = rope.len() * rope.len();
+			if (Math.abs(rope.angle(velocity)) < BOOST_TOLERANCE)
+				isBoosting = true;
 			velocity = rope.scl((rope.dot(velocity) / magnitude));
 			setTailLong();
-		}else{
+		}else if (!dead) {
 			started = true;
 			angVel = -0.5f;
 			velocity.set(0.1f, 0.4f);
@@ -202,6 +258,7 @@ public class Player extends GameObject {
 			bird.held = false;
 		bird = null;
 		targetAngle = 0;
+		isBoosting = false;
 		setTailNormal();
 	}
 	
@@ -228,6 +285,19 @@ public class Player extends GameObject {
 		this.lastAngle = 0;
 		this.started = false;
 		setTailNormal();
+		nextScreen();
+		partDirt.allowCompletion();
+	}
+	
+	public void nextScreen() {
+		if (partBird != null) {
+			partPoolBird.free((PooledEffect) partBird);
+			partBird = null;
+		}
+		if (partDirt != null) {
+			//partPoolDirt.free((PooledEffect) partDirt);
+			//partDirt = null;
+		}
 	}
 
 }

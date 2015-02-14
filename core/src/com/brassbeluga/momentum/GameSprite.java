@@ -133,7 +133,7 @@ public class GameSprite implements Comparable {
 		}
 		if (visible) {
 			Vector2 pos = localTransform.getTranslation(new Vector2());
-			batch.draw(texture, pos.x, pos.y, 0, 0, bounds.x, bounds.y, 1.0f, 1.0f, localTransform.getRotation());
+			batch.draw(texture, pos.x, pos.y, 0, 0, bounds.x * scale.x, bounds.y * scale.y, 1.0f, 1.0f, localTransform.getRotation());
 		}
 	}
 	
@@ -155,7 +155,7 @@ public class GameSprite implements Comparable {
 			spriteAngle -= parAngle;
 		Vector2 parTrans = parentTransform.getTranslation(new Vector2());
 		// Apply parent then local transformations
-		localTransform = localTransform.setToTranslation(parTrans).rotate(parAngle)
+		localTransform = localTransform.setToTranslation(parTrans).scale(scale).rotate(parAngle)
 				.translate(position).rotate(spriteAngle).translate(-offset.x, -offset.y);
 		localTransform = localTransform.translate(offset);
 		

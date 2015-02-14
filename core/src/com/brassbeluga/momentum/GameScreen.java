@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 public class GameScreen extends ScreenAdapter {
 	private static final float STEP = 1/60f;
 	private float accumulator;
+	
+	//private Color cTop = new Color(77f / 255f, 236f / 255f, 178f / 255f, 1);
 	
 	private SpriteBatch batch;
 	private World world;
@@ -38,7 +38,7 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		// Clear the screen and set a screen color.
-		Gdx.gl.glClearColor(200 / 255f, 257 / 255f, 240 / 255f, 1f);
+		Gdx.gl.glClearColor(104f / 255f, 194f / 255f, 219f / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		// Update the camera and sync the batch with the camera.
@@ -87,8 +87,8 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		//Assets.noodling.setLooping(true);
-		///Assets.noodling.play();
+		Assets.noodling.setLooping(true);
+		Assets.noodling.play();
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}
 	
