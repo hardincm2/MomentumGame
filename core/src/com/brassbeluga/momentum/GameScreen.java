@@ -1,7 +1,12 @@
 package com.brassbeluga.momentum;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,8 +26,10 @@ public class GameScreen extends ScreenAdapter {
 	private World world;
 	private ShapeRenderer shapeRenderer;
 	private Array<GameObject> hitboxes;
-	
 	private OrthographicCamera camera;
+	
+	private List<Music> songs;
+	private Music currentSong;
 	
 	/*
 	 * Constructs a new game screen object. Instantiates the game world
@@ -32,6 +39,13 @@ public class GameScreen extends ScreenAdapter {
 		this.batch = game.batch;
 		this.camera = game.camera;
 		hitboxes = new Array<GameObject>();
+		
+		//
+		songs = new ArrayList<Music>();
+		songs.add(Assets.dragonroost);
+		songs.add(Assets.medieval);
+		songs.add(Assets.noodling);
+		songs.add(Assets.zeldashop);
 		
 		world = new World(game);
 		accumulator = 0;
@@ -100,16 +114,17 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		/*
-		Assets.noodling.setLooping(true);
-		Assets.noodling.play();
-		*/
+		Random r = new Random();
+		currentSong = songs.get(r.nextInt(songs.size()));
+		currentSong.setLooping(true);
+		currentSong.play();
+		
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}
 	
 	@Override
 	public void hide() {
-		Assets.noodling.stop();
+		currentSong.stop();
 		Gdx.input.setInputProcessor(null);
 	}
 }
