@@ -21,7 +21,7 @@ public class World {
 	public static final float PLAYER_START_X = 8;
 	public static final float PLAYER_START_Y = WORLD_HEIGHT - 18;
 	
-	public static final float COLOR_DROPOFF = 60f;
+	public static final float COLOR_DROPOFF = 20f;
 	private Color screenColor;
 	
 	private GameSprite backTile;
@@ -82,8 +82,17 @@ public class World {
 	public void update(float delta) {
 		updateCamera(delta);
 		player.update(gravity);
-		for (Bird bird : birds)
+		for (Bird bird : birds) {
+			if (!bird.held) {
+				if (bird.x - bird.bounds.width > WORLD_WIDTH)
+					bird.x = -bird.bounds.width;
+				if (player.velocity.y > 0 && bird.y < game.camera.position.y - WORLD_HEIGHT / 2)
+					bird.y = game.camera.position.y + (WORLD_HEIGHT / 2) + bird.bounds.y;
+				if (player.velocity.y < 0 && bird.y > game.camera.position.y + WORLD_HEIGHT / 2)
+					bird.y = game.camera.position.y - WORLD_HEIGHT / 2 - MathUtils.random(WORLD_HEIGHT) - bird.bounds.y;
+			}
 			bird.update(gravity);
+		}
 		if (player.x >= WORLD_WIDTH && !player.dead) {
 			// The player has moved to the next screen.
 			player.x = 0;

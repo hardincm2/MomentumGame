@@ -77,10 +77,6 @@ public class Bird extends GameObject {
 			waveDelta += (Math.PI * wing.animSpeed / wing.getAnimationLength());
 			sprite.angle = (float) (Math.abs(Math.sin(waveDelta) * 10f));
 			
-			// Wrap around the screen if not being held
-			if (x > World.WORLD_WIDTH + sprite.bounds.x)
-				x = -sprite.bounds.x;
-			
 			eye.playAnimation("normal");
 		}
 		

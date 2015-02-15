@@ -16,7 +16,13 @@ public class Assets {
 	
 	// Background textures
 	public static TextureRegion back_gradient_1;
-	public static TextureRegion back_tile;
+	public static TextureRegion back_tile_hills;
+	public static TextureRegion back_tile_forest;
+	public static TextureRegion back_dist_hills;
+	public static TextureRegion back_dist_forest_trees;
+	public static TextureRegion back_dist_forest_fartrees;
+	
+	
 	
 	// Cat textures
 	public static TextureRegion catBody;
@@ -41,8 +47,16 @@ public class Assets {
 	public static TextureRegion bush3;
 	public static TextureRegion[] bushes;
 	
+	// Cloud textures
+	public static TextureRegion cloud1;
+	public static TextureRegion cloud2;
+	public static TextureRegion cloud3;
+	public static TextureRegion cloud4;
+	public static TextureRegion[] clouds;
+	
 	// Ground textures
-	public static TextureRegion ground;
+	public static TextureRegion ground_hills;
+	public static TextureRegion ground_forest;
 	public static TextureRegion start_mound;
 	
 	// Game sounds
@@ -72,7 +86,11 @@ public class Assets {
 		atlas = new TextureAtlas("momentum.atlas");
 		
 		back_gradient_1 = atlas.findRegion("back_gradient");
-		back_tile = atlas.findRegion("back_tile");
+		back_tile_hills = atlas.findRegion("back_tile");
+		back_tile_forest = atlas.findRegion("back_forest");
+		back_dist_hills = new TextureRegion(new Texture(Gdx.files.internal("bck_hills.png")));
+		back_dist_forest_trees = new TextureRegion(new Texture(Gdx.files.internal("bck_forest.png")));
+		back_dist_forest_fartrees = new TextureRegion(new Texture(Gdx.files.internal("bck_forest_2.png")));
 		
 		catBody = atlas.findRegion("cat_body");
 		catFaceNormal = atlas.findRegion("cat_face_normal");
@@ -99,7 +117,19 @@ public class Assets {
 		bushes[1] = bush2;
 		bushes[2] = bush3;
 		
-		ground = new TextureRegion(new Texture(Gdx.files.internal("ground.png")));
+		cloud1 = atlas.findRegion("cloud_1");
+		cloud2 = atlas.findRegion("cloud_2");
+		cloud3 = atlas.findRegion("cloud_3");
+		cloud4 = atlas.findRegion("cloud_4");
+		clouds = new TextureRegion[4];
+		
+		// Load the clouds into an array for random selection
+		clouds[0] = cloud1;
+		clouds[1] = bush2;
+		clouds[2] = bush3;
+		
+		ground_hills = new TextureRegion(new Texture(Gdx.files.internal("ground.png")));
+		ground_forest = new TextureRegion(new Texture(Gdx.files.internal("ground_forest.png")));
 		start_mound = new TextureRegion(new Texture(Gdx.files.internal("start_mound.png")));
 		
 		// Create new particle effects with given information

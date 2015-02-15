@@ -24,7 +24,10 @@ public class GameScreen extends ScreenAdapter {
 	
 	private OrthographicCamera camera;
 	
-	
+	/*
+	 * Constructs a new game screen object. Instantiates the game world
+	 * and the shape renderer for debugging.
+	 */
 	public GameScreen(final Momentum game) {
 		this.batch = game.batch;
 		this.camera = game.camera;
@@ -78,19 +81,29 @@ public class GameScreen extends ScreenAdapter {
 		}
 	}
 	
+	/**
+	 * Adds a game object to the list of hitboxes to be drawn
+	 * @param obj The game object whose bounds are to be drawn
+	 */
 	public void drawHitBox(GameObject obj) {
 		if (!hitboxes.contains(obj, false))
 			hitboxes.add(obj);
 	}
 	
+	/**
+	 * Removes a game object from the list of hitboxes to be drawn
+	 * @param obj The game object to remove
+	 */
 	public void unDrawHitBox(GameObject obj) {
 		hitboxes.removeValue(obj, false);
 	}
 	
 	@Override
 	public void show() {
+		/*
 		Assets.noodling.setLooping(true);
 		Assets.noodling.play();
+		*/
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}
 	
