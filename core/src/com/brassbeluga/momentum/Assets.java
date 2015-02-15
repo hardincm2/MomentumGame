@@ -129,7 +129,7 @@ public class Assets {
 		clouds[2] = bush3;
 		
 		ground_hills = new TextureRegion(new Texture(Gdx.files.internal("ground.png")));
-		ground_forest = new TextureRegion(new Texture(Gdx.files.internal("ground_forest.png")));
+		ground_forest = new TextureRegion(new Texture(Gdx.files.internal("gnd_forest.png")));
 		start_mound = new TextureRegion(new Texture(Gdx.files.internal("start_mound.png")));
 		
 		// Create new particle effects with given information
