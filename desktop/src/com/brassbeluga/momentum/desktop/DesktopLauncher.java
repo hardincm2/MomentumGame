@@ -20,7 +20,7 @@ public class DesktopLauncher {
 		* pass java command line argument -packTextures to use
 		*/
 		
-		if (arg[0].equals("-packTextures")) {
+		if (arg.length > 0 && arg[0].equals("-packTextures")) {
 			Settings settings = new Settings();
 	        settings.maxWidth = 1024;
 	        settings.maxHeight = 1024; 
