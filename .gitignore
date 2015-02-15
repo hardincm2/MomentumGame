@@ -63,6 +63,5 @@ build/
 ## OS Specific
 .DS_Store
 
-*.png
 *.db
 *.ttf
