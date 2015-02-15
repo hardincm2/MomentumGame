@@ -60,8 +60,8 @@ public class World {
 		level = 0;
 		resetPegBounds = new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 		easyStartBounds = new Rectangle(0, WORLD_HEIGHT / 4.0f, WORLD_WIDTH, ((3.0f / 4.0f) * WORLD_HEIGHT));
-		backTile = new GameSprite(Assets.back_tile, 0, 0);
-		ground = new GameSprite(Assets.ground, 0, 0);
+		backTile = new GameSprite(Assets.back_tile_hills, 0, 0);
+		ground = new GameSprite(Assets.ground_hills, 0, 0);
 		start_mound = new GameSprite(Assets.start_mound, 0, 0);
 		generatePegs(5, 4.0f, easyStartBounds);
 		screenColor = new Color(104f / 255f, 194f / 255f, 219f / 255f, 1.0f);
