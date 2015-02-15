@@ -86,10 +86,6 @@ public class World {
 			if (!bird.held) {
 				if (bird.x - bird.bounds.width > WORLD_WIDTH)
 					bird.x = -bird.bounds.width;
-				if (player.velocity.y > 0 && bird.y < game.camera.position.y - WORLD_HEIGHT / 2)
-					bird.y = game.camera.position.y + (WORLD_HEIGHT / 2) + bird.bounds.y;
-				if (player.velocity.y < 0 && bird.y > game.camera.position.y + WORLD_HEIGHT / 2)
-					bird.y = game.camera.position.y - WORLD_HEIGHT / 2 - MathUtils.random(WORLD_HEIGHT) - bird.bounds.y;
 			}
 			bird.update(gravity);
 		}
