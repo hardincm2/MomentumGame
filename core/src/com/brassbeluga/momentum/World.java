@@ -23,15 +23,19 @@ public class World {
 	
 	public static final float COLOR_DROPOFF = 20f;
 	private Color screenColor;
+	public String levelType = "hills";
 	
 	private GameSprite backTile;
 	private GameSprite ground;
+	private GameSprite backGround;
+	private GameSprite transition;
 	private GameSprite start_mound;
 
 	public Vector2 gravity;
 	public Player player;
 	public Array<Bird> birds;
 	public Array<GameObject> bushes;
+	public Array<Cloud> clouds;
 	
 	private Rectangle resetPegBounds;
 	// Keeps track of which level the player is currently on.
@@ -57,11 +61,26 @@ public class World {
 		player = new Player(PLAYER_START_X, PLAYER_START_Y, Assets.catBody, this);
 		birds = new Array<Bird>();
 		bushes = new Array<GameObject>();
+		clouds = new Array<Cloud>();
 		level = 0;
 		resetPegBounds = new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 		easyStartBounds = new Rectangle(0, WORLD_HEIGHT / 4.0f, WORLD_WIDTH, ((3.0f / 4.0f) * WORLD_HEIGHT));
 		backTile = new GameSprite(Assets.back_tile_hills, 0, 0);
+		backTile.addAnimation("hills", Assets.back_tile_hills);
+		backTile.addAnimation("forest", Assets.back_tile_forest);
 		ground = new GameSprite(Assets.ground_hills, 0, 0);
+		ground.addAnimation("hills", Assets.ground_hills);
+		ground.addAnimation("forest", Assets.ground_forest);
+		backGround = new GameSprite(Assets.back_dist_hills, 0, 0);
+		backGround.drawOrder = 1;
+		backGround.addAnimation("hills", Assets.back_dist_hills);
+		backGround.addAnimation("forest", Assets.back_dist_forest_trees);
+		transition = new GameSprite(Assets.ground_forest_trans, 0, 0);
+		transition.addAnimation("hills", Assets.ground_hills_trans);
+		transition.addAnimation("forest", Assets.ground_forest_trans);
+		transition.visible = false;
+		ground.addChild(backGround);
+		ground.addChild(transition);
 		start_mound = new GameSprite(Assets.start_mound, 0, 0);
 		generatePegs(5, 4.0f, easyStartBounds);
 		screenColor = new Color(104f / 255f, 194f / 255f, 219f / 255f, 1.0f);
@@ -89,6 +108,14 @@ public class World {
 			}
 			bird.update(gravity);
 		}
+		for (Cloud cloud : clouds) {
+			cloud.update(gravity);
+		}
+		if (player.y > WORLD_HEIGHT + player.bounds.height / 2) {
+			player.clearPeg();
+			player.velocity.y = -player.velocity.y;
+			rumble(1.0f, 0.2f);
+		}
 		if (player.x >= WORLD_WIDTH && !player.dead) {
 			// The player has moved to the next screen.
 			player.x = 0;
@@ -98,6 +125,10 @@ public class World {
 			player.setTailNormal();
 			player.nextScreen();
 			level++;
+			if (level == 10) {
+				transition.visible = true;
+			}else if (level == 11)
+				setLevelType("forest");
 			generatePegs(5);
 		}else if (player.y < player.bounds.height / 2.0f) {
 			player.setDead();
@@ -111,11 +142,20 @@ public class World {
 				}else{
 					generatePegs(5, 4.0f, easyStartBounds);
 				}
+				setLevelType("hills");
 				level = 0;
 				
 			}
 		}
 		
+	}
+	
+	public void setLevelType(String type) {
+		levelType = type;
+		backTile.playAnimation(levelType);
+		ground.playAnimation(levelType);
+		backGround.playAnimation(levelType);
+		transition.visible = false;
 	}
 	
 	public void rumble(float power, float time) {
@@ -132,15 +172,18 @@ public class World {
 	public void render(SpriteBatch batch) {
 		for (int i = 0; i < WORLD_WIDTH / backTile.bounds.x; i++)
 			batch.draw(backTile.texture, i * backTile.bounds.x, 0, backTile.bounds.x, backTile.bounds.y);
-		batch.draw(ground.texture, 0, 0, ground.bounds.x, ground.bounds.y);
+		ground.draw(batch);
 		if (level == 0)
 			batch.draw(start_mound.texture, 0, 0, start_mound.bounds.x, start_mound.bounds.y);
-		for (GameObject bush : bushes)
-			bush.render(batch);
-		player.render(batch);
-		for (Bird bird : birds) {
-			bird.render(batch);
+		if (levelType == "hills") {
+	 		for (Cloud cloud : clouds)
+				cloud.render(batch);
+			for (GameObject bush : bushes)
+				bush.render(batch);
 		}
+		player.render(batch);
+		for (Bird bird : birds)
+			bird.render(batch);
 		player.postRender(batch);
 	}
 	
@@ -151,10 +194,10 @@ public class World {
 		/*
 		if (player.x > camX)
 			camX = player.x;
-		*/
+		
 		if ((player.y + player.bounds.height / 2.0f) > WORLD_HEIGHT)
 			camY = player.y + player.bounds.height / 2.0f - WORLD_HEIGHT / 2.0f;
-		
+		*/
 		
 		game.camera.position.set(camX, camY, 0.0f);
 		if (player.velocity.x > 2.0f)
@@ -233,12 +276,28 @@ public class World {
 	private void generatePegs(int amount, float incFactor, Rectangle bounds) {
 		birds.clear();
 		bushes.clear();
-		for (int i = 0; i < Math.round(Math.random() * 8.0); i++) {
+		for (int i = 0; i < Math.round(Math.random() * 25.0); i++) {
 			GameObject bush = new GameObject((float) (Math.random() * WORLD_WIDTH), 
 					(float) (8 + Math.random() * 4.0f), Assets.bushes[MathUtils.random(2)]);
 			bush.sprite.angle = MathUtils.random(20) - 10f;
 			bush.sprite.scale.x = bush.sprite.scale.y = MathUtils.random(0.2f) - 0.1f + 1.0f;
-			bushes.add(bush);
+			boolean added = false;
+			for (int p = 0; p < bushes.size; p++) {
+				if (bushes.get(p).y < bush.y) {
+					bushes.insert(p, bush);
+					added = true;
+					break;
+				}
+			}
+			if (!added)
+				bushes.add(bush);
+		}
+		clouds.clear();
+		for (int i = 0; i < Math.round(Math.random() * 25.0); i++) {
+			Cloud cloud = new Cloud((float) (Math.random() * WORLD_WIDTH), 
+					(float) (WORLD_HEIGHT - Math.random() * 4.0f), Assets.clouds[MathUtils.random(3)]);
+			cloud.sprite.scale.x = cloud.sprite.scale.y = MathUtils.random(0.2f) - 0.1f + 1.0f;
+			clouds.add(cloud);
 		}
 		float lastX = 0;
 		for (int i = 0; i < amount; i++) {

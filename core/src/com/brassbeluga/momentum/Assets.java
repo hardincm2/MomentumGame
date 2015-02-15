@@ -56,7 +56,9 @@ public class Assets {
 	
 	// Ground textures
 	public static TextureRegion ground_hills;
+	public static TextureRegion ground_hills_trans;
 	public static TextureRegion ground_forest;
+	public static TextureRegion ground_forest_trans;
 	public static TextureRegion start_mound;
 	
 	// Game sounds
@@ -117,19 +119,22 @@ public class Assets {
 		bushes[1] = bush2;
 		bushes[2] = bush3;
 		
-		cloud1 = atlas.findRegion("cloud_1");
-		cloud2 = atlas.findRegion("cloud_2");
-		cloud3 = atlas.findRegion("cloud_3");
-		cloud4 = atlas.findRegion("cloud_4");
+		cloud1 = atlas.findRegion("cloud1");
+		cloud2 = atlas.findRegion("cloud2");
+		cloud3 = atlas.findRegion("cloud3");
+		cloud4 = atlas.findRegion("cloud4");
 		clouds = new TextureRegion[4];
 		
 		// Load the clouds into an array for random selection
 		clouds[0] = cloud1;
-		clouds[1] = bush2;
-		clouds[2] = bush3;
+		clouds[1] = cloud2;
+		clouds[2] = cloud3;
+		clouds[3] = cloud4;
 		
-		ground_hills = new TextureRegion(new Texture(Gdx.files.internal("ground.png")));
+		ground_hills = new TextureRegion(new Texture(Gdx.files.internal("gnd_hills.png")));
+		ground_hills_trans = new TextureRegion(new Texture(Gdx.files.internal("gnd_hills_trans.png")));
 		ground_forest = new TextureRegion(new Texture(Gdx.files.internal("gnd_forest.png")));
+		ground_forest_trans = new TextureRegion(new Texture(Gdx.files.internal("gnd_forest_trans.png")));
 		start_mound = new TextureRegion(new Texture(Gdx.files.internal("start_mound.png")));
 		
 		// Create new particle effects with given information

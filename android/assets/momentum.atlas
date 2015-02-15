@@ -158,34 +158,34 @@ cat_tail_rings
   orig: 65, 97
   offset: 0, 0
   index: -1
-cloud
+cloud1
   rotate: false
   xy: 375, 830
   size: 401, 182
   orig: 401, 182
   offset: 0, 0
-  index: 1
-cloud
+  index: -1
+cloud2
   rotate: false
   xy: 375, 646
   size: 401, 182
   orig: 401, 182
   offset: 0, 0
-  index: 2
-cloud
+  index: -1
+cloud3
   rotate: false
   xy: 375, 462
   size: 401, 182
   orig: 401, 182
   offset: 0, 0
-  index: 3
-cloud
+  index: -1
+cloud4
   rotate: false
   xy: 375, 278
   size: 401, 182
   orig: 401, 182
   offset: 0, 0
-  index: 4
+  index: -1
 dirt_part
   rotate: false
   xy: 214, 90
