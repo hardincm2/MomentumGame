@@ -165,7 +165,7 @@ public class Player extends GameObject {
 				pos.set(x,y);
 				
 				// Apply effects if above speed threshold
-				if (velocity.len() < SPEED_THRESHOLD) {
+				if (velocity.x < SPEED_THRESHOLD) {
 					angle += angVel;
 					angVel *= ANG_DECAY;
 				}else{
@@ -243,7 +243,11 @@ public class Player extends GameObject {
 		if (partAir != null) {
 			partAir.update(Gdx.graphics.getDeltaTime());
 			partAir.setPosition(x, y);
-			if (velocity.len() >= SPEED_THRESHOLD) {
+			float partVel = velocity.x;
+			// If swinging, test with velocity vector magnitude
+			if (bird != null)
+				partVel = velocity.len();
+			if (partVel >= SPEED_THRESHOLD) {
 				partAir.start();
 				partAir.draw(batch);
 			}

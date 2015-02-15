@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class GameScreen extends ScreenAdapter {
 	private static final float STEP = 1/60f;
+	
 	private float accumulator;
 	
 	//private Color cTop = new Color(77f / 255f, 236f / 255f, 178f / 255f, 1);
@@ -38,7 +39,8 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		// Clear the screen and set a screen color.
-		Gdx.gl.glClearColor(104f / 255f, 194f / 255f, 219f / 255f, 1);
+		Color worldColor = world.getScreenColor();
+		Gdx.gl.glClearColor(worldColor.r, worldColor.g, worldColor.b, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		// Update the camera and sync the batch with the camera.
@@ -53,7 +55,7 @@ public class GameScreen extends ScreenAdapter {
 		Assets.chunkBatch.begin();
 		Assets.chunkFont.setColor(Color.DARK_GRAY);
 		Assets.drawText(Assets.chunkBatch, "" + world.level, 30, 30);
-		Assets.drawText(Assets.chunkBatch, "" + world.player.velocity.len(), 100, 60 );
+		Assets.drawText(Assets.chunkBatch, "" + Gdx.graphics.getFramesPerSecond(), 100, 60 );
 		Assets.chunkFont.setColor(Color.WHITE);
 		Assets.chunkBatch.end();
 		

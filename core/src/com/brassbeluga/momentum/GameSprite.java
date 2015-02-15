@@ -156,14 +156,23 @@ public class GameSprite implements Comparable<GameSprite> {
 	}
 	
 	/**
-	 * Draws the sprite to the given sprite batch
+	 * Draws the sprite to the given sprite batch. For used on 
+	 * root sprite as there is no reference to a parent transform.
+	 * The identity matrix is used.
 	 * @param batch The sprite batch to draw the sprite to
 	 */
 	public void draw(SpriteBatch batch) {
 		draw(batch, identity);
 	}
 	
-	
+	/**
+	 * Draws the sprite to the given sprite batch. First updates the
+	 * the transform matrices of every child sprite recursively. Then,
+	 * if the calling sprite is the root sprite of the hierarchy, iterates
+	 * through the draw order list and draws the sprites with the correct z-ordering.
+	 * @param batch The sprite batch to draw the sprites to
+	 * @param parentTransform The transform matrix of the parent sprite
+	 */
 	public void draw(SpriteBatch batch, Matrix3 parentTransform) {
 		// Update transform matrix and update transforms in children
 		if (visible) {
@@ -180,12 +189,23 @@ public class GameSprite implements Comparable<GameSprite> {
 		
 	}
 	
+	/**
+	 * Sets this sprite's visibiliy, SHOULD (but doesn't) update
+	 * all the children's visiblities. WIP
+	 * @param visible
+	 */
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 		//for (GameSprite sprite : children)
 		//	sprite.visible = visible;
 	}
 	
+	/**
+	 * Updates the animation logic and draws the texture at 
+	 * the location, orientation, and scale determined by
+	 * the local transform.
+	 * @param batch The sprite batch to draw to
+	 */
 	public void render(SpriteBatch batch) {
 		// Update animation state
 		if (anim != null) {

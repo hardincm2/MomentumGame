@@ -3,6 +3,7 @@ package com.brassbeluga.momentum;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -19,6 +20,9 @@ public class World {
 	// Starting position for the player.
 	public static final float PLAYER_START_X = 8;
 	public static final float PLAYER_START_Y = WORLD_HEIGHT - 18;
+	
+	public static final float COLOR_DROPOFF = 60f;
+	private Color screenColor;
 	
 	private GameSprite backTile;
 	private GameSprite ground;
@@ -60,6 +64,14 @@ public class World {
 		ground = new GameSprite(Assets.ground, 0, 0);
 		start_mound = new GameSprite(Assets.start_mound, 0, 0);
 		generatePegs(5, 4.0f, easyStartBounds);
+		screenColor = new Color(104f / 255f, 194f / 255f, 219f / 255f, 1.0f);
+	}
+	
+	public Color getScreenColor() {
+		float colorSub = 0f;
+		if (player.y > WORLD_HEIGHT * 2.0f)
+			colorSub = 60f * (player.y - World.WORLD_HEIGHT * 2.0f) / WORLD_HEIGHT;
+		return screenColor.set((104f - colorSub) / 255f, (194f - colorSub) / 255f, (219f - colorSub) / 255f, 1.0f);
 	}
 	
 	/**
