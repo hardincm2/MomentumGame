@@ -18,6 +18,7 @@ public class HillsBiome extends Biome{
 		this.ground = new GameSprite(Assets.ground_hills, 0, 0);
 		this.backTile =  new GameSprite(Assets.back_tile_hills, 0, 0);
 		this.backGround = new GameSprite(Assets.back_dist_hills, 0, 0);
+		this.marker = Assets.markerHills;
 		
 		clouds = new Array<Cloud>();
 		bushes = new Array<GameObject>();

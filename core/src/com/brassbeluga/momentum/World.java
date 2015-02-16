@@ -35,7 +35,6 @@ public class World {
 	// Kinematic game objects
 	public Player player;
 	public Array<Bird> birds;
-	public int level;
 	
 	// Which pointer (finger) is currently touching the screen 
 	public int currPointer;
@@ -56,12 +55,20 @@ public class World {
 	public Speedometer meter;
 	public ProgressBar progress;
 	
+	// Level progression
+	public Array<BiomeType> levels;
+	public static final int LEVEL_SET = 10;
+	public int level;
+	
 	public World(Momentum game) {
 		this.game = game;
 		gravity = new Vector2(0.0f, -0.012f);
 		player = new Player(PLAYER_START_X, PLAYER_START_Y, Assets.catBody, this);
 		birds = new Array<Bird>();
+		
 		level = 0;
+		levels = new Array<BiomeType>();
+		generateLevelSequence();
 		
 		birdBounds = new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 		easyStartBounds = new Rectangle(0, WORLD_HEIGHT / 4.0f, WORLD_WIDTH, ((3.0f / 4.0f) * WORLD_HEIGHT));
@@ -72,10 +79,21 @@ public class World {
 		progress = new ProgressBar(WORLD_WIDTH -  WORLD_WIDTH / 6.0f, 4.0f);
 
 		rumbler = new WorldRumbler(game.camera);
-		levelManager = new LevelManager(BiomeType.HILLS);
+		levelManager = new LevelManager();
+		advanceLevel();
 		
 		// Generate the first level
 		newLevel(easyStartBounds);
+	}
+	
+	/*
+	 * Loads all biome-types into the level sequence list and shuffles it
+	 */
+	private void generateLevelSequence() {
+		levels.clear();
+		for (BiomeType biome : BiomeType.values())
+			levels.add(biome);
+		levels.shuffle();
 	}
 
 	
@@ -89,6 +107,7 @@ public class World {
 		levelManager.update(delta);
 		player.update(gravity);
 		meter.updateMeter(MathUtils.clamp((Math.abs(player.velocity.len()) / player.SPEED_THRESHOLD), 0.0f, 1.0f));
+		progress.updateProgress(((level % LEVEL_SET) * WORLD_WIDTH + player.x) / (WORLD_WIDTH * LEVEL_SET));
 		for (Bird bird : birds) {
 			if (!bird.held) {
 				if (bird.x - bird.bounds.width > WORLD_WIDTH)
@@ -112,9 +131,9 @@ public class World {
 			player.setTailNormal();
 			player.nextScreen();
 			level++;
-			if (level == 11) {
-				levelManager.setLevelType(BiomeType.FOREST);
-			}
+			// Advance the level if a multiple of level set is reached
+			if (level % LEVEL_SET == 0 && level != 0)
+				advanceLevel();
 			newLevel(birdBounds);
 		} else if (player.y < player.bounds.height / 2.0f) {
 			player.setDead();
@@ -128,10 +147,26 @@ public class World {
 				} else {
 					newLevel(easyStartBounds);
 				}
-				levelManager.setLevelType(BiomeType.HILLS);
+				generateLevelSequence();
+				advanceLevel();
 				level = 0;
 			}
 		}
+	}
+	
+	/**
+	 * Advances the level in the level manager and
+	 * regenerates the level sequence if necessary.
+	 * Also updates the endpoint textures on the
+	 * progress bar.
+	 */
+	private void advanceLevel() {
+		BiomeType newType = levels.pop();
+		levelManager.setLevelType(newType);
+		if (levels.size == 0)
+			generateLevelSequence();
+		progress.setEndpoints(levelManager.getMarker(newType),
+				levelManager.getMarker(levels.peek()));
 	}
 	
 	/**
@@ -151,6 +186,9 @@ public class World {
 			bird.render(batch);
 		}
 		player.postRender(batch);
+		
+		meter.draw(batch);
+		progress.draw(batch);
 	}
 	
 	/**
