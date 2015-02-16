@@ -52,9 +52,11 @@ public class Player extends GameObject {
 	public ParticleEffectPool partPoolBird;
 	public ParticleEffectPool partPoolDirt;
 	public ParticleEffectPool partPoolAir;
+	public ParticleEffectPool partPoolBoost;
 	public ParticleEffect partBird;
 	public ParticleEffect partDirt;
 	public ParticleEffect partAir;
+	public ParticleEffect partBoost;
 	
 	public Player(float x, float y, TextureRegion texture, World world) {
 		super(x, y,texture);
@@ -69,10 +71,13 @@ public class Player extends GameObject {
 		partPoolBird = new ParticleEffectPool(Assets.partFeathers, 5, 20);
 		partPoolDirt = new ParticleEffectPool(Assets.partDirt, 100, 200);
 		partPoolAir = new ParticleEffectPool(Assets.partAir, 100, 200);
+		partPoolBoost = new ParticleEffectPool(Assets.partBoost, 0, 200);
 		partDirt = partPoolDirt.obtain();
 		partDirt.allowCompletion();
 		partAir = partPoolAir.obtain();
 		partAir.allowCompletion();
+		partBoost = partPoolBoost.obtain();
+		partBoost.allowCompletion();
 		
 		baseHeight = sprite.bounds.y;
 		
@@ -252,6 +257,11 @@ public class Player extends GameObject {
 				partAir.draw(batch);
 			}
 		}
+		if (partBoost != null) {
+			partBoost.update(Gdx.graphics.getDeltaTime());
+			partBoost.setPosition(x, y);
+			partBoost.draw(batch);
+		}
 		// Angling, scaling, and positioning the tail to the peg
 		if (bird != null) {
 			Vector2 tailPos = new Vector2(tailOff.x, tailOff.y).rotate(angle);
@@ -289,8 +299,10 @@ public class Player extends GameObject {
 			Vector2 rope = pegPos.sub(pos);
 			rope.rotate90(-1);
 			float magnitude = rope.len() * rope.len();
-			if (Math.abs(rope.angle(velocity)) < BOOST_TOLERANCE)
+			if (Math.abs(rope.angle(velocity)) < BOOST_TOLERANCE) {
+				partBoost.start();
 				isBoosting = true;
+			}
 			velocity = rope.scl((rope.dot(velocity) / magnitude));
 			setTailLong();
 		}else if (!dead) {
@@ -313,6 +325,7 @@ public class Player extends GameObject {
 		bird = null;
 		targetAngle = 0;
 		isBoosting = false;
+		partBoost.allowCompletion();
 		setTailNormal();
 	}
 	

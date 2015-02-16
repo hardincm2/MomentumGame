@@ -75,6 +75,7 @@ public class Assets {
 	public static ParticleEffect partFeathers;
 	public static ParticleEffect partDirt;
 	public static ParticleEffect partAir;
+	public static ParticleEffect partBoost;
 	
 	// NOT IN USE: Dynamic screen scaling for use across multiple devices
 	public static float SCREEN_SCALE;
@@ -147,6 +148,8 @@ public class Assets {
 		partDirt.load(Gdx.files.internal("part_dirt"), atlas);
 		partAir = new ParticleEffect();
 		partAir.load(Gdx.files.internal("part_air"), atlas);
+		partBoost = new ParticleEffect();
+		partBoost.load(Gdx.files.internal("part_boost"), atlas);
 
 		// Define the screen scale as a percentage of the character taking up the screen (?)
 		SCREEN_SCALE = (PERC_CHARACTER * Gdx.graphics.getHeight()) / ((float)catBody.getRegionHeight());
