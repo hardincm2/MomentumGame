@@ -6,253 +6,260 @@ filter: Nearest,Nearest
 repeat: none
 back_forest
   rotate: false
-  xy: 2, 292
+  xy: 2, 290
   size: 183, 720
   orig: 183, 720
   offset: 0, 0
   index: -1
 back_gradient
   rotate: false
-  xy: 372, 292
+  xy: 372, 290
   size: 1, 720
   orig: 1, 720
   offset: 0, 0
   index: -1
 back_tile
   rotate: false
-  xy: 187, 292
+  xy: 187, 290
   size: 183, 720
   orig: 183, 720
   offset: 0, 0
   index: -1
 bird_body
   rotate: false
-  xy: 778, 405
+  xy: 252, 13
   size: 78, 75
   orig: 78, 75
   offset: 0, 0
   index: -1
 bird_eye_held
   rotate: false
-  xy: 778, 328
+  xy: 778, 304
   size: 78, 75
   orig: 78, 75
   offset: 0, 0
   index: -1
 bird_eye_normal
   rotate: false
-  xy: 353, 125
+  xy: 903, 767
   size: 78, 75
   orig: 78, 75
   offset: 0, 0
   index: -1
 bird_feather
   rotate: false
-  xy: 464, 209
+  xy: 585, 259
   size: 40, 15
   orig: 40, 15
   offset: 0, 0
   index: -1
 bird_wing_down
   rotate: false
-  xy: 903, 838
+  xy: 903, 690
   size: 78, 75
   orig: 78, 75
   offset: 0, 0
   index: -1
 bird_wing_mid
   rotate: false
-  xy: 903, 761
+  xy: 905, 613
   size: 78, 75
   orig: 78, 75
   offset: 0, 0
   index: -1
 bird_wing_top
   rotate: false
-  xy: 903, 684
+  xy: 905, 536
   size: 78, 75
   orig: 78, 75
   offset: 0, 0
   index: -1
 bush1
   rotate: false
-  xy: 2, 2
+  xy: 252, 90
   size: 125, 99
   orig: 125, 99
   offset: 0, 0
   index: -1
 bush2
   rotate: false
-  xy: 778, 583
+  xy: 778, 581
   size: 125, 99
   orig: 125, 99
   offset: 0, 0
   index: -1
 bush3
   rotate: false
-  xy: 778, 482
+  xy: 778, 480
   size: 125, 99
   orig: 125, 99
   offset: 0, 0
   index: -1
 cat_body
   rotate: false
-  xy: 778, 849
+  xy: 778, 847
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_body_original
   rotate: false
-  xy: 2, 127
+  xy: 2, 26
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_face_blink
   rotate: false
-  xy: 778, 684
+  xy: 778, 682
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_face_normal
   rotate: false
-  xy: 127, 127
+  xy: 127, 26
   size: 123, 163
   orig: 123, 163
   offset: 0, 0
   index: -1
 cat_tail
   rotate: false
-  xy: 129, 4
+  xy: 778, 381
   size: 65, 97
   orig: 65, 97
   offset: 0, 0
   index: -1
 cat_tail_curl
   rotate: false
-  xy: 252, 133
+  xy: 903, 943
   size: 99, 67
   orig: 99, 67
   offset: 0, 0
   index: -1
 cat_tail_long
   rotate: false
-  xy: 2, 103
+  xy: 2, 2
   size: 210, 22
   orig: 210, 22
   offset: 0, 0
   index: -1
 cat_tail_long0
   rotate: false
-  xy: 252, 202
+  xy: 373, 252
   size: 210, 22
   orig: 210, 22
   offset: 0, 0
   index: -1
 cat_tail_rings
   rotate: false
-  xy: 903, 915
+  xy: 903, 844
   size: 65, 97
   orig: 65, 97
   offset: 0, 0
   index: -1
 cloud1
   rotate: false
-  xy: 375, 830
+  xy: 375, 828
   size: 401, 182
   orig: 401, 182
   offset: 0, 0
   index: -1
 cloud2
   rotate: false
-  xy: 375, 646
+  xy: 375, 644
   size: 401, 182
   orig: 401, 182
   offset: 0, 0
   index: -1
 cloud3
   rotate: false
-  xy: 375, 462
+  xy: 375, 460
   size: 401, 182
   orig: 401, 182
   offset: 0, 0
   index: -1
 cloud4
   rotate: false
-  xy: 375, 278
+  xy: 375, 276
   size: 401, 182
   orig: 401, 182
   offset: 0, 0
   index: -1
 dirt_part
   rotate: false
-  xy: 905, 647
+  xy: 845, 410
   size: 35, 35
   orig: 35, 35
   offset: 0, 0
   index: -1
 par_smoke
   rotate: false
-  xy: 676, 252
+  xy: 778, 278
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 part_air
   rotate: false
-  xy: 196, 85
+  xy: 1004, 994
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 part_star
   rotate: false
-  xy: 858, 423
+  xy: 950, 510
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 peg
   rotate: false
-  xy: 630, 234
+  xy: 332, 46
   size: 44, 42
   orig: 44, 42
   offset: 0, 0
   index: -1
 ui_marker_forest
   rotate: false
-  xy: 858, 449
+  xy: 845, 447
   size: 43, 31
   orig: 43, 31
   offset: 0, 0
   index: -1
 ui_marker_hills
   rotate: false
-  xy: 778, 295
+  xy: 905, 503
   size: 43, 31
   orig: 43, 31
   offset: 0, 0
   index: -1
 ui_marker_player
   rotate: false
-  xy: 970, 981
+  xy: 332, 13
   size: 43, 31
   orig: 43, 31
   offset: 0, 0
   index: -1
 ui_meter_fill
   rotate: false
-  xy: 433, 164
+  xy: 970, 905
   size: 19, 36
   orig: 19, 36
   offset: 0, 0
   index: -1
 ui_meter_overlay
   rotate: false
-  xy: 252, 226
+  xy: 2, 191
   size: 376, 50
   orig: 376, 50
+  offset: 0, 0
+  index: -1
+ui_progress_bar
+  rotate: false
+  xy: 2, 243
+  size: 369, 45
+  orig: 369, 45
   offset: 0, 0
   index: -1

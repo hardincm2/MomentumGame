@@ -13,6 +13,7 @@ import com.brassbeluga.momentum.gameobjects.Bird;
 import com.brassbeluga.momentum.gameobjects.Cloud;
 import com.brassbeluga.momentum.gameobjects.GameObject;
 import com.brassbeluga.momentum.gameobjects.Player;
+import com.brassbeluga.momentum.gui.ProgressBar;
 import com.brassbeluga.momentum.gui.Speedometer;
 
 public class World {
@@ -56,6 +57,7 @@ public class World {
 	private Rectangle easyStartBounds;
 	
 	public Speedometer meter;
+	public ProgressBar progress;
 	
 	public World(Momentum game) {
 		this.game = game;
@@ -85,8 +87,9 @@ public class World {
 		ground.addChild(transition);
 		start_mound = new GameSprite(Assets.start_mound, 0, 0);
 		
-		meter = new Speedometer(WORLD_WIDTH / 2.0f, 4.0f);
+		meter = new Speedometer(WORLD_WIDTH / 3.0f - WORLD_WIDTH / 6.0f, 4.0f);
 		meter.centerOrigin();
+		progress = new ProgressBar(WORLD_WIDTH -  WORLD_WIDTH / 6.0f, 4.0f);
 		
 		rumbler = new WorldRumbler(game.camera);
 		levelManager = new LevelManager(this, LevelType.HILLS);
@@ -110,7 +113,7 @@ public class World {
 	public void update(float delta) {
 		updateCamera(delta);
 		player.update(gravity);
-		meter.updateMeter(MathUtils.clamp((Math.abs(player.velocity.x) / player.SPEED_THRESHOLD), 0.0f, 1.0f));
+		meter.updateMeter(MathUtils.clamp((Math.abs(player.velocity.len()) / player.SPEED_THRESHOLD), 0.0f, 1.0f));
 		for (Bird bird : birds) {
 			if (!bird.held) {
 				if (bird.x - bird.bounds.width > WORLD_WIDTH)
@@ -192,6 +195,7 @@ public class World {
 		player.postRender(batch);
 		
 		meter.draw(batch);
+		progress.draw(batch);
 	}
 	
 	private void updateCamera(float delta) {

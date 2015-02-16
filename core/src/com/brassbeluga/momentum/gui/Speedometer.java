@@ -13,6 +13,7 @@ public class Speedometer extends GameSprite {
 
 	public Speedometer(float x, float y) {
 		super(Assets.meterOverlay, x, y);
+		centerOrigin();
 		fill = new GameSprite(Assets.meterFill, 0, 0);
 		fill.drawOrder = 1;
 		fill.centerOrigin();

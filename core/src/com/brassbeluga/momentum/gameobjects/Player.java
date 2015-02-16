@@ -173,7 +173,7 @@ public class Player extends GameObject {
 				pos.set(x,y);
 				
 				// Apply effects if above speed threshold
-				if (velocity.x < SPEED_THRESHOLD) {
+				if (velocity.len() < SPEED_THRESHOLD) {
 					angle += angVel;
 					angVel *= ANG_DECAY;
 					partAir.allowCompletion();

@@ -80,6 +80,10 @@ public class Assets {
 	// GUI
 	public static TextureRegion meterOverlay;
 	public static TextureRegion meterFill;
+	public static TextureRegion progressBar;
+	public static TextureRegion markerPlayer;
+	public static TextureRegion markerHills;
+	public static TextureRegion markerForest;
 	
 	// NOT IN USE: Dynamic screen scaling for use across multiple devices
 	public static float SCREEN_SCALE;
@@ -148,6 +152,10 @@ public class Assets {
 		// GUI texture
 		meterOverlay = atlas.findRegion("ui_meter_overlay");
 		meterFill = atlas.findRegion("ui_meter_fill");
+		progressBar = atlas.findRegion("ui_progress_bar");
+		markerPlayer = atlas.findRegion("ui_marker_player");
+		markerHills = atlas.findRegion("ui_marker_hills");
+		markerForest = atlas.findRegion("ui_marker_forest");
 		
 		// Create new particle effects with given information
 		partFeathers = new ParticleEffect();
