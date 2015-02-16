@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.brassbeluga.momentum.biomes.Biome;
 import com.brassbeluga.momentum.biomes.ForestBiome;
 import com.brassbeluga.momentum.biomes.HillsBiome;
@@ -24,17 +25,28 @@ public class LevelManager {
 	/**
 	 * Constructs a new level manager.
 	 * 
-	 * @param startBiome The biome for the level manager to start in.
 	 */
-	public LevelManager(BiomeType startBiome) {
+	public LevelManager() {
 		this.biomes = new HashMap<BiomeType, Biome>();
 		
 		// Add in the different biome types to the mapping.
 		biomes.put(BiomeType.HILLS, new HillsBiome());
 		biomes.put(BiomeType.FOREST, new ForestBiome());
-		
-		this.currentBiome = biomes.get(startBiome);
 		//this.transitionToType = null;
+	}
+	
+	/**
+	 * Returns the biome marker texture of the given biome type
+	 * for use on the progress bar. Returns null if the biome
+	 * type does not exist.
+	 * @param type The desired biome marker
+	 * @return The texture of the biomes marker
+	 */
+	public TextureRegion getMarker(BiomeType type) {
+		Biome biome = biomes.get(type);
+		if (biome != null)
+			return biome.marker;
+		return null;
 	}
 	
 	/**

@@ -10,6 +10,7 @@ public class ForestBiome extends Biome {
 		this.ground = new GameSprite(Assets.ground_forest, 0, 0);
 		this.backTile =  new GameSprite(Assets.back_tile_forest, 0, 0);
 		this.backGround = new GameSprite(Assets.back_dist_forest_trees, 0, 0);
+		this.marker = Assets.markerForest;
 	}
 	
 	@Override
