@@ -13,12 +13,12 @@ import com.brassbeluga.momentum.GameSprite;
 import com.brassbeluga.momentum.World;
 
 public class Player extends GameObject {
-	public static float HEIGHT = 10;
-	public static float WIDTH = 10;
-	public static float TARGET_ANGLE_VEL = 10;
-	public static float MAX_ANG_VEL = 5;
-	public static float ANG_DECAY = 0.995f;
-	public static float SPEED_THRESHOLD = 2.0f; 
+	public static final float HEIGHT = 10;
+	public static final float WIDTH = 10;
+	public static final float TARGET_ANGLE_VEL = 10;
+	public static final float MAX_ANG_VEL = 5;
+	public static final float ANG_DECAY = 0.995f;
+	public static final float SPEED_THRESHOLD = 2.0f; 
 	public Vector2 tailOff = new Vector2(-43, -43);
 	
 	public boolean dead;

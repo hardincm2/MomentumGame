@@ -57,7 +57,7 @@ public class World {
 	
 	// Level progression
 	public Array<BiomeType> levels;
-	public static final int LEVEL_SET = 10;
+	public static final int LEVEL_SET = 4;
 	public int level;
 	
 	public World(Momentum game) {
@@ -94,6 +94,8 @@ public class World {
 		for (BiomeType biome : BiomeType.values())
 			levels.add(biome);
 		levels.shuffle();
+		if (levelManager != null)
+			levelManager.resetTransitions();
 	}
 
 	
@@ -106,7 +108,8 @@ public class World {
 		updateCamera(delta);
 		levelManager.update(delta);
 		player.update(gravity);
-		meter.updateMeter(MathUtils.clamp((Math.abs(player.velocity.len()) / player.SPEED_THRESHOLD), 0.0f, 1.0f));
+		//Update the ui components
+		meter.updateMeter(MathUtils.clamp((Math.abs(player.velocity.len()) / Player.SPEED_THRESHOLD), 0.0f, 1.0f));
 		progress.updateProgress(((level % LEVEL_SET) * WORLD_WIDTH + player.x) / (WORLD_WIDTH * LEVEL_SET));
 		for (Bird bird : birds) {
 			if (!bird.held) {
@@ -134,6 +137,8 @@ public class World {
 			// Advance the level if a multiple of level set is reached
 			if (level % LEVEL_SET == 0 && level != 0)
 				advanceLevel();
+			else if (level % LEVEL_SET == LEVEL_SET - 2)
+				levelManager.startTransition(levels.peek());
 			newLevel(birdBounds);
 		} else if (player.y < player.bounds.height / 2.0f) {
 			player.setDead();
