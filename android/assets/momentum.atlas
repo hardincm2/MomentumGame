@@ -195,7 +195,7 @@ dirt_part
   index: -1
 par_smoke
   rotate: false
-  xy: 433, 176
+  xy: 676, 252
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -209,7 +209,7 @@ part_air
   index: -1
 part_star
   rotate: false
-  xy: 676, 252
+  xy: 858, 423
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -240,6 +240,13 @@ ui_marker_player
   xy: 970, 981
   size: 43, 31
   orig: 43, 31
+  offset: 0, 0
+  index: -1
+ui_meter_fill
+  rotate: false
+  xy: 433, 164
+  size: 19, 36
+  orig: 19, 36
   offset: 0, 0
   index: -1
 ui_meter_overlay

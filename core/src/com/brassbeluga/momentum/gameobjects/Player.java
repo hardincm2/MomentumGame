@@ -176,7 +176,9 @@ public class Player extends GameObject {
 				if (velocity.x < SPEED_THRESHOLD) {
 					angle += angVel;
 					angVel *= ANG_DECAY;
+					partAir.allowCompletion();
 				}else{
+					partAir.start();
 					angle = (float) (MathUtils.radiansToDegrees * Math.atan2(pos.y - lastPos.y, pos.x - lastPos.x)) - 90;
 					lastPos.set(x, y);
 				}
@@ -241,8 +243,7 @@ public class Player extends GameObject {
 		if (partDirt != null) {
 			partDirt.update(Gdx.graphics.getDeltaTime());
 			partDirt.setPosition(x, y - sprite.bounds.y / 4.0f);
-			if (dead)
-				partDirt.draw(batch);
+			partDirt.draw(batch);
 		}
 	}
 	
@@ -251,14 +252,7 @@ public class Player extends GameObject {
 		if (partAir != null) {
 			partAir.update(Gdx.graphics.getDeltaTime());
 			partAir.setPosition(x, y);
-			float partVel = velocity.x;
-			// If swinging, test with velocity vector magnitude
-			if (bird != null)
-				partVel = velocity.len();
-			if (partVel >= SPEED_THRESHOLD) {
-				partAir.start();
-				partAir.draw(batch);
-			}
+			partAir.draw(batch);
 		}
 		if (partBoost != null) {
 			partBoost.update(Gdx.graphics.getDeltaTime());
