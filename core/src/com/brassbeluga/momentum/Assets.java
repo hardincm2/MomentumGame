@@ -75,6 +75,11 @@ public class Assets {
 	public static ParticleEffect partFeathers;
 	public static ParticleEffect partDirt;
 	public static ParticleEffect partAir;
+	public static ParticleEffect partBoost;
+	
+	// GUI
+	public static TextureRegion meterOverlay;
+	public static TextureRegion meterFill;
 	
 	// NOT IN USE: Dynamic screen scaling for use across multiple devices
 	public static float SCREEN_SCALE;
@@ -140,6 +145,10 @@ public class Assets {
 		ground_forest_trans = new TextureRegion(new Texture(Gdx.files.internal("gnd_forest_trans.png")));
 		start_mound = new TextureRegion(new Texture(Gdx.files.internal("start_mound.png")));
 		
+		// GUI texture
+		meterOverlay = atlas.findRegion("ui_meter_overlay");
+		meterFill = atlas.findRegion("ui_meter_fill");
+		
 		// Create new particle effects with given information
 		partFeathers = new ParticleEffect();
 		partFeathers.load(Gdx.files.internal("part_feathers"), atlas);
@@ -147,6 +156,8 @@ public class Assets {
 		partDirt.load(Gdx.files.internal("part_dirt"), atlas);
 		partAir = new ParticleEffect();
 		partAir.load(Gdx.files.internal("part_air"), atlas);
+		partBoost = new ParticleEffect();
+		partBoost.load(Gdx.files.internal("part_boost"), atlas);
 
 		// Define the screen scale as a percentage of the character taking up the screen (?)
 		SCREEN_SCALE = (PERC_CHARACTER * Gdx.graphics.getHeight()) / ((float)catBody.getRegionHeight());

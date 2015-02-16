@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.brassbeluga.momentum.LevelManager.BiomeType;
 import com.brassbeluga.momentum.gameobjects.Bird;
 import com.brassbeluga.momentum.gameobjects.Player;
+import com.brassbeluga.momentum.gui.Speedometer;
 
 public class World {
 	private Momentum game;
@@ -51,6 +52,8 @@ public class World {
 	// Manager for transitions and generation of different biomes
 	private LevelManager levelManager;
 	
+	public Speedometer meter;
+	
 	public World(Momentum game) {
 		this.game = game;
 		gravity = new Vector2(0.0f, -0.012f);
@@ -61,6 +64,10 @@ public class World {
 		birdBounds = new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 		easyStartBounds = new Rectangle(0, WORLD_HEIGHT / 4.0f, WORLD_WIDTH, ((3.0f / 4.0f) * WORLD_HEIGHT));
 		start_mound = new GameSprite(Assets.start_mound, 0, 0);
+		
+		meter = new Speedometer(WORLD_WIDTH / 2.0f, 4.0f);
+		meter.centerOrigin();
+
 		rumbler = new WorldRumbler(game.camera);
 		levelManager = new LevelManager(BiomeType.HILLS);
 		
@@ -78,6 +85,7 @@ public class World {
 		updateCamera(delta);
 		levelManager.update(delta);
 		player.update(gravity);
+		meter.updateMeter(MathUtils.clamp((Math.abs(player.velocity.x) / player.SPEED_THRESHOLD), 0.0f, 1.0f));
 		for (Bird bird : birds) {
 			if (!bird.held) {
 				if (bird.x - bird.bounds.width > WORLD_WIDTH)
