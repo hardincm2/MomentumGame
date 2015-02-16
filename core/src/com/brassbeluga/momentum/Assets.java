@@ -63,6 +63,9 @@ public class Assets {
 	
 	// Game sounds
 	public static Music noodling;
+	public static Music medieval;
+	public static Music dragonroost;
+	public static Music zeldashop;
 	
 	// Font rendering
 	public static SpriteBatch chunkBatch;
@@ -149,6 +152,9 @@ public class Assets {
 		SCREEN_SCALE = (PERC_CHARACTER * Gdx.graphics.getHeight()) / ((float)catBody.getRegionHeight());
 		
 		noodling = Gdx.audio.newMusic(Gdx.files.internal("Noodling.mp3"));
+		medieval = Gdx.audio.newMusic(Gdx.files.internal("medieval.wav"));
+		dragonroost = Gdx.audio.newMusic(Gdx.files.internal("dragonroost.mp3"));
+		zeldashop = Gdx.audio.newMusic(Gdx.files.internal("zelda_shop.mp3"));
 		
 		chunkBatch = new SpriteBatch();
 		chunkFont = new BitmapFont(Gdx.files.internal("chunk.fnt"),
