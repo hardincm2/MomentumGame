@@ -119,17 +119,17 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		Random r = new Random();
+		Random r = new Random();/*
 		currentSong = songs.get(r.nextInt(songs.size()));
 		currentSong.setLooping(true);
-		currentSong.play();
+		currentSong.play();*/
 		
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}
 	
 	@Override
 	public void hide() {
-		currentSong.stop();
+		//currentSong.stop();
 		Gdx.input.setInputProcessor(null);
 	}
 }

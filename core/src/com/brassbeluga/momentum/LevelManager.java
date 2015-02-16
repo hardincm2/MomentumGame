@@ -21,38 +21,42 @@ public class LevelManager {
 		HILLS, FOREST
 	}
 	
-	public LevelManager(SpriteBatch batch, World world, LevelType startType) {
-		this.batch = batch;
+	public LevelManager(World world, LevelType startType) {
 		this.world = world;
-		this.currentLevelType = startType;
 		this.transitionToLevel = null;
 		
 		backTile = new GameSprite(Assets.back_tile_hills, 0, 0);
-		backTile.addAnimation("hills", Assets.back_tile_hills);
-		backTile.addAnimation("forest", Assets.back_tile_forest);
+		backTile.addAnimation(LevelType.HILLS.toString(), Assets.back_tile_hills);
+		backTile.addAnimation(LevelType.FOREST.toString(), Assets.back_tile_forest);
 		ground = new GameSprite(Assets.ground_hills, 0, 0);
-		ground.addAnimation("hills", Assets.ground_hills);
-		ground.addAnimation("forest", Assets.ground_forest);
+		ground.addAnimation(LevelType.HILLS.toString(), Assets.ground_hills);
+		ground.addAnimation(LevelType.FOREST.toString(), Assets.ground_forest);
 		backGround = new GameSprite(Assets.back_dist_hills, 0, 0);
 		backGround.drawOrder = 1;
-		backGround.addAnimation("hills", Assets.back_dist_hills);
-		backGround.addAnimation("forest", Assets.back_dist_forest_trees);
+		backGround.addAnimation(LevelType.HILLS.toString(), Assets.back_dist_hills);
+		backGround.addAnimation(LevelType.FOREST.toString(), Assets.back_dist_forest_trees);
 		transition = new GameSprite(Assets.ground_forest_trans, 0, 0);
-		transition.addAnimation("hills", Assets.ground_hills_trans);
-		transition.addAnimation("forest", Assets.ground_forest_trans);
+		transition.addAnimation(LevelType.HILLS.toString(), Assets.ground_hills_trans);
+		transition.addAnimation(LevelType.FOREST.toString(), Assets.ground_forest_trans);
 		transition.visible = false;
 		ground.addChild(backGround);
 		ground.addChild(transition);
 		start_mound = new GameSprite(Assets.start_mound, 0, 0);
 		
-		backTile.playAnimation(currentLevelType);
-		ground.playAnimation(currentLevelType);
-		backGround.playAnimation(currentLevelType);
-		transition.visible = false;
+		setLevelType(startType);
 	}
 	
 	public void transitionTo(LevelType type) {
 		transitionToLevel = type;
+	}
+	
+	public void setLevelType(LevelType type) {
+		this.currentLevelType = type;
+		
+		backTile.playAnimation(currentLevelType.toString());
+		ground.playAnimation(currentLevelType.toString());
+		backGround.playAnimation(currentLevelType.toString());
+		transition.visible = false;
 	}
 	
 	public void renderLevel(SpriteBatch batch) {

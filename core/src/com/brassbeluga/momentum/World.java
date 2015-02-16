@@ -85,7 +85,7 @@ public class World {
 		
 		
 		rumbler = new WorldRumbler(game.camera);
-		//levelManager = new LevelManager(game.batch, this, LevelType.HILLS);
+		levelManager = new LevelManager(this, LevelType.HILLS);
 		
 		generatePegs(5, 4.0f, easyStartBounds);
 		screenColor = new Color(104f / 255f, 194f / 255f, 219f / 255f, 1.0f);
@@ -134,7 +134,7 @@ public class World {
 			if (level == 10) {
 				transition.visible = true;
 			} else if (level == 11) {
-				setLevelType("forest");
+				levelManager.setLevelType(LevelType.FOREST);
 			}
 			generatePegs(5);
 		} else if (player.y < player.bounds.height / 2.0f) {
@@ -149,7 +149,7 @@ public class World {
 				} else {
 					generatePegs(5, 4.0f, easyStartBounds);
 				}
-				setLevelType("hills");
+				levelManager.setLevelType(LevelType.HILLS);
 				level = 0;
 			}
 		}
@@ -169,9 +169,7 @@ public class World {
 	 * @param batch The sprite batch to draw to.
 	 */
 	public void render(SpriteBatch batch) {
-		for (int i = 0; i < WORLD_WIDTH / backTile.bounds.x; i++)
-			batch.draw(backTile.texture, i * backTile.bounds.x, 0, backTile.bounds.x, backTile.bounds.y);
-		ground.draw(batch);
+		levelManager.renderLevel(batch);
 		if (level == 0)
 			batch.draw(start_mound.texture, 0, 0, start_mound.bounds.x, start_mound.bounds.y);
 		if (levelType == "hills") {
