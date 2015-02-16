@@ -3,6 +3,9 @@ package com.brassbeluga.momentum;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.brassbeluga.momentum.screens.DeathScreen;
+import com.brassbeluga.momentum.screens.GameScreen;
+import com.brassbeluga.momentum.screens.StartScreen;
 
 public class Momentum extends Game {
 	

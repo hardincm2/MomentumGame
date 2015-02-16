@@ -131,6 +131,7 @@ public class GameSprite implements Comparable<GameSprite> {
 	
 	/**
 	 * Plays the given animation if it exists
+	 * 
 	 * @param name The name of the animation
 	 * @param looping Whether or not the animation should loop
 	 */
@@ -257,7 +258,7 @@ public class GameSprite implements Comparable<GameSprite> {
 		localTransform = localTransform.translate(-offset.x, -offset.y);
 	}
 	
-	protected static Vector2 getAdjustedSpriteBounds(TextureRegion texture) {
+	public static Vector2 getAdjustedSpriteBounds(TextureRegion texture) {
 		float width = (texture.getRegionWidth() * 1.0f / Gdx.graphics.getWidth()) * World.WORLD_WIDTH;
 		float height = (texture.getRegionHeight() * 1.0f / Gdx.graphics.getHeight()) * World.WORLD_HEIGHT;
 		return new Vector2(width, height);
