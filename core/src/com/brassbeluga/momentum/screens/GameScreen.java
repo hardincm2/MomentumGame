@@ -61,8 +61,7 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		// Clear the screen and set a screen color.
-		Color worldColor = world.getScreenColor();
-		Gdx.gl.glClearColor(worldColor.r, worldColor.g, worldColor.b, 1.0f);
+		Gdx.gl.glClearColor(104f / 255f, 194f / 255f, 219f / 255f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		// Update the camera and sync the batch with the camera.

@@ -1,22 +1,20 @@
 package com.brassbeluga.momentum;
 
 import java.util.Iterator;
-import java.util.Random;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.brassbeluga.momentum.LevelManager.LevelType;
+import com.brassbeluga.momentum.LevelManager.BiomeType;
 import com.brassbeluga.momentum.gameobjects.Bird;
-import com.brassbeluga.momentum.gameobjects.Cloud;
-import com.brassbeluga.momentum.gameobjects.GameObject;
 import com.brassbeluga.momentum.gameobjects.Player;
 
 public class World {
 	private Momentum game;
+	private static final int BIRD_COUNT = 5;
+	private static final float INC_FACTOR = 4.0f;
 	
 	// World dimensions.
 	public static final float WORLD_WIDTH = 100;
@@ -26,77 +24,50 @@ public class World {
 	public static final float PLAYER_START_X = 8;
 	public static final float PLAYER_START_Y = WORLD_HEIGHT - 18;
 	
-	public static final float COLOR_DROPOFF = 20f;
+	// Velocity at which screen rumbling begins.
 	public static final float RUMBLE_VELOCITY = 2.0f;
 	
-	private Color screenColor;
-	public String levelType = "hills";
-	
-	private GameSprite backTile;
-	private GameSprite ground;
-	private GameSprite backGround;
-	private GameSprite transition;
-	private GameSprite start_mound;
+	// World gravity
+	public static Vector2 gravity;
 
-	public Vector2 gravity;
+	// Kinematic game objects
 	public Player player;
 	public Array<Bird> birds;
-	public Array<GameObject> bushes;
-	public Array<Cloud> clouds;
-	
-	private Rectangle resetPegBounds;
-	// Keeps track of which level the player is currently on.
 	public int level;
 	
 	// Which pointer (finger) is currently touching the screen 
 	public int currPointer;
-
-	private WorldRumbler rumbler;
-	private LevelManager levelManager;
+	
+	// Bounds for bird generation.
+	private Rectangle birdBounds;
 	private Rectangle easyStartBounds;
+	
+	// Starting mound for player.
+	private GameSprite start_mound;
+	
+	// Rumbler for the screen.
+	private WorldRumbler rumbler;
+	
+	// Manager for transitions and generation of different biomes
+	private LevelManager levelManager;
 	
 	public World(Momentum game) {
 		this.game = game;
 		gravity = new Vector2(0.0f, -0.012f);
 		player = new Player(PLAYER_START_X, PLAYER_START_Y, Assets.catBody, this);
 		birds = new Array<Bird>();
-		bushes = new Array<GameObject>();
-		clouds = new Array<Cloud>();
 		level = 0;
-		resetPegBounds = new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+		
+		birdBounds = new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 		easyStartBounds = new Rectangle(0, WORLD_HEIGHT / 4.0f, WORLD_WIDTH, ((3.0f / 4.0f) * WORLD_HEIGHT));
-		backTile = new GameSprite(Assets.back_tile_hills, 0, 0);
-		backTile.addAnimation("hills", Assets.back_tile_hills);
-		backTile.addAnimation("forest", Assets.back_tile_forest);
-		ground = new GameSprite(Assets.ground_hills, 0, 0);
-		ground.addAnimation("hills", Assets.ground_hills);
-		ground.addAnimation("forest", Assets.ground_forest);
-		backGround = new GameSprite(Assets.back_dist_hills, 0, 0);
-		backGround.drawOrder = 1;
-		backGround.addAnimation("hills", Assets.back_dist_hills);
-		backGround.addAnimation("forest", Assets.back_dist_forest_trees);
-		transition = new GameSprite(Assets.ground_forest_trans, 0, 0);
-		transition.addAnimation("hills", Assets.ground_hills_trans);
-		transition.addAnimation("forest", Assets.ground_forest_trans);
-		transition.visible = false;
-		ground.addChild(backGround);
-		ground.addChild(transition);
 		start_mound = new GameSprite(Assets.start_mound, 0, 0);
-		
-		
 		rumbler = new WorldRumbler(game.camera);
-		levelManager = new LevelManager(this, LevelType.HILLS);
+		levelManager = new LevelManager(BiomeType.HILLS);
 		
-		generatePegs(5, 4.0f, easyStartBounds);
-		screenColor = new Color(104f / 255f, 194f / 255f, 219f / 255f, 1.0f);
+		// Generate the first level
+		newLevel(easyStartBounds);
 	}
-	
-	public Color getScreenColor() {
-		float colorSub = 0f;
-		if (player.y > WORLD_HEIGHT * 2.0f)
-			colorSub = 60f * (player.y - World.WORLD_HEIGHT * 2.0f) / WORLD_HEIGHT;
-		return screenColor.set((104f - colorSub) / 255f, (194f - colorSub) / 255f, (219f - colorSub) / 255f, 1.0f);
-	}
+
 	
 	/**
 	 * Updates the world and all of the bodies contained within it.
@@ -105,6 +76,7 @@ public class World {
 	 */
 	public void update(float delta) {
 		updateCamera(delta);
+		levelManager.update(delta);
 		player.update(gravity);
 		for (Bird bird : birds) {
 			if (!bird.held) {
@@ -113,10 +85,8 @@ public class World {
 			}
 			bird.update(gravity);
 		}
-		for (Cloud cloud : clouds) {
-			cloud.update(gravity);
-		}
 		if (player.y > WORLD_HEIGHT + player.bounds.height / 2) {
+			// Player has hit the ceiling
 			player.clearPeg();
 			player.velocity.y = -player.velocity.y;
 			rumbler.rumble(1.0f, 0.2f, delta);
@@ -131,12 +101,10 @@ public class World {
 			player.setTailNormal();
 			player.nextScreen();
 			level++;
-			if (level == 10) {
-				transition.visible = true;
-			} else if (level == 11) {
-				levelManager.setLevelType(LevelType.FOREST);
+			if (level == 11) {
+				levelManager.setLevelType(BiomeType.FOREST);
 			}
-			generatePegs(5);
+			newLevel(birdBounds);
 		} else if (player.y < player.bounds.height / 2.0f) {
 			player.setDead();
 		} else if (player.dead) {
@@ -145,22 +113,14 @@ public class World {
 				player.dead = false;
 				game.onDeath(level);
 				if (level > 5) {
-					generatePegs(5, 4.0f, resetPegBounds);
+					newLevel(birdBounds);
 				} else {
-					generatePegs(5, 4.0f, easyStartBounds);
+					newLevel(easyStartBounds);
 				}
-				levelManager.setLevelType(LevelType.HILLS);
+				levelManager.setLevelType(BiomeType.HILLS);
 				level = 0;
 			}
 		}
-	}
-	
-	public void setLevelType(String type) {
-		levelType = type;
-		backTile.playAnimation(levelType);
-		ground.playAnimation(levelType);
-		backGround.playAnimation(levelType);
-		transition.visible = false;
 	}
 	
 	/**
@@ -170,49 +130,16 @@ public class World {
 	 */
 	public void render(SpriteBatch batch) {
 		levelManager.renderLevel(batch);
+		
+		// Need a starting mound if the first level.
 		if (level == 0)
 			batch.draw(start_mound.texture, 0, 0, start_mound.bounds.x, start_mound.bounds.y);
-		if (levelType == "hills") {
-	 		for (Cloud cloud : clouds)
-				cloud.render(batch);
-			for (GameObject bush : bushes)
-				bush.render(batch);
-		}
-		
-		//levelManager.renderLevel(batch);
 		
 		player.render(batch);
-		for (Bird bird : birds)
+		for (Bird bird : birds) {
 			bird.render(batch);
-		player.postRender(batch);
-	}
-	
-	private void updateCamera(float delta) {
-		float camX = WORLD_WIDTH / 2.0f;
-		float camY = WORLD_HEIGHT / 2.0f;
-		
-		/*
-		if (player.x > camX)
-			camX = player.x;
-		
-		if ((player.y + player.bounds.height / 2.0f) > WORLD_HEIGHT)
-			camY = player.y + player.bounds.height / 2.0f - WORLD_HEIGHT / 2.0f;
-		*/
-		
-		game.camera.position.set(camX, camY, 0.0f);
-		if (player.velocity.len() > RUMBLE_VELOCITY) {
-			rumbler.rumble((float) (0.1f * (Math.pow(player.velocity.x / RUMBLE_VELOCITY, 3f))), 0.05f, delta);
 		}
-		/*
-		if(currentRumbleTime <= rumbleTime) {
-			currentRumblePower = rumblePower * ((rumbleTime - currentRumbleTime) / rumbleTime);
-			rumbleX = (random.nextFloat() - 0.5f) * 2 * currentRumblePower;
-			rumbleY = (random.nextFloat() - 0.5f) * 2 * currentRumblePower;
-		        	              
-			game.camera.translate(-rumbleX, -rumbleY);
-			currentRumbleTime += delta;
-		}*/
-		game.camera.update();
+		player.postRender(batch);
 	}
 	
 	/**
@@ -261,50 +188,38 @@ public class World {
 			player.clearPeg();
 		}
 	}
-
-	/**
-	 * Semi-randomly generates the pegs for the level.
-	 * 
-	 * @param amount The number of pegs to generate
-	 */
-	private void generatePegs(int amount) {
-		generatePegs(amount, 4.0f, new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT));
-	}
 	
-	private void generatePegs(int amount, float incFactor, Rectangle bounds) {
+	private void updateCamera(float delta) {
+		float camX = WORLD_WIDTH / 2.0f;
+		float camY = WORLD_HEIGHT / 2.0f;
+		
+		game.camera.position.set(camX, camY, 0.0f);
+		
+		if (player.velocity.len() > RUMBLE_VELOCITY) {
+			rumbler.rumble((float) (0.1f * (Math.pow(player.velocity.x / RUMBLE_VELOCITY, 3f))), 0.05f, delta);
+		}
+		
+		game.camera.update();
+	}
+
+
+	private void newLevel(Rectangle bounds) {
+		levelManager.generateLevel();
 		birds.clear();
-		bushes.clear();
-		for (int i = 0; i < Math.round(Math.random() * 25.0); i++) {
-			GameObject bush = new GameObject((float) (Math.random() * WORLD_WIDTH), 
-					(float) (8 + Math.random() * 4.0f), Assets.bushes[MathUtils.random(2)]);
-			bush.sprite.angle = MathUtils.random(20) - 10f;
-			bush.sprite.scale.x = bush.sprite.scale.y = MathUtils.random(0.2f) - 0.1f + 1.0f;
-			boolean added = false;
-			for (int p = 0; p < bushes.size; p++) {
-				if (bushes.get(p).y < bush.y) {
-					bushes.insert(p, bush);
-					added = true;
-					break;
-				}
-			}
-			if (!added)
-				bushes.add(bush);
-		}
-		clouds.clear();
-		for (int i = 0; i < Math.round(Math.random() * 25.0); i++) {
-			Cloud cloud = new Cloud((float) (Math.random() * WORLD_WIDTH), 
-					(float) (WORLD_HEIGHT - Math.random() * 4.0f), Assets.clouds[MathUtils.random(3)]);
-			cloud.sprite.scale.x = cloud.sprite.scale.y = MathUtils.random(0.2f) - 0.1f + 1.0f;
-			clouds.add(cloud);
-		}
+		
+		// Generate the birds semi-randomly
 		float lastX = 0;
-		for (int i = 0; i < amount; i++) {
-			float xInc = bounds.width / incFactor - bounds.width / (2.0f * incFactor) + MathUtils.random(0, bounds.width / incFactor);
+		for (int i = 0; i < BIRD_COUNT; i++) {
+			float xInc = bounds.width / INC_FACTOR - bounds.width
+					/ (2.0f * INC_FACTOR)
+					+ MathUtils.random(0, bounds.width / INC_FACTOR);
 			float x = lastX + xInc;
 			x = x % bounds.width;
 			x += bounds.x;
 			lastX = x;
-			float y = bounds.y + MathUtils.random(bounds.height / incFactor, bounds.height);
+			float y = bounds.y
+					+ MathUtils.random(bounds.height / INC_FACTOR,
+							bounds.height);
 			Bird bird = new Bird(x, y, Assets.birdBody);
 			birds.add(bird);
 		}
