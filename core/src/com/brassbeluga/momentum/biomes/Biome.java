@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.brassbeluga.momentum.GameSprite;
 import com.brassbeluga.momentum.World;
 
+
 public abstract class Biome {
 	
 	/**

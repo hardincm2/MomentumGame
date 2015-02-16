@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.brassbeluga.momentum.Assets;
 import com.brassbeluga.momentum.Momentum;
+import com.brassbeluga.momentum.database.MomentumDB;
 
 public class StartScreen extends ScreenAdapter {
 	

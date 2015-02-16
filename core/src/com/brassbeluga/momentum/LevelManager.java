@@ -23,6 +23,8 @@ public class LevelManager {
 		HILLS, FOREST
 	}
 	
+	
+	
 	/**
 	 * Constructs a new level manager.
 	 * 

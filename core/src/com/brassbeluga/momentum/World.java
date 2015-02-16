@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.brassbeluga.momentum.LevelManager.BiomeType;
+import com.brassbeluga.momentum.database.MomentumDB;
 import com.brassbeluga.momentum.gameobjects.Bird;
 import com.brassbeluga.momentum.gameobjects.Player;
 import com.brassbeluga.momentum.gui.ProgressBar;
