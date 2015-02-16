@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.brassbeluga.momentum.GameSprite;
 import com.brassbeluga.momentum.World;
 
+
 public abstract class Biome {
 	protected GameSprite backTile;
 	protected GameSprite ground;
