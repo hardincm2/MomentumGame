@@ -1,4 +1,4 @@
-package com.brassbeluga.momentum;
+package com.brassbeluga.momentum.gameobjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.brassbeluga.momentum.Assets;
+import com.brassbeluga.momentum.GameSprite;
+import com.brassbeluga.momentum.World;
 
 public class Player extends GameObject {
 	public static float HEIGHT = 10;

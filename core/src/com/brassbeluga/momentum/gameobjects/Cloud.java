@@ -1,7 +1,8 @@
-package com.brassbeluga.momentum;
+package com.brassbeluga.momentum.gameobjects;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.brassbeluga.momentum.World;
 
 public class Cloud extends GameObject {
 

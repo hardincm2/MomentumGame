@@ -1,8 +1,9 @@
-package com.brassbeluga.momentum;
+package com.brassbeluga.momentum.controllers;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
+import com.brassbeluga.momentum.World;
 
 public class GameInputProcessor extends InputAdapter {
 	

@@ -1,4 +1,4 @@
-package com.brassbeluga.momentum;
+package com.brassbeluga.momentum.screens;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Array;
+import com.brassbeluga.momentum.Assets;
+import com.brassbeluga.momentum.Momentum;
+import com.brassbeluga.momentum.World;
+import com.brassbeluga.momentum.controllers.GameInputProcessor;
+import com.brassbeluga.momentum.gameobjects.GameObject;
 
 public class GameScreen extends ScreenAdapter {
 	private static final float STEP = 1/60f;
@@ -72,7 +77,7 @@ public class GameScreen extends ScreenAdapter {
 		Assets.chunkBatch.begin();
 		Assets.chunkFont.setColor(Color.DARK_GRAY);
 		Assets.drawText(Assets.chunkBatch, "" + world.level, 30, 30);
-		Assets.drawText(Assets.chunkBatch, "" + Gdx.graphics.getFramesPerSecond(), 100, 60 );
+		Assets.drawText(Assets.chunkBatch, "" + world.player.velocity.len(), 100, 60 );
 		Assets.chunkFont.setColor(Color.WHITE);
 		Assets.chunkBatch.end();
 		
@@ -114,17 +119,17 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		Random r = new Random();
+		Random r = new Random();/*
 		currentSong = songs.get(r.nextInt(songs.size()));
 		currentSong.setLooping(true);
-		currentSong.play();
+		currentSong.play();*/
 		
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}
 	
 	@Override
 	public void hide() {
-		currentSong.stop();
+		//currentSong.stop();
 		Gdx.input.setInputProcessor(null);
 	}
 }

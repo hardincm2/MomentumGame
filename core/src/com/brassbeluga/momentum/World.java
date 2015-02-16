@@ -9,6 +9,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.brassbeluga.momentum.LevelManager.LevelType;
+import com.brassbeluga.momentum.gameobjects.Bird;
+import com.brassbeluga.momentum.gameobjects.Cloud;
+import com.brassbeluga.momentum.gameobjects.GameObject;
+import com.brassbeluga.momentum.gameobjects.Player;
 
 public class World {
 	private Momentum game;
@@ -22,6 +27,8 @@ public class World {
 	public static final float PLAYER_START_Y = WORLD_HEIGHT - 18;
 	
 	public static final float COLOR_DROPOFF = 20f;
+	public static final float RUMBLE_VELOCITY = 2.0f;
+	
 	private Color screenColor;
 	public String levelType = "hills";
 	
@@ -43,20 +50,13 @@ public class World {
 	
 	// Which pointer (finger) is currently touching the screen 
 	public int currPointer;
-	
-	private Random random;
-	private float rumbleX;
-	private float rumbleY;
-	private float rumbleTime = 0;
-	private float currentRumbleTime = 1;
-	private float rumblePower = 0;
-	private float currentRumblePower = 0;
 
+	private WorldRumbler rumbler;
+	private LevelManager levelManager;
 	private Rectangle easyStartBounds;
 	
-	World(Momentum game) {
+	public World(Momentum game) {
 		this.game = game;
-		random = new Random();
 		gravity = new Vector2(0.0f, -0.012f);
 		player = new Player(PLAYER_START_X, PLAYER_START_Y, Assets.catBody, this);
 		birds = new Array<Bird>();
@@ -82,6 +82,11 @@ public class World {
 		ground.addChild(backGround);
 		ground.addChild(transition);
 		start_mound = new GameSprite(Assets.start_mound, 0, 0);
+		
+		
+		rumbler = new WorldRumbler(game.camera);
+		levelManager = new LevelManager(this, LevelType.HILLS);
+		
 		generatePegs(5, 4.0f, easyStartBounds);
 		screenColor = new Color(104f / 255f, 194f / 255f, 219f / 255f, 1.0f);
 	}
@@ -114,40 +119,40 @@ public class World {
 		if (player.y > WORLD_HEIGHT + player.bounds.height / 2) {
 			player.clearPeg();
 			player.velocity.y = -player.velocity.y;
-			rumble(1.0f, 0.2f);
+			rumbler.rumble(1.0f, 0.2f, delta);
 		}
 		if (player.x >= WORLD_WIDTH && !player.dead) {
 			// The player has moved to the next screen.
 			player.x = 0;
-			if (player.y < PLAYER_START_Y)
+			if (player.y < PLAYER_START_Y) {
 				player.y = PLAYER_START_Y;
+			}
 			player.bird = null;
 			player.setTailNormal();
 			player.nextScreen();
 			level++;
 			if (level == 10) {
 				transition.visible = true;
-			}else if (level == 11)
-				setLevelType("forest");
+			} else if (level == 11) {
+				levelManager.setLevelType(LevelType.FOREST);
+			}
 			generatePegs(5);
-		}else if (player.y < player.bounds.height / 2.0f) {
+		} else if (player.y < player.bounds.height / 2.0f) {
 			player.setDead();
-		}else if (player.dead) {
+		} else if (player.dead) {
 			if (player.velocity.x == 0.0f) {
 				// Player has died.
 				player.dead = false;
+				game.onDeath(level);
 				if (level > 5) {
-					game.onDeath(level);
 					generatePegs(5, 4.0f, resetPegBounds);
-				}else{
+				} else {
 					generatePegs(5, 4.0f, easyStartBounds);
 				}
-				setLevelType("hills");
+				levelManager.setLevelType(LevelType.HILLS);
 				level = 0;
-				
 			}
 		}
-		
 	}
 	
 	public void setLevelType(String type) {
@@ -158,21 +163,13 @@ public class World {
 		transition.visible = false;
 	}
 	
-	public void rumble(float power, float time) {
-		rumblePower = power;
-		rumbleTime = time;
-		currentRumbleTime = 0;
-	}
-	
 	/**
 	 * Renders the world.
 	 * 
 	 * @param batch The sprite batch to draw to.
 	 */
 	public void render(SpriteBatch batch) {
-		for (int i = 0; i < WORLD_WIDTH / backTile.bounds.x; i++)
-			batch.draw(backTile.texture, i * backTile.bounds.x, 0, backTile.bounds.x, backTile.bounds.y);
-		ground.draw(batch);
+		levelManager.renderLevel(batch);
 		if (level == 0)
 			batch.draw(start_mound.texture, 0, 0, start_mound.bounds.x, start_mound.bounds.y);
 		if (levelType == "hills") {
@@ -181,6 +178,9 @@ public class World {
 			for (GameObject bush : bushes)
 				bush.render(batch);
 		}
+		
+		//levelManager.renderLevel(batch);
+		
 		player.render(batch);
 		for (Bird bird : birds)
 			bird.render(batch);
@@ -200,9 +200,10 @@ public class World {
 		*/
 		
 		game.camera.position.set(camX, camY, 0.0f);
-		if (player.velocity.x > 2.0f)
-			rumble((float) (0.1f * (Math.pow(player.velocity.x / 2.0f, 3f))), 0.05f);
-		
+		if (player.velocity.len() > RUMBLE_VELOCITY) {
+			rumbler.rumble((float) (0.1f * (Math.pow(player.velocity.x / RUMBLE_VELOCITY, 3f))), 0.05f, delta);
+		}
+		/*
 		if(currentRumbleTime <= rumbleTime) {
 			currentRumblePower = rumblePower * ((rumbleTime - currentRumbleTime) / rumbleTime);
 			rumbleX = (random.nextFloat() - 0.5f) * 2 * currentRumblePower;
@@ -210,10 +211,7 @@ public class World {
 		        	              
 			game.camera.translate(-rumbleX, -rumbleY);
 			currentRumbleTime += delta;
-		} else {
-			game.camera.position.x = camX;
-			game.camera.position.y = camY;
-		}
+		}*/
 		game.camera.update();
 	}
 	

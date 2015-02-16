@@ -1,9 +1,10 @@
-package com.brassbeluga.momentum;
+package com.brassbeluga.momentum.gameobjects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.brassbeluga.momentum.GameSprite;
 
 public class GameObject {
 
