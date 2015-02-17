@@ -93,12 +93,14 @@ public class GameScreen extends ScreenAdapter {
 			}
 		}
 		
+		world.update(delta);
+		
 		// Fixed time steps for predictable physics.
-		accumulator += delta;
+		/*accumulator += delta;
 		while (accumulator >= STEP) {
 			world.update(delta);
 			accumulator -= delta;
-		}
+		}*/
 	}
 	
 	/**
@@ -120,19 +122,17 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		Random r = new Random();/*
-		currentSong = songs.get(r.nextInt(songs.size()));
+		Random r = new Random();
+		currentSong = songs.get(0);
 		currentSong.setLooping(true);
-		currentSong.play();*/
-		Assets.dragonroost.play();
-		Assets.dragonroost.setLooping(true);
+		currentSong.play();
 		
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}
 	
 	@Override
 	public void hide() {
-		//currentSong.stop();
+		currentSong.stop();
 		Gdx.input.setInputProcessor(null);
 	}
 }

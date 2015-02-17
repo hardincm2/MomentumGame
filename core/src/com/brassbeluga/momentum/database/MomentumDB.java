@@ -47,7 +47,7 @@ public class MomentumDB {
 	 */
 	public List<Highscore> getHighscores() {
 		DBCollection collection = db.getCollection("highscores");
-		DBCursor cursor = collection.find();
+		DBCursor cursor = collection.find().sort(new BasicDBObject("score",-1));
 
 		StringBuilder response = new StringBuilder();
 
