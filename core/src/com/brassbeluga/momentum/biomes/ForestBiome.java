@@ -6,10 +6,17 @@ import com.brassbeluga.momentum.GameSprite;
 
 public class ForestBiome extends Biome {
 	
+	private GameSprite backTrees;
+	
 	public ForestBiome() {
-		this.ground = new GameSprite(Assets.ground_forest, 0, 0);
-		this.backTile =  new GameSprite(Assets.back_tile_forest, 0, 0);
-		this.backGround = new GameSprite(Assets.back_dist_forest_trees, 0, 0);
+		this.ground = new GameSprite(Assets.ground_forest, PADDING_OFFSET_Y, PADDING_OFFSET_Y);
+		this.backTile =  new GameSprite(Assets.back_tile_forest, PADDING_OFFSET_X, PADDING_OFFSET_Y);
+		this.backGround = new GameSprite(Assets.back_dist_forest_trees, PADDING_OFFSET_X, -2 * PADDING_OFFSET_Y);
+		backTrees = new GameSprite(Assets.back_dist_forest_fartrees, 0, 0);
+		backTrees.drawOrder = 1;
+		backGround.addChild(backTrees);
+		this.groundTrans = new GameSprite(Assets.ground_forest_trans, PADDING_OFFSET_X, PADDING_OFFSET_Y);
+		this.backTrans = new GameSprite(Assets.back_dist_forest_trans, PADDING_OFFSET_X, -2 * PADDING_OFFSET_Y);
 		this.marker = Assets.markerForest;
 	}
 	

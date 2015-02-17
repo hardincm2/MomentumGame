@@ -19,7 +19,9 @@ public class Assets {
 	public static TextureRegion back_tile_hills;
 	public static TextureRegion back_tile_forest;
 	public static TextureRegion back_dist_hills;
+	public static TextureRegion back_dist_hills_trans;
 	public static TextureRegion back_dist_forest_trees;
+	public static TextureRegion back_dist_forest_trans;
 	public static TextureRegion back_dist_forest_fartrees;
 	
 	
@@ -103,7 +105,9 @@ public class Assets {
 		back_tile_hills = atlas.findRegion("back_tile");
 		back_tile_forest = atlas.findRegion("back_forest");
 		back_dist_hills = new TextureRegion(new Texture(Gdx.files.internal("bck_hills.png")));
+		back_dist_hills_trans = new TextureRegion(new Texture(Gdx.files.internal("bck_hills_trans.png")));
 		back_dist_forest_trees = new TextureRegion(new Texture(Gdx.files.internal("bck_forest.png")));
+		back_dist_forest_trans = new TextureRegion(new Texture(Gdx.files.internal("bck_forest_trans.png")));
 		back_dist_forest_fartrees = new TextureRegion(new Texture(Gdx.files.internal("bck_forest_2.png")));
 		
 		catBody = atlas.findRegion("cat_body");
