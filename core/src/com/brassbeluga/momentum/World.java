@@ -58,7 +58,7 @@ public class World {
 	
 	// Level progression
 	public Array<BiomeType> levels;
-	public static final int LEVEL_SET = 4;
+	public static final int LEVEL_SET = 8;
 	public int level;
 	
 	public World(Momentum game) {
@@ -80,7 +80,7 @@ public class World {
 		progress = new ProgressBar(WORLD_WIDTH -  WORLD_WIDTH / 6.0f, 4.0f);
 
 		rumbler = new WorldRumbler(game.camera);
-		levelManager = new LevelManager();
+		levelManager = new LevelManager(this);
 		advanceLevel();
 		
 		// Generate the first level
@@ -103,7 +103,7 @@ public class World {
 	/**
 	 * Updates the world and all of the bodies contained within it.
 	 * 
-	 * @param delta The time that has passed since update was last called.
+	 * @param delta The time thWat has passed since update was last called.
 	 */
 	public void update(float delta) {
 		updateCamera(delta);
@@ -148,12 +148,12 @@ public class World {
 				// Player has died.
 				player.dead = false;
 				game.onDeath(level);
+				generateLevelSequence();
 				if (level > 5) {
 					newLevel(birdBounds);
 				} else {
 					newLevel(easyStartBounds);
 				}
-				generateLevelSequence();
 				advanceLevel();
 				level = 0;
 			}

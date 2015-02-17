@@ -1,6 +1,7 @@
 package com.brassbeluga.momentum.biomes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.brassbeluga.momentum.GameSprite;
@@ -23,6 +24,8 @@ public abstract class Biome {
 	public static enum Transition {
 		NONE, OUT, IN, GONE, INTRO;
 	}
+	
+	public World world;
 	
 	private boolean transFlipped = false;
 	
@@ -58,9 +61,10 @@ public abstract class Biome {
 			groundTrans.draw(batch);
 			break;
 		case GONE:
-			drawTiles(batch);
+			drawTiles(batch, 1.0f - world.player.x / World.WORLD_WIDTH);
 			break;
 		case INTRO:
+			drawTiles(batch, world.player.x / World.WORLD_WIDTH);
 			backTrans.draw(batch);
 			ground.draw(batch);
 			break;
@@ -68,6 +72,7 @@ public abstract class Biome {
 	}
 	
 	public void setTransitionType(Transition type) {
+		System.out.println("Biome: " + this.getClass().getName() + " trans: " + type);
 		if (type == Transition.IN) {
 			if (!transFlipped) {
 				groundTrans.texture.flip(true, false);
@@ -81,11 +86,19 @@ public abstract class Biome {
 		}
 		transType = type;
 	}
-
+	
 	private void drawTiles(SpriteBatch batch) {
+		drawTiles(batch, 1.0f);
+	}
+
+	private void drawTiles(SpriteBatch batch, float alpha) {
+		Color c = batch.getColor();
+		// Set color for transparency
+		batch.setColor(c.r, c.g, c.b, alpha);
 		for (int i = 0; i < World.WORLD_WIDTH / backTile.bounds.x; i++) {
 			batch.draw(backTile.texture, i * backTile.bounds.x, 0, backTile.bounds.x, backTile.bounds.y);
 		}
+		batch.setColor(c);
 	}
 	
 	/**

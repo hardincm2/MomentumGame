@@ -124,6 +124,8 @@ public class GameScreen extends ScreenAdapter {
 		currentSong = songs.get(r.nextInt(songs.size()));
 		currentSong.setLooping(true);
 		currentSong.play();*/
+		Assets.dragonroost.play();
+		Assets.dragonroost.setLooping(true);
 		
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}

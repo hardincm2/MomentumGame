@@ -29,12 +29,12 @@ public class LevelManager {
 	 * Constructs a new level manager.
 	 * 
 	 */
-	public LevelManager() {
+	public LevelManager(World world) {
 		this.biomes = new HashMap<BiomeType, Biome>();
 		
 		// Add in the different biome types to the mapping.
-		biomes.put(BiomeType.HILLS, new HillsBiome());
-		biomes.put(BiomeType.FOREST, new ForestBiome());
+		biomes.put(BiomeType.HILLS, new HillsBiome(world));
+		biomes.put(BiomeType.FOREST, new ForestBiome(world));
 	}
 	
 	/**
@@ -71,12 +71,14 @@ public class LevelManager {
 	 */
 	public void setLevelType(BiomeType type) {
 		this.currentBiome = biomes.get(type);
+		this.currentBiome.setTransitionType(Transition.NONE);
 	}
 	
 	/**
 	 * Resets the state of the currently transitioning biomes
 	 */
 	public void resetTransitions() {
+		System.out.println("resetting");
 		currentBiome.setTransitionType(Transition.NONE);
 		if (nextBiome != null) {
 			nextBiome.setTransitionType(Transition.NONE);

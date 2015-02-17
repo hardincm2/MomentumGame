@@ -14,7 +14,8 @@ public class HillsBiome extends Biome{
 	protected Array<Cloud> clouds;
 	protected Array<GameObject> bushes;
 
-	public HillsBiome() {
+	public HillsBiome(World world) {
+		this.world = world;
 		this.ground = new GameSprite(Assets.ground_hills, PADDING_OFFSET_Y, PADDING_OFFSET_Y);
 		this.backTile =  new GameSprite(Assets.back_tile_hills, PADDING_OFFSET_Y, PADDING_OFFSET_Y);
 		this.backGround = new GameSprite(Assets.back_dist_hills, PADDING_OFFSET_Y, PADDING_OFFSET_Y);
