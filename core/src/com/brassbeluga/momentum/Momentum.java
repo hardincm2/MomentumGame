@@ -1,8 +1,11 @@
 package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.brassbeluga.momentum.controllers.HighscoreInputListener;
 import com.brassbeluga.momentum.screens.DeathScreen;
 import com.brassbeluga.momentum.screens.GameScreen;
 import com.brassbeluga.momentum.screens.StartScreen;

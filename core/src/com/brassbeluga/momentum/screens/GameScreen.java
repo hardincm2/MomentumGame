@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,6 +19,7 @@ import com.brassbeluga.momentum.Assets;
 import com.brassbeluga.momentum.Momentum;
 import com.brassbeluga.momentum.World;
 import com.brassbeluga.momentum.controllers.GameInputProcessor;
+import com.brassbeluga.momentum.controllers.HighscoreInputListener;
 import com.brassbeluga.momentum.gameobjects.GameObject;
 
 public class GameScreen extends ScreenAdapter {
@@ -93,12 +95,14 @@ public class GameScreen extends ScreenAdapter {
 			}
 		}
 		
+		world.update(delta);
+		
 		// Fixed time steps for predictable physics.
-		accumulator += delta;
+		/*accumulator += delta;
 		while (accumulator >= STEP) {
 			world.update(delta);
 			accumulator -= delta;
-		}
+		}*/
 	}
 	
 	/**
@@ -120,17 +124,17 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		Random r = new Random();/*
-		currentSong = songs.get(r.nextInt(songs.size()));
+		Random r = new Random();
+		currentSong = songs.get(0);
 		currentSong.setLooping(true);
-		currentSong.play();*/
+		currentSong.play();
 		
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}
 	
 	@Override
 	public void hide() {
-		//currentSong.stop();
+		currentSong.stop();
 		Gdx.input.setInputProcessor(null);
 	}
 }
