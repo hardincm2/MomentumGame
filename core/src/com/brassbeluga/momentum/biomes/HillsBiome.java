@@ -31,15 +31,19 @@ public class HillsBiome extends Biome{
 	public void draw(SpriteBatch batch) {
 		super.draw(batch);
 		
-		// Draw all clouds
-		for (Cloud cloud : clouds) {
-			cloud.render(batch);
+		// Don't draw the extras if we're in a transition
+		if (transType == Transition.NONE) {
+			// Draw all clouds
+			for (Cloud cloud : clouds) {
+				cloud.render(batch);
+			}
+			
+			// Draw all bushes.
+			for (GameObject bush : bushes) {
+				bush.render(batch);
+			}
 		}
 		
-		// Draw all bushes.
-		for (GameObject bush : bushes) {
-			bush.render(batch);
-		}
 	}
 	
 	@Override

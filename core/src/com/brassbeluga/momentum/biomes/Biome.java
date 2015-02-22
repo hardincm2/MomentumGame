@@ -72,7 +72,6 @@ public abstract class Biome {
 	}
 	
 	public void setTransitionType(Transition type) {
-		System.out.println("Biome: " + this.getClass().getName() + " trans: " + type);
 		if (type == Transition.IN) {
 			if (!transFlipped) {
 				groundTrans.texture.flip(true, false);
