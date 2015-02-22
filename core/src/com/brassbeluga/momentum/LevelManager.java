@@ -9,6 +9,7 @@ import com.brassbeluga.momentum.biomes.Biome;
 import com.brassbeluga.momentum.biomes.Biome.Transition;
 import com.brassbeluga.momentum.biomes.ForestBiome;
 import com.brassbeluga.momentum.biomes.HillsBiome;
+import com.brassbeluga.momentum.biomes.SnowBiome;
 
 public class LevelManager {
 	private Map<BiomeType, Biome> biomes;
@@ -20,7 +21,7 @@ public class LevelManager {
 	
 	/** Different level biomes for the game environment */
 	public static enum BiomeType {
-		HILLS, FOREST
+		HILLS, FOREST, SNOW
 	}
 	
 	
@@ -35,6 +36,7 @@ public class LevelManager {
 		// Add in the different biome types to the mapping.
 		biomes.put(BiomeType.HILLS, new HillsBiome(world));
 		biomes.put(BiomeType.FOREST, new ForestBiome(world));
+		biomes.put(BiomeType.SNOW, new SnowBiome(world));
 	}
 	
 	/**

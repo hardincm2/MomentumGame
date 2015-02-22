@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
@@ -18,11 +19,16 @@ public class Assets {
 	public static TextureRegion back_gradient_1;
 	public static TextureRegion back_tile_hills;
 	public static TextureRegion back_tile_forest;
+	public static TextureRegion back_tile_snow;
 	public static TextureRegion back_dist_hills;
 	public static TextureRegion back_dist_hills_trans;
 	public static TextureRegion back_dist_forest_trees;
 	public static TextureRegion back_dist_forest_trans;
 	public static TextureRegion back_dist_forest_fartrees;
+	public static TextureRegion back_dist_snow_bank;
+	public static TextureRegion back_dist_snow_trees;
+	public static TextureRegion back_dist_snow_mountains;
+	public static TextureRegion back_dist_snow_trans;
 	
 	
 	
@@ -61,7 +67,11 @@ public class Assets {
 	public static TextureRegion ground_hills_trans;
 	public static TextureRegion ground_forest;
 	public static TextureRegion ground_forest_trans;
+	public static TextureRegion ground_snow;
+	public static TextureRegion ground_snow_trans;
 	public static TextureRegion start_mound;
+	public static TextureRegion mound_forest;
+	public static TextureRegion mound_snow;
 	
 	// Game sounds
 	public static Music noodling;
@@ -86,6 +96,7 @@ public class Assets {
 	public static TextureRegion markerPlayer;
 	public static TextureRegion markerHills;
 	public static TextureRegion markerForest;
+	public static TextureRegion markerSnow;
 	
 	// NOT IN USE: Dynamic screen scaling for use across multiple devices
 	public static float SCREEN_SCALE;
@@ -104,11 +115,16 @@ public class Assets {
 		back_gradient_1 = atlas.findRegion("back_gradient");
 		back_tile_hills = atlas.findRegion("back_tile");
 		back_tile_forest = atlas.findRegion("back_forest");
+		back_tile_snow = atlas.findRegion("back_snow");
 		back_dist_hills = new TextureRegion(new Texture(Gdx.files.internal("bck_hills.png")));
 		back_dist_hills_trans = new TextureRegion(new Texture(Gdx.files.internal("bck_hills_trans.png")));
 		back_dist_forest_trees = new TextureRegion(new Texture(Gdx.files.internal("bck_forest.png")));
 		back_dist_forest_trans = new TextureRegion(new Texture(Gdx.files.internal("bck_forest_trans.png")));
 		back_dist_forest_fartrees = new TextureRegion(new Texture(Gdx.files.internal("bck_forest_2.png")));
+		back_dist_snow_bank = new TextureRegion(new Texture(Gdx.files.internal("bck_snow.png")));
+		back_dist_snow_trees = new TextureRegion(new Texture(Gdx.files.internal("bck_snow_1.png")));
+		back_dist_snow_mountains = new TextureRegion(new Texture(Gdx.files.internal("bck_snow_2.png")));
+		back_dist_snow_trans = new TextureRegion(new Texture(Gdx.files.internal("bck_snow_trans.png")));
 		
 		catBody = atlas.findRegion("cat_body");
 		catFaceNormal = atlas.findRegion("cat_face_normal");
@@ -151,7 +167,11 @@ public class Assets {
 		ground_hills_trans = new TextureRegion(new Texture(Gdx.files.internal("gnd_hills_trans.png")));
 		ground_forest = new TextureRegion(new Texture(Gdx.files.internal("gnd_forest.png")));
 		ground_forest_trans = new TextureRegion(new Texture(Gdx.files.internal("gnd_forest_trans.png")));
+		ground_snow = new TextureRegion(new Texture(Gdx.files.internal("gnd_snow.png")));
+		ground_snow_trans = new TextureRegion(new Texture(Gdx.files.internal("gnd_snow_trans.png")));
 		start_mound = new TextureRegion(new Texture(Gdx.files.internal("start_mound.png")));
+		mound_forest = new TextureRegion(new Texture(Gdx.files.internal("mound_forest.png")));
+		mound_snow = new TextureRegion(new Texture(Gdx.files.internal("mound_snow.png")));
 		
 		// GUI texture
 		meterOverlay = atlas.findRegion("ui_meter_overlay");
@@ -160,6 +180,7 @@ public class Assets {
 		markerPlayer = atlas.findRegion("ui_marker_player");
 		markerHills = atlas.findRegion("ui_marker_hills");
 		markerForest = atlas.findRegion("ui_marker_forest");
+		markerSnow = atlas.findRegion("ui_marker_snow");
 		
 		// Create new particle effects with given information
 		partFeathers = new ParticleEffect();

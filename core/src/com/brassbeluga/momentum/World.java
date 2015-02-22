@@ -183,9 +183,7 @@ public class World {
 		levelManager.renderLevel(batch);
 		
 		// Need a starting mound if the first level.
-		if (level == 0)
-			batch.draw(start_mound.texture, 0, 0, start_mound.bounds.x, start_mound.bounds.y);
-		
+
 		player.render(batch);
 		for (Bird bird : birds) {
 			bird.render(batch);

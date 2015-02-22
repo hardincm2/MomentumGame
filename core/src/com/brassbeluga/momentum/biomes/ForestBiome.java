@@ -19,6 +19,7 @@ public class ForestBiome extends Biome {
 		backGround.addChild(backTrees);
 		this.groundTrans = new GameSprite(Assets.ground_forest_trans, PADDING_OFFSET_X, PADDING_OFFSET_Y);
 		this.backTrans = new GameSprite(Assets.back_dist_forest_trans, PADDING_OFFSET_X, -2 * PADDING_OFFSET_Y);
+		this.startMound = new GameSprite(Assets.mound_forest, 0, 0);
 		this.marker = Assets.markerForest;
 	}
 	

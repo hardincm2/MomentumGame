@@ -40,12 +40,15 @@ public abstract class Biome {
 	protected GameSprite backGround;
 	protected GameSprite groundTrans;
 	protected GameSprite backTrans;
+	protected GameSprite startMound;
 	public TextureRegion marker;
 	
 	/**
 	 * Draw this biome to the screen.
 	 */
 	public void draw(SpriteBatch batch) {
+		backGround.position.x = (-world.player.x / World.WORLD_WIDTH);
+		ground.position.x = (-world.player.x / World.WORLD_WIDTH) * 2.5f;
 		switch (transType) {
 		case NONE:
 			drawTiles(batch);
@@ -55,7 +58,7 @@ public abstract class Biome {
 		case OUT:
 			drawTiles(batch);
 			backGround.draw(batch);
-			groundTrans.draw(batch);
+			ground.draw(batch);
 			break;
 		case IN:
 			groundTrans.draw(batch);
@@ -69,6 +72,8 @@ public abstract class Biome {
 			ground.draw(batch);
 			break;
 		}
+		if (world.level == 0)
+			startMound.draw(batch);
 	}
 	
 	public void setTransitionType(Transition type) {

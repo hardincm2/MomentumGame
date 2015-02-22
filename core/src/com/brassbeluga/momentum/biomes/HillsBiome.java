@@ -21,6 +21,7 @@ public class HillsBiome extends Biome{
 		this.backGround = new GameSprite(Assets.back_dist_hills, PADDING_OFFSET_Y, PADDING_OFFSET_Y);
 		this.groundTrans = new GameSprite(Assets.ground_hills_trans, PADDING_OFFSET_X, PADDING_OFFSET_Y);
 		this.backTrans = new GameSprite(Assets.back_dist_hills_trans, PADDING_OFFSET_X, PADDING_OFFSET_Y);
+		this.startMound = new GameSprite(Assets.start_mound, 0, 0);
 		this.marker = Assets.markerHills;
 		
 		clouds = new Array<Cloud>();
