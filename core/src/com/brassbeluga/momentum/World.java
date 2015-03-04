@@ -57,7 +57,7 @@ public class World {
 	
 	// Level progression
 	public Array<BiomeType> levels;
-	public static final int LEVEL_SET = 8;
+	public static final int LEVEL_SET = 3;
 	public int level;
 	
 	public World(Momentum game) {
@@ -145,6 +145,7 @@ public class World {
 		} else if (player.dead) {
 			if (player.velocity.x == 0.0f) {
 				// Player has died.
+				levelManager.reset();
 				player.dead = false;
 				game.onDeath(level);
 				generateLevelSequence();

@@ -130,4 +130,14 @@ public class LevelManager {
 	public void update(float delta) {
 		currentBiome.update(delta);
 	}
+	
+	/**
+	 * Resets the offsets on all the biomes, used when the player dies.
+	 */
+	public void reset() {
+		for (BiomeType type : biomes.keySet()) {
+			biomes.get(type).reset();
+		}
+	}
+	
 }
