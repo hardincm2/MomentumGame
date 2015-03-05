@@ -23,7 +23,8 @@ public class HillsBiome extends Biome {
 		this.backGround = new BackgroundSprite(Assets.back_dist_hills,
 				PADDING_OFFSET_Y, PADDING_OFFSET_Y);
 		this.groundTrans = new BackgroundSprite(Assets.ground_hills_trans,
-				PADDING_OFFSET_X, PADDING_OFFSET_Y);
+				PADDING_OFFSET_X * 4, PADDING_OFFSET_Y);
+		groundTrans.xWrap = false;
 		this.backTrans = new BackgroundSprite(Assets.back_dist_hills_trans,
 				PADDING_OFFSET_X, PADDING_OFFSET_Y);
 		this.startMound = new GameSprite(Assets.start_mound, 0, 0);

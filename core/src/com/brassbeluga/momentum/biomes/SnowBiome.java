@@ -27,6 +27,7 @@ public class SnowBiome extends Biome {
 		ground.addChild(snowBank);
 		this.groundTrans = new BackgroundSprite(Assets.ground_snow_trans,
 				PADDING_OFFSET_X, PADDING_OFFSET_Y);
+		groundTrans.xWrap = false;
 		this.backTrans = new BackgroundSprite(Assets.back_dist_snow_trans,
 				PADDING_OFFSET_X, PADDING_OFFSET_Y);
 		this.startMound = new GameSprite(Assets.mound_snow, 0, 0);

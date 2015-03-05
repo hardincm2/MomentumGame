@@ -54,10 +54,15 @@ public class Player extends GameObject {
 	
 	public ParticleEffectPool partPoolBird;
 	public ParticleEffectPool partPoolDirt;
-	public ParticleEffectPool partPoolAir;
+	public ParticleEffectPool partPoolAir1;
+	public ParticleEffectPool partPoolAir2;
+	public ParticleEffectPool partPoolAir3;
 	public ParticleEffectPool partPoolBoost;
 	public ParticleEffect partBird;
 	public ParticleEffect partDirt;
+	public ParticleEffect partAir1;
+	public ParticleEffect partAir2;
+	public ParticleEffect partAir3;
 	public ParticleEffect partAir;
 	public ParticleEffect partBoost;
 	
@@ -73,12 +78,19 @@ public class Player extends GameObject {
 		
 		partPoolBird = new ParticleEffectPool(Assets.partFeathers, 5, 20);
 		partPoolDirt = new ParticleEffectPool(Assets.partDirt, 100, 200);
-		partPoolAir = new ParticleEffectPool(Assets.partAir, 100, 200);
+		partPoolAir1 = new ParticleEffectPool(Assets.partAir1, 100, 200);
+		partPoolAir2 = new ParticleEffectPool(Assets.partAir2, 100, 200);
+		partPoolAir3 = new ParticleEffectPool(Assets.partAir3, 100, 200);
 		partPoolBoost = new ParticleEffectPool(Assets.partBoost, 0, 200);
 		partDirt = partPoolDirt.obtain();
 		partDirt.allowCompletion();
-		partAir = partPoolAir.obtain();
-		partAir.allowCompletion();
+		partAir1 = partPoolAir1.obtain();
+		partAir1.allowCompletion();
+		partAir2 = partPoolAir2.obtain();
+		partAir2.allowCompletion();
+		partAir3 = partPoolAir3.obtain();
+		partAir3.allowCompletion();
+		partAir = partAir1;
 		partBoost = partPoolBoost.obtain();
 		partBoost.allowCompletion();
 		
@@ -250,6 +262,13 @@ public class Player extends GameObject {
 	@Override
 	public void render(SpriteBatch batch) {
 		if (partAir != null) {
+			float speedDiff = (Math.abs(velocity.x) - SPEED_THRESHOLD);
+			if (speedDiff <= 0.2f)
+				partAir = partAir1;
+			else if (speedDiff <= 0.4f)
+				partAir = partAir2;
+			else
+				partAir = partAir3;
 			partAir.update(Gdx.graphics.getDeltaTime());
 			partAir.setPosition(x, y);
 			partAir.draw(batch);

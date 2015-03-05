@@ -31,8 +31,6 @@ public class Assets {
 	public static TextureRegion back_dist_snow_mountains;
 	public static TextureRegion back_dist_snow_trans;
 	
-	
-	
 	// Cat textures
 	public static TextureRegion catBody;
 	public static TextureRegion catFaceNormal;
@@ -87,7 +85,9 @@ public class Assets {
 	// Particles
 	public static ParticleEffect partFeathers;
 	public static ParticleEffect partDirt;
-	public static ParticleEffect partAir;
+	public static ParticleEffect partAir1;
+	public static ParticleEffect partAir2;
+	public static ParticleEffect partAir3;
 	public static ParticleEffect partBoost;
 	
 	// GUI
@@ -187,8 +187,12 @@ public class Assets {
 		partFeathers.load(Gdx.files.internal("part_feathers"), atlas);
 		partDirt = new ParticleEffect();
 		partDirt.load(Gdx.files.internal("part_dirt"), atlas);
-		partAir = new ParticleEffect();
-		partAir.load(Gdx.files.internal("part_air"), atlas);
+		partAir1 = new ParticleEffect();
+		partAir1.load(Gdx.files.internal("part_air_2"), atlas);
+		partAir2 = new ParticleEffect();
+		partAir2.load(Gdx.files.internal("part_air_3"), atlas);
+		partAir3 = new ParticleEffect();
+		partAir3.load(Gdx.files.internal("part_air"), atlas);
 		partBoost = new ParticleEffect();
 		partBoost.load(Gdx.files.internal("part_boost"), atlas);
 

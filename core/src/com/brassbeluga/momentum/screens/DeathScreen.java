@@ -86,12 +86,7 @@ public class DeathScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		game.statManager.stats.highScore = levels;
-		try {
-			game.statManager.writeToFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		game.statManager.updateStats(levels);
 		Highscore currentScore = new Highscore("user",levels);
 		
 		if (currentScore.score > localScore.score) {

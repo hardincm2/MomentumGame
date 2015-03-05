@@ -100,7 +100,7 @@ public abstract class Biome {
 			}
 		}
 		startMound.position.x = 0;
-		groundTrans.position.x = 0;
+		groundTrans.position.x = -PADDING_OFFSET_X * 2.0f;
 		backTrans.position.x = 0;
 		transType = type;
 	}
