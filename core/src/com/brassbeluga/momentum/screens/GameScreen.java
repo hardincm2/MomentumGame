@@ -125,7 +125,7 @@ public class GameScreen extends ScreenAdapter {
 		Random r = new Random();
 		currentSong = songs.get(0);
 		currentSong.setLooping(true);
-		currentSong.play();
+		//currentSong.play();   
 		
 		Gdx.input.setInputProcessor(new GameInputProcessor(world, camera));
 	}

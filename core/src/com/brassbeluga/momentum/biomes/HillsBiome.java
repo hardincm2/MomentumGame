@@ -47,6 +47,7 @@ public class HillsBiome extends Biome {
 
 			// Draw all bushes.
 			for (GameObject bush : bushes) {
+				bush.sprite.position.x += ground.scrollSpeed;
 				bush.render(batch);
 			}
 		}

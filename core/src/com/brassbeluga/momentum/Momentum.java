@@ -9,9 +9,11 @@ import com.brassbeluga.momentum.controllers.HighscoreInputListener;
 import com.brassbeluga.momentum.screens.DeathScreen;
 import com.brassbeluga.momentum.screens.GameScreen;
 import com.brassbeluga.momentum.screens.StartScreen;
+import com.brassbeluga.momentum.stats.StatManager;
 
 public class Momentum extends Game {
 	
+	public StatManager statManager;
 	public GameScreen gameScreen;
 	public DeathScreen deathScreen;
 	public SpriteBatch batch;
@@ -21,6 +23,8 @@ public class Momentum extends Game {
 	public void create () {
 		// Load in all sounds, textures, etc...
 		Assets.load();
+		
+		statManager = new StatManager();
 		
 		// Set up the camera.
 		camera = new OrthographicCamera();
