@@ -114,9 +114,8 @@ public class World {
 			}
 			bird.update(gravity);
 		}
-		if (player.y > WORLD_HEIGHT + player.bounds.height / 2) {
+		if (player.y > WORLD_HEIGHT + player.bounds.height / 2 && player.bird == null) {
 			// Player has hit the ceiling
-			player.clearPeg();
 			player.velocity.y = -player.velocity.y;
 			rumbler.rumble(1.0f, 0.2f, delta);
 		}

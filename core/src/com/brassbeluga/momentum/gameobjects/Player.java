@@ -22,7 +22,7 @@ public class Player extends GameObject {
 	public Vector2 tailOff = new Vector2(-43, -43);
 	
 	public boolean dead;
-
+ 
 	public Bird bird; // null if currently not attached
 	public float pegAngle;
 	public float angVel = 0;
@@ -240,7 +240,7 @@ public class Player extends GameObject {
 			partBird.update(Gdx.graphics.getDeltaTime());
 			partBird.draw(batch);
 		}
-		if (partDirt != null) {
+		if (dead && partDirt != null) {
 			partDirt.update(Gdx.graphics.getDeltaTime());
 			partDirt.setPosition(x, y - sprite.bounds.y / 4.0f);
 			partDirt.draw(batch);
@@ -344,6 +344,7 @@ public class Player extends GameObject {
 		tail.setVisible(false);
 		tailLong.setVisible(true);
 		tailPeg.setVisible(true);
+		partDirt.getEmitters().first().setMaxParticleCount(100);
 	}
 
 	/**
@@ -362,20 +363,16 @@ public class Player extends GameObject {
 		this.angle = 0;
 		this.lastAngle = 0;
 		this.started = false;
-		setTailNormal();
+		setTailNormal(); 
 		nextScreen();
-		// Allow the dirt particle effect to end
-		partDirt.allowCompletion();
 	}
 	
 	public void nextScreen() {
 		if (partBird != null) {
 			partPoolBird.free((PooledEffect) partBird);
-			partBird = null;
 		}
-		if (partDirt != null) {
-			//partPoolDirt.free((PooledEffect) partDirt);
-			//partDirt = null;
+		if (partDirt != null) { 
+			partDirt.allowCompletion();
 		}
 	}
 

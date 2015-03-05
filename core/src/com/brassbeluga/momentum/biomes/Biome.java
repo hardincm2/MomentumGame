@@ -52,8 +52,8 @@ public abstract class Biome {
 	public void draw(SpriteBatch batch) {
 		backGround.scrollSpeed = -world.player.velocity.x / 30.0f;
 		backTrans.scrollSpeed = -world.player.velocity.x / 30.0f;
-		ground.scrollSpeed = -world.player.velocity.x / 25.0f;
-		groundTrans.scrollSpeed = -world.player.velocity.x / 25.0f;
+		ground.scrollSpeed = -world.player.velocity.x / 22.0f;
+		groundTrans.scrollSpeed = -world.player.velocity.x / 22.0f;
 
 		switch (transType) {
 		case NONE:

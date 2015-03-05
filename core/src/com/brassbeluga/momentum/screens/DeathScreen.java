@@ -1,5 +1,6 @@
 package com.brassbeluga.momentum.screens;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -85,8 +86,14 @@ public class DeathScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
+		game.statManager.stats.highScore = levels;
+		try {
+			game.statManager.writeToFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Highscore currentScore = new Highscore("user",levels);
-
+		
 		if (currentScore.score > localScore.score) {
 			String json = new Gson().toJson(currentScore);
 			localScoreFile.writeBytes(json.getBytes(), false);

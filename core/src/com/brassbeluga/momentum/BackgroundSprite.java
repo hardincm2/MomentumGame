@@ -2,6 +2,7 @@ package com.brassbeluga.momentum;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix3;
 
 /**
  * A sprite made exclusively for backgrounds that enables tiling
@@ -41,8 +42,9 @@ public class BackgroundSprite extends GameSprite {
 					position.y, 0, 0, bounds.x * scale.x, bounds.y * scale.y,
 					1.0f, 1.0f, 0.0f);
 		}
-		for (GameSprite b : children) { 
-			b.draw(batch);
+		for (GameSprite b : children) {
+			Matrix3 localTrans = new Matrix3().setToTranslation(position);
+			b.draw(batch, localTrans);
 		}
 	}
 

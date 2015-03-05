@@ -32,6 +32,7 @@ public class ForestBiome extends Biome {
 
 	@Override
 	public void draw(SpriteBatch batch) {
+		backTrees.scrollSpeed = -world.player.velocity.x / 37.0f;
 		super.draw(batch);
 	}
 

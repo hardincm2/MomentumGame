@@ -36,6 +36,8 @@ public class SnowBiome extends Biome {
 
 	@Override
 	public void draw(SpriteBatch batch) {
+		backTrees.scrollSpeed = -world.player.velocity.x / 27.0f;
+		snowBank.scrollSpeed = - world.player.velocity.x / 26.0f;
 		super.draw(batch);
 	}
 
