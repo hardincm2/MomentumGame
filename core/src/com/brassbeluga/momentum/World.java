@@ -43,9 +43,6 @@ public class World {
 	private Rectangle birdBounds;
 	private Rectangle easyStartBounds;
 	
-	// Starting mound for player.
-	private GameSprite start_mound;
-	
 	// Rumbler for the screen.
 	private WorldRumbler rumbler;
 	
@@ -72,7 +69,6 @@ public class World {
 		
 		birdBounds = new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 		easyStartBounds = new Rectangle(0, WORLD_HEIGHT / 4.0f, WORLD_WIDTH, ((3.0f / 4.0f) * WORLD_HEIGHT));
-		start_mound = new GameSprite(Assets.start_mound, 0, 0);
 		
 		meter = new Speedometer(WORLD_WIDTH / 3.0f - WORLD_WIDTH / 6.0f, 4.0f);
 		meter.centerOrigin();
