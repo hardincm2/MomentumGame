@@ -41,7 +41,7 @@ public class BackgroundSprite extends GameSprite {
 					position.y, 0, 0, bounds.x * scale.x, bounds.y * scale.y,
 					1.0f, 1.0f, 0.0f);
 		}
-		for (GameSprite b : children) {
+		for (GameSprite b : children) { 
 			b.draw(batch);
 		}
 	}

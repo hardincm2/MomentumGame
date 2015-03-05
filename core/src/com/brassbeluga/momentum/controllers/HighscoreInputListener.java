@@ -1,9 +1,6 @@
 package com.brassbeluga.momentum.controllers;
 
-import java.util.List;
-
 import com.badlogic.gdx.Input.TextInputListener;
-import com.brassbeluga.momentum.database.Highscore;
 import com.brassbeluga.momentum.database.MomentumDB;
 import com.brassbeluga.momentum.screens.DeathScreen;
 
