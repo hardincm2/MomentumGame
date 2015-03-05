@@ -110,6 +110,10 @@ public abstract class Biome {
 	}
 
 	private void drawTiles(SpriteBatch batch, float alpha) {
+		if (alpha < 0.0)
+			alpha = 0.0f;
+		if (alpha > 1.0)
+			alpha = 1.0f;
 		Color c = batch.getColor();
 		// Set color for transparency
 		batch.setColor(c.r, c.g, c.b, alpha);

@@ -99,6 +99,10 @@ public class Assets {
 	public static TextureRegion markerForest;
 	public static TextureRegion markerSnow;
 	
+	public static TextureRegion title;
+	public static TextureRegion titlePress;
+	public static TextureRegion titleName;
+	
 	// NOT IN USE: Dynamic screen scaling for use across multiple devices
 	public static float SCREEN_SCALE;
 
@@ -111,6 +115,10 @@ public class Assets {
 	public static void load () {
 		// Load assets from file
 		atlas = new TextureAtlas("momentum.atlas");
+		
+		title = new TextureRegion(new Texture(Gdx.files.internal("title.png")));
+		titlePress = new TextureRegion(new Texture(Gdx.files.internal("press_anything.png")));
+		titleName = new TextureRegion(new Texture(Gdx.files.internal("swung_title.png")));
 		
 		back_gradient_1 = atlas.findRegion("back_gradient");
 		back_tile_hills = atlas.findRegion("back_tile");

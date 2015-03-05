@@ -11,38 +11,51 @@ import com.brassbeluga.momentum.Momentum;
 import com.brassbeluga.momentum.database.MomentumDB;
 
 public class StartScreen extends ScreenAdapter {
-	
+
 	private Momentum game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	
+	private float deltas;
+
 	public StartScreen(final Momentum game) {
-		this.game = game;	
+		this.game = game;
 		this.camera = game.camera;
 		this.batch = game.batch;
+		deltas = 0.0f;
 	}
 
-	public void render (float delta) {
+	public void render(float delta) {
 		Gdx.gl.glClearColor(200 / 255f, 257 / 255f, 240 / 255f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	    
+		deltas += delta;
 		camera.update();
-		//batch.setProjectionMatrix(camera.combined);
-		
+		// batch.setProjectionMatrix(camera.combined);
 		Assets.chunkBatch.begin();
-		float height = Assets.chunkFont.getBounds("Test").height;
-		Assets.chunkFont.setColor(Color.DARK_GRAY);
-		Assets.chunkFont.setScale(1.0f);
-		Assets.drawText(Assets.chunkBatch, "SWUNG", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 + 2 * height);
-		Assets.chunkFont.setScale(0.5f);
-		Assets.drawText(Assets.chunkBatch, "tap anywhere to start", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-		Assets.chunkFont.setScale(1.0f);
-		Assets.chunkFont.setColor(Color.WHITE);
+		Assets.chunkBatch.draw(Assets.title, 0, 0);
+		Assets.chunkBatch.draw(
+				Assets.titleName,
+				Gdx.graphics.getWidth() / 2.0f
+						- Assets.titleName.getRegionWidth() / 2.0f,
+				(float) Gdx.graphics.getHeight()
+						- Assets.titleName.getRegionHeight() * 2.0f,
+				(float) Assets.titleName.getRegionWidth() / 2.0f, 0.0f,
+				(float) Assets.titleName.getRegionWidth(),
+				(float) Assets.titleName.getRegionHeight(), 1.0f, 1.0f,
+				(float) (4.5f * Math.sin(deltas)));
+		Assets.chunkBatch.draw(
+				Assets.titlePress,
+				Gdx.graphics.getWidth() / 2.0f
+						- Assets.titlePress.getRegionWidth() / 2.0f,
+				Assets.titlePress.getRegionHeight() * 2.0f,
+				(float) Assets.titlePress.getRegionWidth() / 2.0f, 0.0f,
+				(float) Assets.titlePress.getRegionWidth(),
+				(float) Assets.titlePress.getRegionHeight(), 1.0f, 1.0f,
+				(float) (3.0f * Math.sin(deltas + 2)));
 		Assets.chunkBatch.end();
-		
+
 		if (Gdx.input.justTouched()) {
-            game.setScreen(game.gameScreen);
-        }
+			game.setScreen(game.gameScreen);
+		}
 	}
 
 	public void dispose() {
